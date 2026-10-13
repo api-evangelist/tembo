@@ -132,6 +132,7 @@ apis:
     url: json-schema/tembo-tip-tap-document-schema.json
   - type: JSONSchema
     url: json-schema/tembo-agent-state-schema.json
+  image: https://www.tembo.io/images/og-image.png
 x-enrichment:
   date: '2026-10-13'
   status: enriched
