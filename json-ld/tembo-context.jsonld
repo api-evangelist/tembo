@@ -1,0 +1,355 @@
+{
+  "@context": {
+    "@vocab": "https://tembo.io/schema#",
+    "schema": "https://schema.org/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "dcterms": "http://purl.org/dc/terms/",
+    "tembo": "https://tembo.io/schema#",
+    "TipTapImageNode": "tembo:TipTapImageNode",
+    "text": {
+      "@id": "tembo:text",
+      "@type": "xsd:string"
+    },
+    "marks": {
+      "@id": "tembo:marks",
+      "@container": "@list"
+    },
+    "type": {
+      "@id": "tembo:type",
+      "@type": "xsd:string"
+    },
+    "attrs": {
+      "@id": "tembo:attrs",
+      "@type": "@id"
+    },
+    "TipTapLinkMark": "tembo:TipTapLinkMark",
+    "TipTapMark": "tembo:TipTapMark",
+    "TipTapImageAttributes": "tembo:TipTapImageAttributes",
+    "src": {
+      "@id": "tembo:src",
+      "@type": "xsd:string"
+    },
+    "alt": {
+      "@id": "tembo:alt",
+      "@type": "xsd:string"
+    },
+    "title": {
+      "@id": "tembo:title",
+      "@type": "xsd:string"
+    },
+    "width": {
+      "@id": "tembo:width",
+      "@type": "xsd:string"
+    },
+    "data-uploading": {
+      "@id": "tembo:data-uploading",
+      "@type": "xsd:string"
+    },
+    "data-placeholder-id": {
+      "@id": "tembo:data-placeholder-id",
+      "@type": "xsd:string"
+    },
+    "upload-progress": {
+      "@id": "tembo:upload-progress",
+      "@type": "xsd:string"
+    },
+    "TipTapMentionNode": "tembo:TipTapMentionNode",
+    "TipTapMentionAttributes": "tembo:TipTapMentionAttributes",
+    "id": {
+      "@id": "tembo:id",
+      "@type": "xsd:string"
+    },
+    "label": {
+      "@id": "tembo:label",
+      "@type": "xsd:string"
+    },
+    "mentionSuggestionChar": {
+      "@id": "tembo:mentionSuggestionChar",
+      "@type": "xsd:string"
+    },
+    "metadata": {
+      "@id": "tembo:metadata"
+    },
+    "TipTapHeadingNode": "tembo:TipTapHeadingNode",
+    "TipTapOrderedListNode": "tembo:TipTapOrderedListNode",
+    "TipTapTaskItemNode": "tembo:TipTapTaskItemNode",
+    "TipTapCodeBlockNode": "tembo:TipTapCodeBlockNode",
+    "TipTapContentNode": "tembo:TipTapContentNode",
+    "content": {
+      "@id": "tembo:content",
+      "@container": "@list"
+    },
+    "MessageEventData": "tembo:MessageEventData",
+    "scope": {
+      "@id": "tembo:scope"
+    },
+    "source": {
+      "@id": "tembo:source",
+      "@type": "xsd:string"
+    },
+    "providerEvent": {
+      "@id": "tembo:providerEvent",
+      "@type": "xsd:boolean"
+    },
+    "delivery": {
+      "@id": "tembo:delivery",
+      "@type": "xsd:string"
+    },
+    "event": {
+      "@id": "tembo:event"
+    },
+    "index": {
+      "@id": "tembo:index",
+      "@type": "xsd:integer"
+    },
+    "itemId": {
+      "@id": "tembo:itemId",
+      "@type": "xsd:string"
+    },
+    "sequenceNumber": {
+      "@id": "tembo:sequenceNumber",
+      "@type": "xsd:integer"
+    },
+    "accumulatedText": {
+      "@id": "tembo:accumulatedText",
+      "@type": "xsd:string"
+    },
+    "deltaType": {
+      "@id": "tembo:deltaType",
+      "@type": "xsd:string"
+    },
+    "responsePhase": {
+      "@id": "tembo:responsePhase",
+      "@type": "xsd:string"
+    },
+    "toolName": {
+      "@id": "tembo:toolName",
+      "@type": "xsd:string"
+    },
+    "toolResult": {
+      "@id": "tembo:toolResult"
+    },
+    "snapshotId": {
+      "@id": "tembo:snapshotId",
+      "@type": "xsd:string"
+    },
+    "snapshotCreatedAt": {
+      "@id": "tembo:snapshotCreatedAt",
+      "@type": "xsd:string"
+    },
+    "AgentOptions": "tembo:AgentOptions",
+    "reasoningLevel": {
+      "@id": "tembo:reasoningLevel",
+      "@type": "xsd:string"
+    },
+    "mode": {
+      "@id": "tembo:mode",
+      "@type": "xsd:string"
+    },
+    "speed": {
+      "@id": "tembo:speed",
+      "@type": "xsd:string"
+    },
+    "goal": {
+      "@id": "tembo:goal"
+    },
+    "SessionDocumentNode": "tembo:SessionDocumentNode",
+    "SessionEventData": "tembo:SessionEventData",
+    "AtlassianIssueAddedToBoardFilters": "tembo:AtlassianIssueAddedToBoardFilters",
+    "projects": {
+      "@id": "tembo:projects",
+      "@container": "@list"
+    },
+    "boards": {
+      "@id": "tembo:boards",
+      "@container": "@list"
+    },
+    "statuses": {
+      "@id": "tembo:statuses",
+      "@container": "@list"
+    },
+    "assignedTo": {
+      "@id": "tembo:assignedTo",
+      "@container": "@list"
+    },
+    "labels": {
+      "@id": "tembo:labels",
+      "@container": "@list"
+    },
+    "includeNewIssues": {
+      "@id": "tembo:includeNewIssues",
+      "@type": "xsd:boolean"
+    },
+    "AtlassianIssueAssignedToUserFilters": "tembo:AtlassianIssueAssignedToUserFilters",
+    "AtlassianIssueCommentCreatedFilters": "tembo:AtlassianIssueCommentCreatedFilters",
+    "commentedBy": {
+      "@id": "tembo:commentedBy",
+      "@container": "@list"
+    },
+    "messageContains": {
+      "@id": "tembo:messageContains",
+      "@container": "@list"
+    },
+    "AtlassianIssueCreatedFilters": "tembo:AtlassianIssueCreatedFilters",
+    "issueTypes": {
+      "@id": "tembo:issueTypes",
+      "@container": "@list"
+    },
+    "AtlassianIssueLabelAddedFilters": "tembo:AtlassianIssueLabelAddedFilters",
+    "teams": {
+      "@id": "tembo:teams",
+      "@container": "@list"
+    },
+    "AtlassianIssueStatusChangedFilters": "tembo:AtlassianIssueStatusChangedFilters",
+    "previousStatuses": {
+      "@id": "tembo:previousStatuses",
+      "@container": "@list"
+    },
+    "AtlassianIssueUpdatedFilters": "tembo:AtlassianIssueUpdatedFilters",
+    "BitbucketPullRequestOpenedFilters": "tembo:BitbucketPullRequestOpenedFilters",
+    "repositories": {
+      "@id": "tembo:repositories",
+      "@container": "@list"
+    },
+    "openedBy": {
+      "@id": "tembo:openedBy",
+      "@container": "@list"
+    },
+    "temboPrs": {
+      "@id": "tembo:temboPrs",
+      "@type": "xsd:boolean"
+    },
+    "GithubCreateFilters": "tembo:GithubCreateFilters",
+    "refType": {
+      "@id": "tembo:refType",
+      "@container": "@list"
+    },
+    "branchNames": {
+      "@id": "tembo:branchNames",
+      "@container": "@list"
+    },
+    "tagNames": {
+      "@id": "tembo:tagNames",
+      "@container": "@list"
+    },
+    "GithubIssueClosedFilters": "tembo:GithubIssueClosedFilters",
+    "temboIssues": {
+      "@id": "tembo:temboIssues",
+      "@type": "xsd:boolean"
+    },
+    "GithubIssueCommentCreatedFilters": "tembo:GithubIssueCommentCreatedFilters",
+    "commentOn": {
+      "@id": "tembo:commentOn",
+      "@container": "@list"
+    },
+    "GithubIssueOpenedFilters": "tembo:GithubIssueOpenedFilters",
+    "GithubPullRequestClosedFilters": "tembo:GithubPullRequestClosedFilters",
+    "GithubPullRequestMergedFilters": "tembo:GithubPullRequestMergedFilters",
+    "mergedBy": {
+      "@id": "tembo:mergedBy",
+      "@container": "@list"
+    },
+    "GithubPullRequestOpenedFilters": "tembo:GithubPullRequestOpenedFilters",
+    "branches": {
+      "@id": "tembo:branches",
+      "@container": "@list"
+    },
+    "draftPrs": {
+      "@id": "tembo:draftPrs",
+      "@type": "xsd:boolean"
+    },
+    "GithubPullRequestReadyForReviewFilters": "tembo:GithubPullRequestReadyForReviewFilters",
+    "GithubReleasePublishedFilters": "tembo:GithubReleasePublishedFilters",
+    "GithubPullRequestSynchronizeFilters": "tembo:GithubPullRequestSynchronizeFilters",
+    "pushedBy": {
+      "@id": "tembo:pushedBy",
+      "@container": "@list"
+    },
+    "GithubTemboPullRequestOpenedFilters": "tembo:GithubTemboPullRequestOpenedFilters",
+    "GithubWorkflowRunFailedFilters": "tembo:GithubWorkflowRunFailedFilters",
+    "workflowNames": {
+      "@id": "tembo:workflowNames",
+      "@container": "@list"
+    },
+    "GithubWorkflowRunCompletedFilters": "tembo:GithubWorkflowRunCompletedFilters",
+    "conclusions": {
+      "@id": "tembo:conclusions",
+      "@container": "@list"
+    },
+    "events": {
+      "@id": "tembo:events",
+      "@container": "@list"
+    },
+    "GitlabBotMergeRequestCommentFilters": "tembo:GitlabBotMergeRequestCommentFilters",
+    "botUsernames": {
+      "@id": "tembo:botUsernames",
+      "@container": "@list"
+    },
+    "GitlabIssueClosedFilters": "tembo:GitlabIssueClosedFilters",
+    "closedBy": {
+      "@id": "tembo:closedBy",
+      "@container": "@list"
+    },
+    "GitlabIssueOpenedFilters": "tembo:GitlabIssueOpenedFilters",
+    "GitlabMergeRequestClosedFilters": "tembo:GitlabMergeRequestClosedFilters",
+    "temboMrs": {
+      "@id": "tembo:temboMrs",
+      "@type": "xsd:boolean"
+    },
+    "GitlabMergeRequestMergedFilters": "tembo:GitlabMergeRequestMergedFilters",
+    "GitlabMergeRequestOpenedFilters": "tembo:GitlabMergeRequestOpenedFilters",
+    "draftMrs": {
+      "@id": "tembo:draftMrs",
+      "@type": "xsd:boolean"
+    },
+    "GitlabMergeRequestUpdatedFilters": "tembo:GitlabMergeRequestUpdatedFilters",
+    "GitlabPipelineFailedFilters": "tembo:GitlabPipelineFailedFilters",
+    "GitlabRefCreatedFilters": "tembo:GitlabRefCreatedFilters",
+    "LinearIssueCreateFilters": "tembo:LinearIssueCreateFilters",
+    "states": {
+      "@id": "tembo:states",
+      "@container": "@list"
+    },
+    "LinearIssueLabelAddedFilters": "tembo:LinearIssueLabelAddedFilters",
+    "LinearIssueStatusChangedFilters": "tembo:LinearIssueStatusChangedFilters",
+    "LinearIssueUpdatedFilters": "tembo:LinearIssueUpdatedFilters",
+    "SentryIssueCreatedFilters": "tembo:SentryIssueCreatedFilters",
+    "priorities": {
+      "@id": "tembo:priorities",
+      "@container": "@list"
+    },
+    "projectSlugs": {
+      "@id": "tembo:projectSlugs",
+      "@container": "@list"
+    },
+    "SlackMessageReactionAddedFilters": "tembo:SlackMessageReactionAddedFilters",
+    "emojis": {
+      "@id": "tembo:emojis",
+      "@container": "@list"
+    },
+    "channels": {
+      "@id": "tembo:channels",
+      "@container": "@list"
+    },
+    "users": {
+      "@id": "tembo:users",
+      "@container": "@list"
+    },
+    "SlackMessageSentInChannelFilters": "tembo:SlackMessageSentInChannelFilters",
+    "messageNotContains": {
+      "@id": "tembo:messageNotContains",
+      "@container": "@list"
+    },
+    "GlobalMcpServers": "tembo:GlobalMcpServers",
+    "mcpServers": {
+      "@id": "tembo:mcpServers"
+    }
+  },
+  "@type": "schema:Dataset",
+  "schema:name": "Tembo API JSON-LD context",
+  "schema:description": "A JSON-LD @context for the objects Tembo's own API contract declares: one class per component schema, one property per declared field, typed from the contract. Derived by script (derive-json-ld.py, 2026-10-13) from openapi/tembo-openapi.yml.",
+  "dcterms:created": "2026-10-13",
+  "dcterms:source": [
+    "openapi/tembo-openapi.yml"
+  ]
+}

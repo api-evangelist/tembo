@@ -1,0 +1,426 @@
+generated: '2026-10-13'
+method: derived
+generator: derive-vocabulary.py
+source: openapi/tembo-openapi.yml
+vocabulary:
+  name: Tembo Domain Vocabulary
+  description: 'Terms declared by Tembo''s own API contract: its resource groups, objects and enumerations, with the contract''s definitions.
+    Derived, not authored.'
+  version: '2026-10-13'
+  terms:
+  - term: TipTapDocument
+    definition: Rich-text document containing text, formatting, images, and mentions. A document typically has a "doc" root with nested content
+      nodes.
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/TipTapDocument
+  - term: TipTapImageNode
+    definition: 'Object declared by the contract with fields: text, marks, type, attrs.'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/TipTapImageNode
+  - term: TipTapLinkMark
+    definition: 'Object declared by the contract with fields: type, attrs.'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/TipTapLinkMark
+  - term: TipTapMark
+    definition: 'Object declared by the contract with fields: type, attrs.'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/TipTapMark
+  - term: TipTapImageAttributes
+    definition: 'Object declared by the contract with fields: src, alt, title, width, data-uploading, data-placeholder-id, upload-progress.'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/TipTapImageAttributes
+  - term: TipTapMentionNode
+    definition: 'Object declared by the contract with fields: text, marks, type, attrs.'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/TipTapMentionNode
+  - term: TipTapMentionAttributes
+    definition: 'Object declared by the contract with fields: id, label, type, mentionSuggestionChar, metadata.'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/TipTapMentionAttributes
+  - term: TipTapHeadingNode
+    definition: 'Object declared by the contract with fields: text, marks, type, attrs.'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/TipTapHeadingNode
+  - term: TipTapOrderedListNode
+    definition: 'Object declared by the contract with fields: text, marks, type, attrs.'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/TipTapOrderedListNode
+  - term: TipTapTaskItemNode
+    definition: 'Object declared by the contract with fields: text, marks, type, attrs.'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/TipTapTaskItemNode
+  - term: TipTapCodeBlockNode
+    definition: 'Object declared by the contract with fields: text, marks, type, attrs.'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/TipTapCodeBlockNode
+  - term: TipTapContentNode
+    definition: 'Object declared by the contract with fields: text, marks, type, attrs, content.'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/TipTapContentNode
+  - term: CustomDocument
+    definition: Rich-text content with custom document properties and node attributes.
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/CustomDocument
+  - term: MessageEventData
+    definition: 'Object declared by the contract with fields: type, scope, source, providerEvent, delivery, event, index, itemId, sequenceNumber,
+      accumulatedText, deltaType, responsePhase. (4 more)'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/MessageEventData
+  - term: CustomMessageEventData
+    definition: Message event data with runtime-specific fields.
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/CustomMessageEventData
+  - term: AgentOptionsInput
+    definition: Execution settings for the selected agent runtime, including provider-specific options.
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/AgentOptionsInput
+  - term: AgentOptions
+    definition: 'Object declared by the contract with fields: reasoningLevel, mode, speed, goal.'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/AgentOptions
+  - term: RuntimeAgentOptions
+    definition: Runtime-specific execution settings and provider extensions.
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/RuntimeAgentOptions
+  - term: SessionDocumentNode
+    definition: 'Object declared by the contract with fields: type, text, attrs, marks, content.'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/SessionDocumentNode
+  - term: SessionEventData
+    definition: 'Object declared by the contract with fields: type, scope, source, providerEvent, delivery, event, index, itemId, sequenceNumber,
+      accumulatedText, deltaType, responsePhase. (4 more)'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/SessionEventData
+  - term: AgentState
+    definition: User-defined state keyed by name. Values may be any JSON value, including nested objects and arrays. No application-specific keys
+      are required.
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/AgentState
+  - term: TriggerFilters
+    definition: Conditions that determine whether the selected integration event starts the agent. Available fields depend on the integration
+      and event type.
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/TriggerFilters
+  - term: AtlassianIssueAddedToBoardFilters
+    definition: 'Object declared by the contract with fields: projects, boards, statuses, assignedTo, labels, includeNewIssues.'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/AtlassianIssueAddedToBoardFilters
+  - term: AtlassianIssueAssignedToUserFilters
+    definition: 'Object declared by the contract with fields: projects, assignedTo, labels, includeNewIssues.'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/AtlassianIssueAssignedToUserFilters
+  - term: AtlassianIssueCommentCreatedFilters
+    definition: 'Object declared by the contract with fields: projects, commentedBy, messageContains, labels.'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/AtlassianIssueCommentCreatedFilters
+  - term: AtlassianIssueCreatedFilters
+    definition: 'Object declared by the contract with fields: projects, assignedTo, issueTypes, labels.'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/AtlassianIssueCreatedFilters
+  - term: AtlassianIssueLabelAddedFilters
+    definition: 'Object declared by the contract with fields: projects, teams, labels.'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/AtlassianIssueLabelAddedFilters
+  - term: AtlassianIssueStatusChangedFilters
+    definition: 'Object declared by the contract with fields: projects, statuses, previousStatuses, issueTypes, assignedTo, labels.'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/AtlassianIssueStatusChangedFilters
+  - term: AtlassianIssueUpdatedFilters
+    definition: 'Object declared by the contract with fields: projects, issueTypes, assignedTo, labels.'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/AtlassianIssueUpdatedFilters
+  - term: BitbucketPullRequestOpenedFilters
+    definition: 'Object declared by the contract with fields: repositories, openedBy, temboPrs.'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/BitbucketPullRequestOpenedFilters
+  - term: GithubCreateFilters
+    definition: 'Object declared by the contract with fields: repositories, refType, branchNames, tagNames.'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/GithubCreateFilters
+  - term: GithubIssueClosedFilters
+    definition: 'Object declared by the contract with fields: repositories, openedBy, temboIssues.'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/GithubIssueClosedFilters
+  - term: GithubIssueCommentCreatedFilters
+    definition: 'Object declared by the contract with fields: repositories, commentedBy, commentOn, messageContains.'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/GithubIssueCommentCreatedFilters
+  - term: GithubIssueOpenedFilters
+    definition: 'Object declared by the contract with fields: repositories, openedBy, temboIssues.'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/GithubIssueOpenedFilters
+  - term: GithubPullRequestClosedFilters
+    definition: 'Object declared by the contract with fields: repositories, openedBy, temboPrs.'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/GithubPullRequestClosedFilters
+  - term: GithubPullRequestMergedFilters
+    definition: 'Object declared by the contract with fields: repositories, mergedBy, temboPrs.'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/GithubPullRequestMergedFilters
+  - term: GithubPullRequestOpenedFilters
+    definition: 'Object declared by the contract with fields: repositories, labels, openedBy, branches, draftPrs, temboPrs.'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/GithubPullRequestOpenedFilters
+  - term: GithubPullRequestReadyForReviewFilters
+    definition: 'Object declared by the contract with fields: repositories, openedBy, temboPrs.'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/GithubPullRequestReadyForReviewFilters
+  - term: GithubReleasePublishedFilters
+    definition: 'Object declared by the contract with fields: repositories.'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/GithubReleasePublishedFilters
+  - term: GithubPullRequestSynchronizeFilters
+    definition: 'Object declared by the contract with fields: repositories, pushedBy, draftPrs, temboPrs.'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/GithubPullRequestSynchronizeFilters
+  - term: GithubTemboPullRequestOpenedFilters
+    definition: 'Object declared by the contract with fields: repositories, draftPrs.'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/GithubTemboPullRequestOpenedFilters
+  - term: GithubWorkflowRunFailedFilters
+    definition: 'Object declared by the contract with fields: repositories, workflowNames, branches.'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/GithubWorkflowRunFailedFilters
+  - term: GithubWorkflowRunCompletedFilters
+    definition: 'Object declared by the contract with fields: repositories, workflowNames, branches, conclusions, events.'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/GithubWorkflowRunCompletedFilters
+  - term: GitlabBotMergeRequestCommentFilters
+    definition: 'Object declared by the contract with fields: repositories, botUsernames.'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/GitlabBotMergeRequestCommentFilters
+  - term: GitlabIssueClosedFilters
+    definition: 'Object declared by the contract with fields: repositories, closedBy, temboIssues.'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/GitlabIssueClosedFilters
+  - term: GitlabIssueOpenedFilters
+    definition: 'Object declared by the contract with fields: repositories, openedBy, temboIssues.'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/GitlabIssueOpenedFilters
+  - term: GitlabMergeRequestClosedFilters
+    definition: 'Object declared by the contract with fields: repositories, closedBy, temboMrs.'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/GitlabMergeRequestClosedFilters
+  - term: GitlabMergeRequestMergedFilters
+    definition: 'Object declared by the contract with fields: repositories, mergedBy, temboMrs.'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/GitlabMergeRequestMergedFilters
+  - term: GitlabMergeRequestOpenedFilters
+    definition: 'Object declared by the contract with fields: repositories, draftMrs, temboMrs.'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/GitlabMergeRequestOpenedFilters
+  - term: GitlabMergeRequestUpdatedFilters
+    definition: 'Object declared by the contract with fields: repositories, pushedBy, draftMrs, temboMrs.'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/GitlabMergeRequestUpdatedFilters
+  - term: GitlabPipelineFailedFilters
+    definition: 'Object declared by the contract with fields: repositories, branches.'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/GitlabPipelineFailedFilters
+  - term: GitlabRefCreatedFilters
+    definition: 'Object declared by the contract with fields: repositories, refType, branchNames, tagNames.'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/GitlabRefCreatedFilters
+  - term: LinearIssueCreateFilters
+    definition: 'Object declared by the contract with fields: teams, states, openedBy, assignedTo, labels, temboIssues.'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/LinearIssueCreateFilters
+  - term: LinearIssueLabelAddedFilters
+    definition: 'Object declared by the contract with fields: teams, assignedTo, labels.'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/LinearIssueLabelAddedFilters
+  - term: LinearIssueStatusChangedFilters
+    definition: 'Object declared by the contract with fields: teams, statuses, previousStatuses, assignedTo, labels.'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/LinearIssueStatusChangedFilters
+  - term: LinearIssueUpdatedFilters
+    definition: 'Object declared by the contract with fields: teams, states, assignedTo, labels, temboIssues.'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/LinearIssueUpdatedFilters
+  - term: SentryIssueCreatedFilters
+    definition: 'Object declared by the contract with fields: priorities, projectSlugs.'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/SentryIssueCreatedFilters
+  - term: SlackMessageReactionAddedFilters
+    definition: 'Object declared by the contract with fields: emojis, channels, users.'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/SlackMessageReactionAddedFilters
+  - term: SlackMessageSentInChannelFilters
+    definition: 'Object declared by the contract with fields: channels, users, messageContains, messageNotContains.'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/SlackMessageSentInChannelFilters
+  - term: AgentRunEventPayload
+    definition: Custom webhook input. Arbitrary keys and nested JSON values are preserved and passed to the agent.
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/AgentRunEventPayload
+  - term: GlobalMcpServers
+    definition: 'Object declared by the contract with fields: mcpServers.'
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/GlobalMcpServers
+  - term: McpServerConfigurationObject
+    definition: MCP server configuration with transport-specific settings.
+    tags:
+    - Object
+    source: openapi/tembo-openapi.yml#/components/schemas/McpServerConfigurationObject
+  - term: OAuth
+    definition: 'Resource group in the contract; its operation GET /oauth/context: Returns the user, organization, OAuth client, granted scopes,
+      and expiration for the supplied access token.'
+    tags:
+    - Resource Group
+    source: openapi/tembo-openapi.yml
+  - term: Authentication
+    definition: 'Resource group in the contract; its operation GET /auth/context: Returns the user or service identity and organization associated
+      with the supplied OAuth access token, API key, or agent credential.'
+    tags:
+    - Resource Group
+    source: openapi/tembo-openapi.yml
+  - term: API Keys
+    definition: 'Resource group in the contract; its operation GET /v1/api-keys: List active API keys for the current organization.'
+    tags:
+    - Resource Group
+    source: openapi/tembo-openapi.yml
+  - term: Skills
+    definition: 'Resource group in the contract; its operation GET /v1/skills/marketplace: List popular marketplace skills or search the catalog.'
+    tags:
+    - Resource Group
+    source: openapi/tembo-openapi.yml
+  - term: Insights
+    definition: 'Resource group in the contract; its operation GET /v1/insights: Retrieve pull request contribution insights and their collection
+      status for the current organization.'
+    tags:
+    - Resource Group
+    source: openapi/tembo-openapi.yml
+  - term: Organizations
+    definition: 'Resource group in the contract; its operation POST /v1/organizations: Create an organization and make the authenticated user
+      its administrator.'
+    tags:
+    - Resource Group
+    source: openapi/tembo-openapi.yml
+  - term: MCP Connections
+    definition: 'Resource group in the contract; its operation GET /v1/mcp-connections: List MCP connections for the current organization with
+      cursor pagination and optional search by name or URL.'
+    tags:
+    - Resource Group
+    source: openapi/tembo-openapi.yml
+  - term: Artifacts
+    definition: 'Resource group in the contract; its operation GET /v1/artifacts: List organization artifacts with optional session and type filters.'
+    tags:
+    - Resource Group
+    source: openapi/tembo-openapi.yml
+  - term: Messages
+    definition: 'Resource group in the contract; its operation POST /v1/messages/live: Issue a 30-second, session-bound WebSocket ticket.'
+    tags:
+    - Resource Group
+    source: openapi/tembo-openapi.yml
+  - term: Models
+    definition: 'Resource group in the contract; its operation GET /v1/models: List the models available to the current organization, including
+      enablement and inference-provider access.'
+    tags:
+    - Resource Group
+    source: openapi/tembo-openapi.yml
+  - term: Runtimes
+    definition: 'Resource group in the contract; its operation GET /v1/runtimes: List execution runtimes and their compatible model references
+      for the current organization.'
+    tags:
+    - Resource Group
+    source: openapi/tembo-openapi.yml
+  - term: Users
+    definition: 'Resource group in the contract; its operation GET /v1/users/me: Retrieve the authenticated user.'
+    tags:
+    - Resource Group
+    source: openapi/tembo-openapi.yml
+  - term: Sessions
+    definition: 'Resource group in the contract; its operation POST /v1/sessions/live: Issue a 30-second, session-bound WebSocket ticket.'
+    tags:
+    - Resource Group
+    source: openapi/tembo-openapi.yml
+  - term: Projects
+    definition: 'Resource group in the contract; its operation PUT /v1/projects/defaults: Choose the default project and sandbox size for the
+      organization.'
+    tags:
+    - Resource Group
+    source: openapi/tembo-openapi.yml
+  - term: Pull requests
+    definition: 'Resource group in the contract; its operation GET /v1/pull-requests: List pull requests for the authenticated organization with
+      cursor pagination.'
+    tags:
+    - Resource Group
+    source: openapi/tembo-openapi.yml
+  - term: Agents
+    definition: 'Resource group in the contract; its operation GET /v1/agents: List agents available in your organization, with optional search,
+      status, integration, and author filters.'
+    tags:
+    - Resource Group
+    source: openapi/tembo-openapi.yml
+  - term: Repositories
+    definition: 'Resource group in the contract; its operation GET /v1/repositories: List repositories in the authenticated organization.'
+    tags:
+    - Resource Group
+    source: openapi/tembo-openapi.yml
+  - term: Integrations
+    definition: 'Resource group in the contract; its operation GET /v1/integrations: List integrations visible to the current organization or
+      authenticated admin.'
+    tags:
+    - Resource Group
+    source: openapi/tembo-openapi.yml

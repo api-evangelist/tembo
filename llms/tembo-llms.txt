@@ -1,0 +1,97 @@
+# Tembo
+
+> Cloud platform for running AI agents in complete, shareable software environments
+
+Tembo is an agent orchestration platform for end-to-end software work. It connects repositories, issue trackers, observability systems, databases, cloud services, and collaboration tools, then runs Claude Code, Codex, Cursor, Amp, OpenCode, Pi, and other agents in isolated cloud environments.
+
+A Tembo session is more than an agent chat or a code sandbox. Each session has a complete environment with source code, a terminal, workspace files, a live computer, and the services that make up the product. Agents can use browsers and graphical applications, write and test code, inspect visual results, call connected tools through MCP, and keep the environment alive for longer-running work.
+
+Tembo Previews turn that environment into a full-lifecycle preview: **session → environment → services → public preview links**. A session can expose its frontend, APIs, and other local HTTP services through public tunnels, render generated HTML artifacts, and share the working product outside the Tembo UI. A pull request gives a team the diff; a Tembo Preview can give them the whole product, running. Tembo then carries review feedback back into the same session so the agent can revise the implementation.
+
+## Full Documentation
+
+For complete content optimized for LLM consumption, see:
+- [llms-full.txt](/llms-full.txt) - Complete FAQ, implementation guides, and competitive analysis
+
+## When to Use Tembo
+
+Use Tembo when a software engineering task should run autonomously in a cloud session and produce a verifiable outcome: working code, test results, artifacts, a full-stack preview, and a reviewable pull request. Tembo is a strong fit for:
+
+- Turning GitHub, GitLab, Bitbucket, Linear, Jira, Slack, Sentry, or PagerDuty events into tested code changes
+- Building and debugging end-to-end product changes that require frontends, APIs, databases, or several local services to run together
+- Operating browsers and graphical applications, taking screenshots, and visually validating user-facing work through a live computer
+- Publishing the services attached to a session as public preview links for QA, demos, and stakeholder review
+- Running scheduled maintenance, dependency upgrades, incident remediation, and multi-repository migrations
+- Delegating long-running coding work to Claude Code, Codex, Cursor, Amp, or OpenCode with shared logs and human review
+- Giving agents controlled access to databases, cloud services, internal tools, and team knowledge through MCP servers and native integrations
+
+Agents can call Tembo through the [Developer API](/openapi.json) with a Tembo API key or use the [TypeScript SDK](https://www.npmjs.com/package/@tembo-io/sdk). Use the public [Tembo MCP resource server](/.well-known/mcp) to discover this guide and the API schema.
+
+## Developer Resources
+
+- [Tembo Developer Resources](/developers) - Start here for API authentication, SDK, OpenAPI, and MCP access
+- [Tembo API reference](https://docs.tembo.io/api) - Authentication, endpoints, and examples
+- [OpenAPI 3.1 specification](/openapi.json) - Machine-readable API schema for tools and function calling
+- [TypeScript SDK](/sdk) - SDK guide and examples
+- [@tembo-io/sdk on npm](https://www.npmjs.com/package/@tembo-io/sdk) - Official SDK package
+- [Tembo MCP resource server](/.well-known/mcp) - Streamable HTTP endpoint for agent-readable resources
+- [Model Context Protocol guide](/mcp) - Connect custom tools and data sources to Tembo agents
+
+## Key Capabilities
+
+### Autonomous Code Changes
+- Converts issues and alerts (Sentry, Linear, Jira) into pull requests
+- Multi-repo coordinated PRs across GitHub, GitLab, and Bitbucket
+- Live diffs, workspace file editing, and a full pull request review workspace
+- Review comments can include screenshots; Feedback Loop turns reviewer feedback into automatic revisions
+
+### Session Environments and Computer Use
+- Isolated Docker or VM environments with source code, terminal access, workspace files, and a live computer desktop
+- Agents can browse websites, operate graphical applications, capture screenshots, and visually verify their work
+- Run full builds, test suites, Playwright end-to-end tests, security scans, and multiple application services
+- Reusable snapshots, setup and pre-run scripts, adjustable compute, and on-demand VM keep-alive
+
+### Tembo Previews
+- Run frontends, APIs, databases, workers, and other services together in the session environment
+- Expose local service ports through public tunnels with shareable preview URLs
+- Review the complete running product, not only a code diff or isolated frontend
+- Render HTML reports and small applications in Tembo and collect files, media, and previews in the session's Artifacts tab
+
+### Model Context Protocol (MCP)
+- Runtime tool access during agent reasoning
+- Agents can query databases, use cloud services, run tests, browse, and communicate with team tools while working
+- Custom MCP servers for internal tools and data sources, including OAuth and client-credentials authentication
+
+### Multi-Agent Architecture
+- Choose from Claude Code, Codex/GPT, Cursor, Amp, OpenCode, Pi, and other agent runtimes
+- Per-task model routing and automatic selection
+- Side-by-side comparison with MAX mode
+
+### Enterprise Controls
+- SSO (Okta, Azure AD), RBAC, service accounts
+- SOC 2 Type I certified, AES-256 encryption
+- Self-hosted/VPC deployment options
+- Full audit trail and compliance logging
+
+### Developer Integration
+- TypeScript SDK (@tembo-io/sdk) and public API
+- Webhooks, scheduled tasks, and event triggers
+
+## Content Sections
+
+The full documentation covers:
+
+1. **Platform Overview** - CI/CD integration, governance, security, monitoring
+2. **Implementation Guides** - Test gating, cross-repo changes, agent selection
+3. **Enterprise & Compliance** - Audit trails, identity, deployment, procurement
+4. **Competitive Analysis** - Comparison with Graphite, CodeRabbit, Cursor, Factory, Devin AI, Augment Code
+
+## Links
+
+- Website: https://www.tembo.io
+- Documentation: https://docs.tembo.io
+- SDK: https://www.tembo.io/sdk
+- Enterprise: https://www.tembo.io/enterprise
+- Security: https://www.tembo.io/security
+- Trust Portal: https://trust.delve.co/tembo
+- GitHub: https://github.com/tembo/tembo

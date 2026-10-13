@@ -1,0 +1,546 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/tembo/main/json-schema/tembo-tip-tap-document-schema.json",
+  "title": "TipTapDocument",
+  "description": "Rich-text document containing text, formatting, images, and mentions. A document typically has a \"doc\" root with nested content nodes.",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/tembo-openapi.yml#/components/schemas/TipTapDocument",
+  "anyOf": [
+    {
+      "$ref": "#/$defs/TipTapNode"
+    },
+    {
+      "$ref": "#/$defs/CustomDocument"
+    }
+  ],
+  "$defs": {
+    "CustomDocument": {
+      "type": "object",
+      "additionalProperties": {},
+      "description": "Rich-text content with custom document properties and node attributes."
+    },
+    "TipTapContentNode": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "maxLength": 1000000
+        },
+        "marks": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/TipTapLinkMark"
+              },
+              {
+                "$ref": "#/$defs/TipTapMark"
+              }
+            ]
+          },
+          "maxItems": 1000
+        },
+        "type": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "not": {
+            "enum": [
+              "image",
+              "mention",
+              "heading",
+              "orderedList",
+              "taskItem",
+              "codeBlock"
+            ]
+          }
+        },
+        "attrs": {
+          "$ref": "#/$defs/TipTapExtensionAttributes"
+        },
+        "content": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/TipTapNode"
+          },
+          "maxItems": 10000
+        }
+      },
+      "additionalProperties": {}
+    },
+    "TipTapExtensionAttributes": {
+      "type": "object",
+      "additionalProperties": {}
+    },
+    "TipTapImageAttributes": {
+      "type": "object",
+      "properties": {
+        "src": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "alt": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "title": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "width": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "data-uploading": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "data-placeholder-id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "upload-progress": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": {}
+    },
+    "TipTapLinkMark": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "link"
+        },
+        "attrs": {
+          "type": "object",
+          "properties": {
+            "href": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "target": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "rel": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "class": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "title": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "additionalProperties": {}
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": {}
+    },
+    "TipTapMark": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "not": {
+            "enum": [
+              "link"
+            ]
+          }
+        },
+        "attrs": {
+          "$ref": "#/$defs/TipTapExtensionAttributes"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": {}
+    },
+    "TipTapMentionAttributes": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "label": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "mentionSuggestionChar": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "metadata": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "properties": {
+            "integrationType": {
+              "type": "string"
+            },
+            "codeRepositoryId": {
+              "type": "string"
+            },
+            "isHeader": {
+              "type": "boolean"
+            },
+            "argumentHint": {
+              "type": "string"
+            },
+            "commandName": {
+              "type": "string"
+            },
+            "source": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": {}
+        }
+      },
+      "additionalProperties": {}
+    },
+    "TipTapNode": {
+      "anyOf": [
+        {
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "type": "string",
+                  "maxLength": 1000000
+                },
+                "marks": {
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/$defs/TipTapLinkMark"
+                      },
+                      {
+                        "$ref": "#/$defs/TipTapMark"
+                      }
+                    ]
+                  },
+                  "maxItems": 1000
+                },
+                "type": {
+                  "type": "string",
+                  "const": "image"
+                },
+                "attrs": {
+                  "$ref": "#/$defs/TipTapImageAttributes"
+                },
+                "content": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/TipTapNode"
+                  },
+                  "maxItems": 10000
+                }
+              },
+              "required": [
+                "type"
+              ],
+              "additionalProperties": {}
+            },
+            {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "type": "string",
+                  "maxLength": 1000000
+                },
+                "marks": {
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/$defs/TipTapLinkMark"
+                      },
+                      {
+                        "$ref": "#/$defs/TipTapMark"
+                      }
+                    ]
+                  },
+                  "maxItems": 1000
+                },
+                "type": {
+                  "type": "string",
+                  "const": "mention"
+                },
+                "attrs": {
+                  "$ref": "#/$defs/TipTapMentionAttributes"
+                },
+                "content": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/TipTapNode"
+                  },
+                  "maxItems": 10000
+                }
+              },
+              "required": [
+                "type"
+              ],
+              "additionalProperties": {}
+            },
+            {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "type": "string",
+                  "maxLength": 1000000
+                },
+                "marks": {
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/$defs/TipTapLinkMark"
+                      },
+                      {
+                        "$ref": "#/$defs/TipTapMark"
+                      }
+                    ]
+                  },
+                  "maxItems": 1000
+                },
+                "type": {
+                  "type": "string",
+                  "const": "heading"
+                },
+                "attrs": {
+                  "type": "object",
+                  "properties": {
+                    "level": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 6
+                    }
+                  },
+                  "additionalProperties": {}
+                },
+                "content": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/TipTapNode"
+                  },
+                  "maxItems": 10000
+                }
+              },
+              "required": [
+                "type"
+              ],
+              "additionalProperties": {}
+            },
+            {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "type": "string",
+                  "maxLength": 1000000
+                },
+                "marks": {
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/$defs/TipTapLinkMark"
+                      },
+                      {
+                        "$ref": "#/$defs/TipTapMark"
+                      }
+                    ]
+                  },
+                  "maxItems": 1000
+                },
+                "type": {
+                  "type": "string",
+                  "const": "orderedList"
+                },
+                "attrs": {
+                  "type": "object",
+                  "properties": {
+                    "start": {
+                      "type": "integer"
+                    },
+                    "type": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  },
+                  "additionalProperties": {}
+                },
+                "content": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/TipTapNode"
+                  },
+                  "maxItems": 10000
+                }
+              },
+              "required": [
+                "type"
+              ],
+              "additionalProperties": {}
+            },
+            {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "type": "string",
+                  "maxLength": 1000000
+                },
+                "marks": {
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/$defs/TipTapLinkMark"
+                      },
+                      {
+                        "$ref": "#/$defs/TipTapMark"
+                      }
+                    ]
+                  },
+                  "maxItems": 1000
+                },
+                "type": {
+                  "type": "string",
+                  "const": "taskItem"
+                },
+                "attrs": {
+                  "type": "object",
+                  "properties": {
+                    "checked": {
+                      "type": "boolean"
+                    }
+                  },
+                  "additionalProperties": {}
+                },
+                "content": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/TipTapNode"
+                  },
+                  "maxItems": 10000
+                }
+              },
+              "required": [
+                "type"
+              ],
+              "additionalProperties": {}
+            },
+            {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "type": "string",
+                  "maxLength": 1000000
+                },
+                "marks": {
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/$defs/TipTapLinkMark"
+                      },
+                      {
+                        "$ref": "#/$defs/TipTapMark"
+                      }
+                    ]
+                  },
+                  "maxItems": 1000
+                },
+                "type": {
+                  "type": "string",
+                  "const": "codeBlock"
+                },
+                "attrs": {
+                  "type": "object",
+                  "properties": {
+                    "language": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  },
+                  "additionalProperties": {}
+                },
+                "content": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/TipTapNode"
+                  },
+                  "maxItems": 10000
+                }
+              },
+              "required": [
+                "type"
+              ],
+              "additionalProperties": {}
+            }
+          ]
+        },
+        {
+          "$ref": "#/$defs/TipTapContentNode"
+        }
+      ]
+    }
+  }
+}

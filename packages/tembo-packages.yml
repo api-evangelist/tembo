@@ -1,0 +1,29 @@
+name: Tembo Packages
+generated: '2026-10-13'
+method: searched
+source: https://docs.tembo.io/api/index.md
+packages:
+- name: '@tembo-io/sdk'
+  registry: npm
+  url: https://www.npmjs.com/package/@tembo-io/sdk
+  language: TypeScript
+  official: true
+  version: 0.10.0
+  published: '2026-10-08'
+  repository: https://github.com/tembo/sdk
+- name: tembo-sdk-python
+  registry: pypi
+  url: https://pypi.org/project/tembo-sdk-python/
+  language: Python
+  official: true
+  version: 0.2.0
+  published: '2026-01-05'
+  repository: https://github.com/tembo/sdk-python
+- name: '@tembo-io/mcp'
+  registry: npm
+  url: https://www.npmjs.com/package/@tembo-io/mcp
+  language: TypeScript
+  official: true
+  version: 0.1.0
+  published: '2025-12-08'
+  repository: https://github.com/tembo/mcp

@@ -1,0 +1,56 @@
+name: Tembo Plans and Pricing
+generated: '2026-10-13'
+method: searched
+source: https://docs.tembo.io/resources/pricing.md
+currency: USD
+plans:
+- name: Free trial
+  description: Free trial with an included usage allowance; sessions stop when the trial ends or its allowance runs out.
+  price_text: included usage allowance, up to 10 users, sandbox size up to `xl`, and priority support
+  features:
+  - up to 10 users
+  - sandbox size up to xl
+  - priority support
+  limits:
+  - up to 10 users
+- name: Pro
+  description: Monthly plan with usage allowance and overage billing.
+  price: 60
+  price_text: $60/month
+  billing_period: month
+  features:
+  - $60 monthly usage allowance
+  - up to 5 users
+  - sandbox size up to medium
+  - overage billing
+  limits:
+  - up to 5 users
+- name: Max
+  description: Monthly plan with larger usage allowance and overage billing.
+  price: 200
+  price_text: $200/month
+  billing_period: month
+  features:
+  - $200 monthly usage allowance
+  - up to 10 users
+  - sandbox size up to xl
+  - overage billing
+  limits:
+  - up to 10 users
+- name: Enterprise
+  description: Custom pricing via support@tembo.io, including custom usage allowances.
+  price: Contact sales
+  price_text: If you need custom pricing, reach out to
+  features:
+  - custom usage allowances
+  limits: []
+compute_rates:
+- resource: vCPU
+  price_text: $0.0403 per vCPU-hour
+- resource: Memory
+  price_text: $0.0130 per GiB RAM-hour
+audience: business-product
+pricing_basis: tiered-subscription
+delivery:
+  delivery: managed+licensed
+  evidence: Pricing page offers cloud plans; docs describe a self-hosted Enterprise deployment (https://docs.tembo.io/features/self-hosted/overview.md).

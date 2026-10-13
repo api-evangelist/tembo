@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/tembo/main/json-schema/tembo-agent-state-schema.json",
+  "title": "AgentState",
+  "description": "User-defined state keyed by name. Values may be any JSON value, including nested objects and arrays. No application-specific keys are required.",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/tembo-openapi.yml#/components/schemas/AgentState",
+  "type": "object",
+  "additionalProperties": {}
+}

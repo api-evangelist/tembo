@@ -1,0 +1,1 @@
+{"resource":"https://mcp.tembo.io/mcp","authorization_servers":["https://clerk.app.tembo.io"],"scopes_supported":["user:org:read"],"bearer_methods_supported":["header"],"resource_name":"Tembo"}

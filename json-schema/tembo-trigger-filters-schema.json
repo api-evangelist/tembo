@@ -1,0 +1,1541 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/tembo/main/json-schema/tembo-trigger-filters-schema.json",
+  "title": "TriggerFilters",
+  "description": "Conditions that determine whether the selected integration event starts the agent. Available fields depend on the integration and event type.",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/tembo-openapi.yml#/components/schemas/TriggerFilters",
+  "anyOf": [
+    {
+      "allOf": [
+        {
+          "$ref": "#/$defs/AtlassianIssueAddedToBoardFilters"
+        }
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "allOf": [
+        {
+          "$ref": "#/$defs/AtlassianIssueAssignedToUserFilters"
+        }
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "allOf": [
+        {
+          "$ref": "#/$defs/AtlassianIssueCommentCreatedFilters"
+        }
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "allOf": [
+        {
+          "$ref": "#/$defs/AtlassianIssueCreatedFilters"
+        }
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "allOf": [
+        {
+          "$ref": "#/$defs/AtlassianIssueLabelAddedFilters"
+        }
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "allOf": [
+        {
+          "$ref": "#/$defs/AtlassianIssueStatusChangedFilters"
+        }
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "allOf": [
+        {
+          "$ref": "#/$defs/AtlassianIssueUpdatedFilters"
+        }
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "allOf": [
+        {
+          "$ref": "#/$defs/BitbucketPullRequestOpenedFilters"
+        }
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "allOf": [
+        {
+          "$ref": "#/$defs/GithubCreateFilters"
+        }
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "allOf": [
+        {
+          "$ref": "#/$defs/GithubIssueClosedFilters"
+        }
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "allOf": [
+        {
+          "$ref": "#/$defs/GithubIssueCommentCreatedFilters"
+        }
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "allOf": [
+        {
+          "$ref": "#/$defs/GithubIssueOpenedFilters"
+        }
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "allOf": [
+        {
+          "$ref": "#/$defs/GithubPullRequestClosedFilters"
+        }
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "allOf": [
+        {
+          "$ref": "#/$defs/GithubPullRequestMergedFilters"
+        }
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "allOf": [
+        {
+          "$ref": "#/$defs/GithubPullRequestOpenedFilters"
+        }
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "allOf": [
+        {
+          "$ref": "#/$defs/GithubPullRequestReadyForReviewFilters"
+        }
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "allOf": [
+        {
+          "$ref": "#/$defs/GithubReleasePublishedFilters"
+        }
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "allOf": [
+        {
+          "$ref": "#/$defs/GithubPullRequestSynchronizeFilters"
+        }
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "allOf": [
+        {
+          "$ref": "#/$defs/GithubTemboPullRequestOpenedFilters"
+        }
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "allOf": [
+        {
+          "$ref": "#/$defs/GithubWorkflowRunFailedFilters"
+        }
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "allOf": [
+        {
+          "$ref": "#/$defs/GithubWorkflowRunCompletedFilters"
+        }
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "allOf": [
+        {
+          "$ref": "#/$defs/GitlabBotMergeRequestCommentFilters"
+        }
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "allOf": [
+        {
+          "$ref": "#/$defs/GitlabIssueClosedFilters"
+        }
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "allOf": [
+        {
+          "$ref": "#/$defs/GitlabIssueOpenedFilters"
+        }
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "allOf": [
+        {
+          "$ref": "#/$defs/GitlabMergeRequestClosedFilters"
+        }
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "allOf": [
+        {
+          "$ref": "#/$defs/GitlabMergeRequestMergedFilters"
+        }
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "allOf": [
+        {
+          "$ref": "#/$defs/GitlabMergeRequestOpenedFilters"
+        }
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "allOf": [
+        {
+          "$ref": "#/$defs/GitlabMergeRequestUpdatedFilters"
+        }
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "allOf": [
+        {
+          "$ref": "#/$defs/GitlabPipelineFailedFilters"
+        }
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "allOf": [
+        {
+          "$ref": "#/$defs/GitlabRefCreatedFilters"
+        }
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "allOf": [
+        {
+          "$ref": "#/$defs/LinearIssueCreateFilters"
+        }
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "allOf": [
+        {
+          "$ref": "#/$defs/LinearIssueLabelAddedFilters"
+        }
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "allOf": [
+        {
+          "$ref": "#/$defs/LinearIssueStatusChangedFilters"
+        }
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "allOf": [
+        {
+          "$ref": "#/$defs/LinearIssueUpdatedFilters"
+        }
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "allOf": [
+        {
+          "$ref": "#/$defs/SentryIssueCreatedFilters"
+        }
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "allOf": [
+        {
+          "$ref": "#/$defs/SlackMessageReactionAddedFilters"
+        }
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "allOf": [
+        {
+          "$ref": "#/$defs/SlackMessageSentInChannelFilters"
+        }
+      ],
+      "additionalProperties": {}
+    },
+    {
+      "type": "object",
+      "properties": {
+        "spaces": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the page is in a space with one of these names or IDs"
+        },
+        "titleContains": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the page title contains one of these substrings"
+        }
+      },
+      "additionalProperties": {}
+    },
+    {
+      "type": "object",
+      "properties": {
+        "spaces": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the page is in a space with one of these names or IDs"
+        },
+        "titleContains": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the page title contains one of these substrings"
+        },
+        "previousSpaces": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the page was moved from a space with one of these names or IDs"
+        }
+      },
+      "additionalProperties": {}
+    },
+    {
+      "type": "object",
+      "properties": {
+        "spaces": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the page is in a space with one of these names or IDs"
+        },
+        "titleContains": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the page title contains one of these substrings"
+        },
+        "locations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "footer",
+              "inline"
+            ]
+          },
+          "description": "Only trigger for footer comments, inline comments, or both"
+        }
+      },
+      "additionalProperties": {}
+    },
+    {
+      "type": "object",
+      "properties": {
+        "spaces": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the page is in a space with one of these names or IDs"
+        },
+        "titleContains": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the page title contains one of these substrings"
+        },
+        "labels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the added label has one of these values"
+        },
+        "commentContains": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the comment contains one of these substrings"
+        }
+      },
+      "additionalProperties": {}
+    },
+    {
+      "type": "object",
+      "properties": {
+        "spaces": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the page is in a space with one of these names or IDs"
+        },
+        "titleContains": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the page title contains one of these substrings"
+        },
+        "labels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the removed label has one of these values"
+        },
+        "commentContains": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the comment contains one of these substrings"
+        }
+      },
+      "additionalProperties": {}
+    },
+    {
+      "allOf": [
+        {
+          "$ref": "#/$defs/EmptyTriggerFilters"
+        }
+      ],
+      "additionalProperties": {}
+    }
+  ],
+  "$defs": {
+    "AtlassianIssueAddedToBoardFilters": {
+      "type": "object",
+      "properties": {
+        "projects": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the issue is in one of the specified projects"
+        },
+        "boards": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the issue is on one of the specified boards"
+        },
+        "statuses": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the issue was moved to one of the specified statuses (board columns)"
+        },
+        "assignedTo": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the issue is assigned to one of the specified users"
+        },
+        "labels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the issue has at least one of the specified labels"
+        },
+        "includeNewIssues": {
+          "type": "boolean",
+          "description": "Also trigger for newly created issues (not just status changes)"
+        }
+      }
+    },
+    "AtlassianIssueAssignedToUserFilters": {
+      "type": "object",
+      "properties": {
+        "projects": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the issue is in one of the specified projects"
+        },
+        "assignedTo": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the issue is assigned to one of the specified users"
+        },
+        "labels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the issue has at least one of the specified labels"
+        },
+        "includeNewIssues": {
+          "type": "boolean",
+          "description": "Also trigger for newly created issues that are already assigned"
+        }
+      }
+    },
+    "AtlassianIssueCommentCreatedFilters": {
+      "type": "object",
+      "properties": {
+        "projects": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the issue is in one of the specified projects"
+        },
+        "commentedBy": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the comment was added by one of the specified users"
+        },
+        "messageContains": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the comment contains one of these substrings"
+        },
+        "labels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the issue has at least one of the specified labels"
+        }
+      }
+    },
+    "AtlassianIssueCreatedFilters": {
+      "type": "object",
+      "properties": {
+        "projects": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the issue is in one of the specified projects"
+        },
+        "assignedTo": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the issue is assigned to one of the specified users"
+        },
+        "issueTypes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger for the specified issue types, such as Story, Bug, or Sub-task."
+        },
+        "labels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the issue has at least one of the specified labels"
+        }
+      }
+    },
+    "AtlassianIssueLabelAddedFilters": {
+      "type": "object",
+      "properties": {
+        "projects": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the issue is in one of the specified projects"
+        },
+        "teams": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the issue belongs to one of these Jira teams. Enter exact team names or team IDs (from the team profile URL)."
+        },
+        "labels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if one of the specified labels was added"
+        }
+      }
+    },
+    "AtlassianIssueStatusChangedFilters": {
+      "type": "object",
+      "properties": {
+        "projects": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the issue is in one of the specified projects"
+        },
+        "statuses": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the issue was moved to one of the specified statuses"
+        },
+        "previousStatuses": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger when the issue changes from one of the specified previous statuses."
+        },
+        "issueTypes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger for the specified issue types, such as Story, Bug, or Sub-task."
+        },
+        "assignedTo": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the issue is assigned to one of the specified users"
+        },
+        "labels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the issue has at least one of the specified labels"
+        }
+      }
+    },
+    "AtlassianIssueUpdatedFilters": {
+      "type": "object",
+      "properties": {
+        "projects": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the issue is in one of the specified projects"
+        },
+        "issueTypes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger for the specified issue types, such as Story, Bug, or Sub-task."
+        },
+        "assignedTo": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the issue is assigned to one of the specified users"
+        },
+        "labels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the issue has at least one of the specified labels"
+        }
+      }
+    },
+    "BitbucketPullRequestOpenedFilters": {
+      "type": "object",
+      "properties": {
+        "repositories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the pull request is in one of the repositories"
+        },
+        "openedBy": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the pull request was opened by one of the specified users"
+        },
+        "temboPrs": {
+          "type": "boolean",
+          "description": "Enable agent for Tembo-created pull requests (disabled by default)"
+        }
+      }
+    },
+    "EmptyTriggerFilters": {
+      "type": "object"
+    },
+    "GithubCreateFilters": {
+      "type": "object",
+      "properties": {
+        "repositories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "refType": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "branch",
+              "tag"
+            ]
+          },
+          "description": "Only trigger for the specified Git reference type: branch or tag."
+        },
+        "branchNames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "tagNames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "GithubIssueClosedFilters": {
+      "type": "object",
+      "properties": {
+        "repositories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the issue is in one of the repositories"
+        },
+        "openedBy": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the issue was opened by one of the specified users"
+        },
+        "temboIssues": {
+          "type": "boolean",
+          "description": "Enable agent for Tembo-created issues (disabled by default)"
+        }
+      }
+    },
+    "GithubIssueCommentCreatedFilters": {
+      "type": "object",
+      "properties": {
+        "repositories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the comment is in one of the repositories"
+        },
+        "commentedBy": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the comment was created by one of the specified users"
+        },
+        "commentOn": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "issues",
+              "pull_requests"
+            ]
+          },
+          "description": "Trigger on comments on issues, pull requests, or both"
+        },
+        "messageContains": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the comment contains one of these substrings"
+        }
+      }
+    },
+    "GithubIssueOpenedFilters": {
+      "type": "object",
+      "properties": {
+        "repositories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the issue is in one of the repositories"
+        },
+        "openedBy": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the issue was opened by one of the specified users"
+        },
+        "temboIssues": {
+          "type": "boolean",
+          "description": "Enable agent for Tembo-created issues (disabled by default)"
+        }
+      }
+    },
+    "GithubPullRequestClosedFilters": {
+      "type": "object",
+      "properties": {
+        "repositories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the pull request is in one of the repositories"
+        },
+        "openedBy": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the pull request was opened by one of the specified users"
+        },
+        "temboPrs": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable agent for Tembo-created pull requests (enabled by default)"
+        }
+      }
+    },
+    "GithubPullRequestMergedFilters": {
+      "type": "object",
+      "properties": {
+        "repositories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the pull request is in one of the repositories"
+        },
+        "mergedBy": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the pull request was merged by one of the specified users"
+        },
+        "temboPrs": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable agent for Tembo-created pull requests (enabled by default)"
+        }
+      }
+    },
+    "GithubPullRequestOpenedFilters": {
+      "type": "object",
+      "properties": {
+        "repositories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the pull request is in one of the repositories"
+        },
+        "labels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the pull request has at least one of the specified labels"
+        },
+        "openedBy": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the pull request was opened by one of the specified users"
+        },
+        "branches": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the pull request targets one of these branches"
+        },
+        "draftPrs": {
+          "type": "boolean",
+          "description": "Trigger also for draft pull requests (disabled by default)"
+        },
+        "temboPrs": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable agent for Tembo-created pull requests (enabled by default)"
+        }
+      }
+    },
+    "GithubPullRequestReadyForReviewFilters": {
+      "type": "object",
+      "properties": {
+        "repositories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the pull request is in one of the repositories"
+        },
+        "openedBy": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the pull request was opened by one of the specified users"
+        },
+        "temboPrs": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable agent for Tembo-created pull requests (enabled by default)"
+        }
+      }
+    },
+    "GithubPullRequestSynchronizeFilters": {
+      "type": "object",
+      "properties": {
+        "repositories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the pull request is in one of the repositories"
+        },
+        "pushedBy": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the commits were pushed by one of the specified users"
+        },
+        "draftPrs": {
+          "type": "boolean",
+          "description": "Trigger even if the pull request is a draft"
+        },
+        "temboPrs": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable agent for Tembo-created pull requests (enabled by default)"
+        }
+      }
+    },
+    "GithubReleasePublishedFilters": {
+      "type": "object",
+      "properties": {
+        "repositories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the release is in one of the repositories"
+        }
+      }
+    },
+    "GithubTemboPullRequestOpenedFilters": {
+      "type": "object",
+      "properties": {
+        "repositories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the pull request is in one of the repositories"
+        },
+        "draftPrs": {
+          "type": "boolean",
+          "description": "Also trigger for draft pull requests"
+        }
+      }
+    },
+    "GithubWorkflowRunCompletedFilters": {
+      "type": "object",
+      "properties": {
+        "repositories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the workflow run is in one of the repositories"
+        },
+        "workflowNames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger for specific workflow names"
+        },
+        "branches": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger for specific branches"
+        },
+        "conclusions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "success",
+              "failure",
+              "neutral",
+              "cancelled",
+              "timed_out",
+              "action_required",
+              "stale",
+              "skipped"
+            ]
+          },
+          "description": "Only trigger for these completed workflow results, such as success"
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "Only trigger for these originating GitHub events; use schedule for cron runs, not push or pull_request"
+        }
+      }
+    },
+    "GithubWorkflowRunFailedFilters": {
+      "type": "object",
+      "properties": {
+        "repositories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the workflow run is in one of the repositories"
+        },
+        "workflowNames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger for specific workflow names"
+        },
+        "branches": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger for specific branches"
+        }
+      }
+    },
+    "GitlabBotMergeRequestCommentFilters": {
+      "type": "object",
+      "properties": {
+        "repositories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the comment is in one of the repositories"
+        },
+        "botUsernames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the comment is from one of these bot usernames"
+        }
+      }
+    },
+    "GitlabIssueClosedFilters": {
+      "type": "object",
+      "properties": {
+        "repositories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the issue is in one of the repositories"
+        },
+        "closedBy": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the issue was closed by one of the specified users"
+        },
+        "temboIssues": {
+          "type": "boolean",
+          "description": "Enable agent for Tembo-created issues (disabled by default)"
+        }
+      }
+    },
+    "GitlabIssueOpenedFilters": {
+      "type": "object",
+      "properties": {
+        "repositories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the issue is in one of the repositories"
+        },
+        "openedBy": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the issue was opened by one of the specified users"
+        },
+        "temboIssues": {
+          "type": "boolean",
+          "description": "Enable agent for Tembo-created issues (disabled by default)"
+        }
+      }
+    },
+    "GitlabMergeRequestClosedFilters": {
+      "type": "object",
+      "properties": {
+        "repositories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the merge request is in one of the repositories"
+        },
+        "closedBy": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the merge request was closed by one of the specified users"
+        },
+        "temboMrs": {
+          "type": "boolean",
+          "description": "Enable agent for Tembo-created merge requests (disabled by default)"
+        }
+      }
+    },
+    "GitlabMergeRequestMergedFilters": {
+      "type": "object",
+      "properties": {
+        "repositories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the merge request is in one of the repositories"
+        },
+        "mergedBy": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the merge request was merged by one of the specified users"
+        },
+        "temboMrs": {
+          "type": "boolean",
+          "description": "Enable agent for Tembo-created merge requests (disabled by default)"
+        }
+      }
+    },
+    "GitlabMergeRequestOpenedFilters": {
+      "type": "object",
+      "properties": {
+        "repositories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the merge request is in one of the repositories"
+        },
+        "draftMrs": {
+          "type": "boolean",
+          "description": "Include draft merge requests. Drafts are excluded when omitted or false."
+        },
+        "temboMrs": {
+          "type": "boolean",
+          "description": "Enable agent for Tembo-created merge requests (disabled by default)"
+        }
+      }
+    },
+    "GitlabMergeRequestUpdatedFilters": {
+      "type": "object",
+      "properties": {
+        "repositories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the merge request is in one of the repositories"
+        },
+        "pushedBy": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the commits were pushed by one of the specified users"
+        },
+        "draftMrs": {
+          "type": "boolean",
+          "description": "Include draft merge requests. Drafts are excluded when omitted or false."
+        },
+        "temboMrs": {
+          "type": "boolean",
+          "description": "Enable agent for Tembo-created merge requests (disabled by default)"
+        }
+      }
+    },
+    "GitlabPipelineFailedFilters": {
+      "type": "object",
+      "properties": {
+        "repositories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the pipeline is in one of the repositories"
+        },
+        "branches": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger for specific branches"
+        }
+      }
+    },
+    "GitlabRefCreatedFilters": {
+      "type": "object",
+      "properties": {
+        "repositories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "refType": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "branch",
+              "tag"
+            ]
+          },
+          "description": "Only trigger for the specified Git reference type: branch or tag."
+        },
+        "branchNames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "tagNames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "LinearIssueCreateFilters": {
+      "type": "object",
+      "properties": {
+        "teams": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the issue belongs to one of the specified teams"
+        },
+        "states": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the issue state type matches one of the specified types"
+        },
+        "openedBy": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the issue was opened by one of the specified users"
+        },
+        "assignedTo": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the issue is assigned to one of the specified users"
+        },
+        "labels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the issue has at least one of the specified labels"
+        },
+        "temboIssues": {
+          "type": "boolean",
+          "description": "Enable agent for Tembo-created issues (disabled by default)"
+        }
+      }
+    },
+    "LinearIssueLabelAddedFilters": {
+      "type": "object",
+      "properties": {
+        "teams": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the issue belongs to one of the specified teams"
+        },
+        "assignedTo": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the issue is assigned to one of the specified users"
+        },
+        "labels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if one of the specified labels was added to the issue"
+        }
+      }
+    },
+    "LinearIssueStatusChangedFilters": {
+      "type": "object",
+      "properties": {
+        "teams": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the issue belongs to one of the specified teams"
+        },
+        "statuses": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the issue was moved to one of the specified statuses"
+        },
+        "previousStatuses": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger when the issue changes from one of the specified previous statuses."
+        },
+        "assignedTo": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the issue is assigned to one of the specified users"
+        },
+        "labels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the issue has at least one of the specified labels"
+        }
+      }
+    },
+    "LinearIssueUpdatedFilters": {
+      "type": "object",
+      "properties": {
+        "teams": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the issue belongs to one of the specified teams"
+        },
+        "states": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the issue state type matches one of the specified types"
+        },
+        "assignedTo": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the issue is assigned to one of the specified users"
+        },
+        "labels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the issue has at least one of the specified labels"
+        },
+        "temboIssues": {
+          "type": "boolean",
+          "description": "Enable agent for Tembo-updated issues (disabled by default)"
+        }
+      }
+    },
+    "SentryIssueCreatedFilters": {
+      "type": "object",
+      "properties": {
+        "priorities": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "high",
+              "medium",
+              "low"
+            ]
+          },
+          "description": "Only trigger if the issue has one of the specified priorities"
+        },
+        "projectSlugs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the issue is in one of the specified projects"
+        }
+      }
+    },
+    "SlackMessageReactionAddedFilters": {
+      "type": "object",
+      "properties": {
+        "emojis": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if one of these emoji reactions is added"
+        },
+        "channels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the reaction is added in one of these channels"
+        },
+        "users": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the reaction is added by one of these user names"
+        }
+      }
+    },
+    "SlackMessageSentInChannelFilters": {
+      "type": "object",
+      "properties": {
+        "channels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the message is sent in one of the channels"
+        },
+        "users": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the message was sent by one of these user names"
+        },
+        "messageContains": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only trigger if the message contains one of these substrings"
+        },
+        "messageNotContains": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Skip messages containing any of these case-sensitive substrings (for example, On-call handover:)"
+        }
+      }
+    }
+  }
+}

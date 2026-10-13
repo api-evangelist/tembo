@@ -1,23 +1,139 @@
 aid: tembo
 name: Tembo
-description: 'Tembo is a company surfaced via the API Evangelist harvest backlog (source: market-gap:databases-postgres)
-  and added to the network as a stub for full-pipeline profiling.'
+image: https://www.tembo.io/images/og-image.png
+description: 'Tembo (tembo.io) is a cloud platform for running AI coding agents (Claude Code, Codex, Cursor, Amp, OpenCode and others) in isolated, shareable sandbox environments connected to repositories, issue trackers, observability tools and databases, with a self-hosted Enterprise option. It publishes a public REST API (OpenAPI 3.1, 152 operations at api.tembo.io), TypeScript and Python SDKs, and an official remote MCP server at mcp.tembo.io. Surfaced by the databases-postgres market-gap harvest: Tembo was previously known for its managed Postgres platform, but its current site, docs and API describe the agent platform only, and the former tembo-io GitHub organization lists 0 public repositories (checked 2026-10-13).'
 url: https://raw.githubusercontent.com/api-evangelist/tembo/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:market-gap:databases-postgres
-x-tier: stub
-x-tier-reason: harvest
+x-tier: profiled
+x-tier-reason: enriched
 specificationVersion: '0.20'
 created: '2026-10-13'
 modified: '2026-10-13'
 tags:
 - Company
-apis: []
+- AI Agents
+- Coding Agents
+- Developer Tools
+- Sandboxes
+- MCP
+- Automation
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: AgenticAccess
+  url: agentic-access/tembo-agentic-access.yml
+- type: Plans
+  url: plans/tembo-plans-pricing.yml
+- type: Spectral
+  url: rules/tembo-rules.yml
+- type: JSONLD
+  url: json-ld/tembo-context.jsonld
+- type: Vocabulary
+  url: vocabulary/tembo-vocabulary.yml
+- type: DataModel
+  url: data-model/tembo-data-model.yml
+- type: ChangeLog
+  url: changelog/tembo-changelog.yml
+- type: Idempotency
+  url: conventions/tembo-conventions.yml
+- type: Conventions
+  url: conventions/tembo-conventions.yml
+- type: Compliance
+  url: https://trust.tembo.io/
+- type: ErrorCatalog
+  url: errors/tembo-problem-types.yml
+- type: Conformance
+  url: conformance/tembo-conformance.yml
+- type: LLMsTxt
+  url: llms/tembo-llms.txt
+- type: MCPServer
+  url: mcp/tembo-mcp.yml
+- type: SecurityTxt
+  url: well-known/tembo-status-security.txt
+- type: WellKnown
+  url: well-known/tembo-well-known.yml
+- type: Hosts
+  url: hosts/tembo-hosts.yml
+- type: Vendors
+  url: vendors/tembo-vendors.yml
+- type: Packages
+  url: packages/tembo-packages.yml
+- type: Security
+  url: https://www.tembo.io/security
+- type: Sandbox
+  url: https://www.tembo.io/sandbox
+- type: SDKs
+  url: https://www.tembo.io/sdk
+- type: Authentication
+  url: authentication/tembo-authentication.yml
 - type: Website
-  url: https://tembo.io
+  url: https://www.tembo.io
+- type: TrustCenter
+  url: security/tembo-trust-center.yml
+- type: DomainSecurity
+  url: security/tembo-domain-security.yml
+- type: DeveloperPortal
+  url: https://www.tembo.io/developers
+- type: Documentation
+  url: https://docs.tembo.io
+- type: APIReference
+  url: https://docs.tembo.io/api
+- type: GettingStarted
+  url: https://docs.tembo.io/quickstart
+- type: Support
+  url: https://docs.tembo.io/support
+- type: Blog
+  url: https://www.tembo.io/blog
+- type: ChangeLog
+  url: https://www.tembo.io/changelog
+- type: GitHubOrganization
+  url: https://github.com/tembo
+- type: Pricing
+  url: https://www.tembo.io/pricing
+- type: Login
+  url: https://app.tembo.io
+- type: TermsOfService
+  url: https://www.tembo.io/terms
+- type: PrivacyPolicy
+  url: https://www.tembo.io/privacy
+- type: StatusPage
+  url: https://status.tembo.io
+apis:
+- aid: tembo:tembo-public-api
+  name: Tembo Public API
+  description: Programmatic access to Tembo sessions, agents, projects, organizations, users, integrations, MCP connections, skills and API keys. Bearer API key authentication.
+  humanURL: https://docs.tembo.io/api
+  baseURL: https://api.tembo.io
+  tags:
+  - AI Agents
+  - Sessions
+  - Automation
+  properties:
+  - type: OpenAPI
+    url: openapi/tembo-openapi.yml
+  - type: OpenAPI
+    name: OpenAPI (provider-hosted)
+    url: https://api.tembo.io/public-api/openapi/public
+  - type: Documentation
+    url: https://docs.tembo.io/api
+  - type: JSONSchema
+    url: json-schema/tembo-trigger-filters-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-session-event-data-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-options-input-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-options-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-tip-tap-document-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-state-schema.json
+x-enrichment:
+  date: '2026-10-13'
+  status: enriched
+  artifacts_added: 20
+  pass: local-v5

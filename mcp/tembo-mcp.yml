@@ -1,0 +1,24 @@
+name: Tembo MCP Server
+generated: '2026-10-13'
+method: searched
+source: https://docs.tembo.io/api/index.md
+status: official
+description: Official Tembo MCP server. Per the docs, its tools are generated from the same OpenAPI schema as the Tembo API reference and TypeScript SDK, and it can perform the same API operations available to the authenticated user or API key. Self-hosted deployments expose it at https://{deployment-origin}/mcp.
+deployment:
+  mode: both
+  endpoint: https://mcp.tembo.io/mcp
+  install: npx -y @tembo-io/mcp
+  package: https://www.npmjs.com/package/@tembo-io/mcp
+  auth: oauth
+  verified: probed
+probe:
+  url: https://mcp.tembo.io/mcp
+  method: POST tools/list
+  status: 401
+  www_authenticate: Bearer resource_metadata="https://mcp.tembo.io/.well-known/oauth-protected-resource/mcp", scope="user:org:read"
+  protected_resource_metadata_status: 200
+auth_notes: Docs state clients connect with either OAuth (add only the MCP URL; Tembo sign-in selects an organization) or an API key. Live tool schemas require authenticated introspection.
+tools_source: generated from https://api.tembo.io/public-api/openapi/public (152 operations); tool list not enumerated anonymously.
+docs_mcp:
+  url: https://docs.tembo.io/mcp
+  note: Mintlify documentation-search MCP for the docs site, distinct from the product MCP server.

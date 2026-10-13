@@ -1,0 +1,83 @@
+generated: '2026-10-13'
+method: derived
+generator: derive-problem-types.py
+source:
+- openapi/tembo-openapi.yml
+format: custom
+envelope:
+  media_type: application/json
+  schema: null
+coverage:
+  operations: 152
+  statuses_declared: 10
+problems:
+- status: 400
+  title: Bad Request
+  description: Invalid request or missing required organization or user information.
+  operations: 149
+  media_types:
+  - application/json
+  schema: null
+- status: 401
+  title: Unauthorized
+  description: Provider authentication failed
+  operations: 39
+  media_types:
+  - application/json
+  schema: null
+- status: 403
+  title: Forbidden
+  description: Forbidden
+  operations: 101
+  media_types:
+  - application/json
+  schema: null
+- status: 404
+  title: Not Found
+  description: Resource not found
+  operations: 145
+  media_types:
+  - application/json
+  schema: null
+- status: 409
+  title: Conflict
+  description: Resource conflict
+  operations: 118
+  media_types:
+  - application/json
+  schema: null
+- status: 413
+  title: Content Too Large
+  description: Request body exceeds 5 MB
+  operations: 1
+  media_types:
+  - application/json
+  schema: null
+- status: 500
+  title: Internal Server Error
+  description: Agent operation failed
+  operations: 145
+  media_types:
+  - application/json
+  schema: null
+- status: 502
+  title: Bad Gateway
+  description: Integration provider operation failed
+  operations: 49
+  media_types:
+  - application/json
+  schema: null
+- status: 503
+  title: Service Unavailable
+  description: Required organization storage is unavailable
+  operations: 24
+  media_types:
+  - application/json
+  schema: null
+- status: 504
+  title: Gateway Timeout
+  description: Integration provider operation timed out
+  operations: 19
+  media_types:
+  - application/json
+  schema: null
