@@ -1,0 +1,498 @@
+openapi: 3.2.0
+info:
+  title: Tembo API Keys API
+  version: 1.0.0
+  description: 'Operations tagged API Keys across 2 of this provider''s published API definitions: tembo-openapi-original.json, tembo-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.tembo.io/
+  description: Tembo API
+tags:
+- name: API Keys
+paths:
+  /v1/api-keys:
+    get:
+      operationId: listApiKeys
+      summary: List API keys
+      description: List active API keys for the current organization.
+      tags:
+      - API Keys
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: List API keys
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        createdAt:
+                          type: string
+                          format: date-time
+                        id:
+                          type: string
+                          format: uuid
+                        lastUsedAt:
+                          type:
+                          - string
+                          - 'null'
+                          format: date-time
+                        name:
+                          type:
+                          - string
+                          - 'null'
+                        updatedAt:
+                          type: string
+                          format: date-time
+                        userId:
+                          type: string
+                        tokenPreview:
+                          type: string
+                      required:
+                      - createdAt
+                      - id
+                      - lastUsedAt
+                      - name
+                      - updatedAt
+                      - userId
+                      - tokenPreview
+                      additionalProperties: false
+                  nextCursor:
+                    type:
+                    - string
+                    - 'null'
+                    format: uuid
+                required:
+                - items
+                - nextCursor
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: API key not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: API key operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: query
+        name: cursor
+        schema:
+          type: string
+          format: uuid
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 50
+    post:
+      operationId: createApiKey
+      summary: Create an API key
+      description: Create an API key for the current organization. The complete token is returned only by this operation.
+      tags:
+      - API Keys
+      security:
+      - apiKey: []
+      responses:
+        '201':
+          description: Create an API key
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  createdAt:
+                    type: string
+                    format: date-time
+                  id:
+                    type: string
+                    format: uuid
+                  lastUsedAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  name:
+                    type:
+                    - string
+                    - 'null'
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  userId:
+                    type: string
+                  tokenPreview:
+                    type: string
+                  token:
+                    type: string
+                required:
+                - createdAt
+                - id
+                - lastUsedAt
+                - name
+                - updatedAt
+                - userId
+                - tokenPreview
+                - token
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: API key not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: API key operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 100
+              additionalProperties: false
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/api-keys/{apiKeyId}:
+    get:
+      operationId: retrieveApiKey
+      summary: Retrieve an API key
+      description: Retrieve an active API key without exposing its complete token.
+      tags:
+      - API Keys
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Retrieve an API key
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  createdAt:
+                    type: string
+                    format: date-time
+                  id:
+                    type: string
+                    format: uuid
+                  lastUsedAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  name:
+                    type:
+                    - string
+                    - 'null'
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  userId:
+                    type: string
+                  tokenPreview:
+                    type: string
+                required:
+                - createdAt
+                - id
+                - lastUsedAt
+                - name
+                - updatedAt
+                - userId
+                - tokenPreview
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: API key not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: API key operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: apiKeyId
+        schema:
+          type: string
+          format: uuid
+        required: true
+    patch:
+      operationId: updateApiKey
+      summary: Update an API key
+      description: Rename an active API key.
+      tags:
+      - API Keys
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Update an API key
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  createdAt:
+                    type: string
+                    format: date-time
+                  id:
+                    type: string
+                    format: uuid
+                  lastUsedAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  name:
+                    type:
+                    - string
+                    - 'null'
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  userId:
+                    type: string
+                  tokenPreview:
+                    type: string
+                required:
+                - createdAt
+                - id
+                - lastUsedAt
+                - name
+                - updatedAt
+                - userId
+                - tokenPreview
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: API key not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: API key operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: apiKeyId
+        schema:
+          type: string
+          format: uuid
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 100
+              required:
+              - name
+              additionalProperties: false
+    delete:
+      operationId: deleteApiKey
+      summary: Delete an API key
+      description: Revoke an active API key so it can no longer authenticate requests.
+      tags:
+      - API Keys
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Delete an API key
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  deleted:
+                    type: boolean
+                    const: true
+                  id:
+                    type: string
+                    format: uuid
+                required:
+                - deleted
+                - id
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: API key not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: API key operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: apiKeyId
+        schema:
+          type: string
+          format: uuid
+        required: true
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+components:
+  securitySchemes:
+    apiKey:
+      type: http
+      scheme: bearer
+x-refined-from:
+- tembo-openapi-original.json
+- tembo-openapi.yml

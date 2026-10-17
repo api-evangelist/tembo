@@ -1,0 +1,2665 @@
+openapi: 3.2.0
+info:
+  title: Tembo Users API
+  version: 1.0.0
+  description: 'Operations tagged Users across 2 of this provider''s published API definitions: tembo-openapi-original.json, tembo-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.tembo.io/
+  description: Tembo API
+tags:
+- name: Users
+paths:
+  /v1/users/me:
+    get:
+      operationId: retrieveCurrentUser
+      summary: Retrieve the current user
+      description: Retrieve the authenticated user.
+      tags:
+      - Users
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Retrieve the current user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  createdAt:
+                    type: string
+                    format: date-time
+                  email:
+                    type:
+                    - string
+                    - 'null'
+                  emailVerified:
+                    type: boolean
+                  id:
+                    type: string
+                    minLength: 1
+                    maxLength: 255
+                  image:
+                    type:
+                    - string
+                    - 'null'
+                  name:
+                    type:
+                    - string
+                    - 'null'
+                  updatedAt:
+                    type: string
+                    format: date-time
+                required:
+                - createdAt
+                - email
+                - emailVerified
+                - id
+                - image
+                - name
+                - updatedAt
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: User or connected account not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: User operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/users/{userId}:
+    get:
+      operationId: retrieveUser
+      summary: Retrieve a user
+      description: Retrieve a user profile visible to the caller.
+      tags:
+      - Users
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Retrieve a user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  createdAt:
+                    type: string
+                    format: date-time
+                  email:
+                    type:
+                    - string
+                    - 'null'
+                  emailVerified:
+                    type: boolean
+                  id:
+                    type: string
+                    minLength: 1
+                    maxLength: 255
+                  image:
+                    type:
+                    - string
+                    - 'null'
+                  name:
+                    type:
+                    - string
+                    - 'null'
+                  updatedAt:
+                    type: string
+                    format: date-time
+                required:
+                - createdAt
+                - email
+                - emailVerified
+                - id
+                - image
+                - name
+                - updatedAt
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: User or connected account not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: User operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: userId
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+        required: true
+    delete:
+      operationId: deleteUser
+      summary: Delete a user
+      description: Queue permanent deletion of your user account.
+      tags:
+      - Users
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Delete a user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  deletionJobId:
+                    type: string
+                    minLength: 1
+                    maxLength: 255
+                  deletionQueued:
+                    type: boolean
+                    const: true
+                  id:
+                    type: string
+                    minLength: 1
+                    maxLength: 255
+                required:
+                - deletionJobId
+                - deletionQueued
+                - id
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: User or connected account not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: User operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: userId
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                deletionQuestionnaire:
+                  type: object
+                  properties:
+                    reasons:
+                      type: array
+                      items:
+                        type: string
+                        minLength: 1
+                        maxLength: 255
+                      maxItems: 20
+                    otherReason:
+                      type: string
+                      minLength: 1
+                      maxLength: 2000
+                    submittedAt:
+                      type: string
+                      format: date-time
+                  required:
+                  - reasons
+                  - submittedAt
+                  additionalProperties: false
+              additionalProperties: false
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/users/{userId}/connected-accounts:
+    get:
+      operationId: listUserConnectedAccounts
+      summary: List user connected accounts
+      description: List the user identity-provider accounts without returning credentials.
+      tags:
+      - Users
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: List user connected accounts
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        accountId:
+                          type: string
+                        createdAt:
+                          type:
+                          - string
+                          - 'null'
+                          format: date-time
+                        id:
+                          type: string
+                          minLength: 1
+                          maxLength: 255
+                        providerId:
+                          type: string
+                        updatedAt:
+                          type:
+                          - string
+                          - 'null'
+                          format: date-time
+                        email:
+                          type:
+                          - string
+                          - 'null'
+                          format: email
+                        scopes:
+                          type: array
+                          items:
+                            type: string
+                        username:
+                          type:
+                          - string
+                          - 'null'
+                      required:
+                      - accountId
+                      - createdAt
+                      - id
+                      - providerId
+                      - updatedAt
+                      - email
+                      - scopes
+                      - username
+                      additionalProperties: false
+                  nextCursor:
+                    type:
+                    - string
+                    - 'null'
+                    minLength: 1
+                    maxLength: 255
+                required:
+                - items
+                - nextCursor
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: User or connected account not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: User operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: userId
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+        required: true
+      - in: query
+        name: cursor
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 50
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/users/{userId}/connected-accounts/{connectedAccountId}:
+    get:
+      operationId: retrieveUserConnectedAccount
+      summary: Retrieve a user connected account
+      description: Retrieve one identity-provider account without returning credentials.
+      tags:
+      - Users
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Retrieve a user connected account
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accountId:
+                    type: string
+                  createdAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  id:
+                    type: string
+                    minLength: 1
+                    maxLength: 255
+                  providerId:
+                    type: string
+                  updatedAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  email:
+                    type:
+                    - string
+                    - 'null'
+                    format: email
+                  scopes:
+                    type: array
+                    items:
+                      type: string
+                  username:
+                    type:
+                    - string
+                    - 'null'
+                required:
+                - accountId
+                - createdAt
+                - id
+                - providerId
+                - updatedAt
+                - email
+                - scopes
+                - username
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: User or connected account not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: User operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: userId
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+        required: true
+      - in: path
+        name: connectedAccountId
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+        required: true
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/users/{userId}/settings:
+    get:
+      operationId: retrieveUserSettings
+      summary: Retrieve user settings
+      description: Retrieve user preferences without exposing stored credentials.
+      tags:
+      - Users
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Retrieve user settings
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  autoRestartVm:
+                    type: boolean
+                  defaultProjectId:
+                    type:
+                    - string
+                    - 'null'
+                  gpgKey:
+                    type: string
+                  includeTemboCommitAttribution:
+                    type: boolean
+                  desktopNotificationsEnabled:
+                    type: boolean
+                  desktopNotificationPreferences:
+                    type: object
+                    properties:
+                      awaitingApproval:
+                        type: boolean
+                      pullRequestOpened:
+                        type: boolean
+                      pullRequestReviewRequested:
+                        type: boolean
+                    additionalProperties: false
+                  appearancePreferences:
+                    type: object
+                    properties:
+                      appTheme:
+                        type: string
+                        enum:
+                        - light
+                        - dark
+                        - system
+                      accentTheme:
+                        type: object
+                        properties:
+                          themeId:
+                            type: string
+                          customSurface:
+                            type:
+                            - string
+                            - 'null'
+                          customAccent:
+                            type:
+                            - string
+                            - 'null'
+                          customIntensity:
+                            type: number
+                          systemLight:
+                            type: string
+                          systemDark:
+                            type: string
+                        additionalProperties: false
+                    additionalProperties: false
+                  appSidebarPreferences:
+                    type: object
+                    properties:
+                      open:
+                        type: boolean
+                      sessionOwnerScope:
+                        type: string
+                        enum:
+                        - mine
+                        - team
+                      sessionSortBy:
+                        type: string
+                        enum:
+                        - createdAt
+                        - updatedAt
+                      sessionOrganization:
+                        type: string
+                        enum:
+                        - list
+                        - project
+                      showArchivedSessions:
+                        type: boolean
+                      width:
+                        type: number
+                      rightSidebar:
+                        type: object
+                        additionalProperties:
+                          type: object
+                          properties:
+                            open:
+                              type: boolean
+                            width:
+                              type: string
+                          additionalProperties: false
+                    additionalProperties: false
+                  diffPreferences:
+                    type: object
+                    properties:
+                      style:
+                        type: string
+                        enum:
+                        - unified
+                        - split
+                      indicators:
+                        type: string
+                        enum:
+                        - classic
+                        - bars
+                        - none
+                      overflow:
+                        type: string
+                        enum:
+                        - scroll
+                        - wrap
+                      showLineNumbers:
+                        type: boolean
+                      expandUnchanged:
+                        type: boolean
+                      showFileTree:
+                        type: boolean
+                      fileTreePosition:
+                        type: string
+                        enum:
+                        - left
+                        - right
+                      fileTreeView:
+                        type: string
+                        enum:
+                        - list
+                        - tree
+                      lightTheme:
+                        type: string
+                      darkTheme:
+                        type: string
+                    additionalProperties: false
+                  dashboardPreferences:
+                    type: object
+                    properties:
+                      taskFilters:
+                        type: object
+                        properties:
+                          statusFilter:
+                            type: array
+                            items:
+                              type: string
+                          sortBy:
+                            type: string
+                            enum:
+                            - createdAt
+                            - updatedAt
+                          searchQuery:
+                            type: string
+                          integrationType:
+                            type: array
+                            items:
+                              type: string
+                          externalId:
+                            type: string
+                          projectFilter:
+                            type: array
+                            items:
+                              type: string
+                          authorFilter:
+                            type: array
+                            items:
+                              type: string
+                          prStatusFilter:
+                            type: array
+                            items:
+                              type: string
+                          automationFilter:
+                            type: array
+                            items:
+                              type: string
+                        additionalProperties: false
+                    additionalProperties: false
+                  composerPreferences:
+                    type: object
+                    properties:
+                      lastSelectedRepositories:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            name:
+                              type: string
+                            type:
+                              type: string
+                          required:
+                          - id
+                          additionalProperties: false
+                    additionalProperties: false
+                  reviewPreferences:
+                    type: object
+                    properties:
+                      fileSortMode:
+                        type: string
+                        enum:
+                        - tree
+                        - path-asc
+                        - path-desc
+                        - largest
+                        - smallest
+                      excludedFilePatterns:
+                        type: array
+                        items:
+                          type: string
+                      sections:
+                        type: object
+                        additionalProperties:
+                          type: boolean
+                      hideBotComments:
+                        type: boolean
+                      layout:
+                        type: object
+                        properties:
+                          focusChatHeight:
+                            type: number
+                          activeTab:
+                            type: string
+                          activeViewMode:
+                            type: string
+                          focusChatOpen:
+                            type: boolean
+                          focusMode:
+                            type: boolean
+                          leftDesktopSidebarOpen:
+                            type: boolean
+                          leftDesktopSidebarWidth:
+                            type: number
+                          rightDesktopSidebarOpen:
+                            type: boolean
+                          rightDesktopSidebarWidth:
+                            type: number
+                        additionalProperties: false
+                    additionalProperties: false
+                  diffLightTheme:
+                    type: string
+                  diffDarkTheme:
+                    type: string
+                  defaultAgent:
+                    type: string
+                    pattern: ^[^:]+:[^:]+(?::[^:]+)?$
+                  followUpBehavior:
+                    type: string
+                    enum:
+                    - queue
+                    - steer
+                  customSystemPrompt:
+                    type: string
+                    maxLength: 4096
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: User or connected account not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: User operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: userId
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+        required: true
+    patch:
+      operationId: updateUserSettings
+      summary: Update user settings
+      description: Merge user preference updates while preserving unrelated settings.
+      tags:
+      - Users
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Update user settings
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  autoRestartVm:
+                    type: boolean
+                  defaultProjectId:
+                    type:
+                    - string
+                    - 'null'
+                  gpgKey:
+                    type: string
+                  includeTemboCommitAttribution:
+                    type: boolean
+                  desktopNotificationsEnabled:
+                    type: boolean
+                  desktopNotificationPreferences:
+                    type: object
+                    properties:
+                      awaitingApproval:
+                        type: boolean
+                      pullRequestOpened:
+                        type: boolean
+                      pullRequestReviewRequested:
+                        type: boolean
+                    additionalProperties: false
+                  appearancePreferences:
+                    type: object
+                    properties:
+                      appTheme:
+                        type: string
+                        enum:
+                        - light
+                        - dark
+                        - system
+                      accentTheme:
+                        type: object
+                        properties:
+                          themeId:
+                            type: string
+                          customSurface:
+                            type:
+                            - string
+                            - 'null'
+                          customAccent:
+                            type:
+                            - string
+                            - 'null'
+                          customIntensity:
+                            type: number
+                          systemLight:
+                            type: string
+                          systemDark:
+                            type: string
+                        additionalProperties: false
+                    additionalProperties: false
+                  appSidebarPreferences:
+                    type: object
+                    properties:
+                      open:
+                        type: boolean
+                      sessionOwnerScope:
+                        type: string
+                        enum:
+                        - mine
+                        - team
+                      sessionSortBy:
+                        type: string
+                        enum:
+                        - createdAt
+                        - updatedAt
+                      sessionOrganization:
+                        type: string
+                        enum:
+                        - list
+                        - project
+                      showArchivedSessions:
+                        type: boolean
+                      width:
+                        type: number
+                      rightSidebar:
+                        type: object
+                        additionalProperties:
+                          type: object
+                          properties:
+                            open:
+                              type: boolean
+                            width:
+                              type: string
+                          additionalProperties: false
+                    additionalProperties: false
+                  diffPreferences:
+                    type: object
+                    properties:
+                      style:
+                        type: string
+                        enum:
+                        - unified
+                        - split
+                      indicators:
+                        type: string
+                        enum:
+                        - classic
+                        - bars
+                        - none
+                      overflow:
+                        type: string
+                        enum:
+                        - scroll
+                        - wrap
+                      showLineNumbers:
+                        type: boolean
+                      expandUnchanged:
+                        type: boolean
+                      showFileTree:
+                        type: boolean
+                      fileTreePosition:
+                        type: string
+                        enum:
+                        - left
+                        - right
+                      fileTreeView:
+                        type: string
+                        enum:
+                        - list
+                        - tree
+                      lightTheme:
+                        type: string
+                      darkTheme:
+                        type: string
+                    additionalProperties: false
+                  dashboardPreferences:
+                    type: object
+                    properties:
+                      taskFilters:
+                        type: object
+                        properties:
+                          statusFilter:
+                            type: array
+                            items:
+                              type: string
+                          sortBy:
+                            type: string
+                            enum:
+                            - createdAt
+                            - updatedAt
+                          searchQuery:
+                            type: string
+                          integrationType:
+                            type: array
+                            items:
+                              type: string
+                          externalId:
+                            type: string
+                          projectFilter:
+                            type: array
+                            items:
+                              type: string
+                          authorFilter:
+                            type: array
+                            items:
+                              type: string
+                          prStatusFilter:
+                            type: array
+                            items:
+                              type: string
+                          automationFilter:
+                            type: array
+                            items:
+                              type: string
+                        additionalProperties: false
+                    additionalProperties: false
+                  composerPreferences:
+                    type: object
+                    properties:
+                      lastSelectedRepositories:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            name:
+                              type: string
+                            type:
+                              type: string
+                          required:
+                          - id
+                          additionalProperties: false
+                    additionalProperties: false
+                  reviewPreferences:
+                    type: object
+                    properties:
+                      fileSortMode:
+                        type: string
+                        enum:
+                        - tree
+                        - path-asc
+                        - path-desc
+                        - largest
+                        - smallest
+                      excludedFilePatterns:
+                        type: array
+                        items:
+                          type: string
+                      sections:
+                        type: object
+                        additionalProperties:
+                          type: boolean
+                      hideBotComments:
+                        type: boolean
+                      layout:
+                        type: object
+                        properties:
+                          focusChatHeight:
+                            type: number
+                          activeTab:
+                            type: string
+                          activeViewMode:
+                            type: string
+                          focusChatOpen:
+                            type: boolean
+                          focusMode:
+                            type: boolean
+                          leftDesktopSidebarOpen:
+                            type: boolean
+                          leftDesktopSidebarWidth:
+                            type: number
+                          rightDesktopSidebarOpen:
+                            type: boolean
+                          rightDesktopSidebarWidth:
+                            type: number
+                        additionalProperties: false
+                    additionalProperties: false
+                  diffLightTheme:
+                    type: string
+                  diffDarkTheme:
+                    type: string
+                  defaultAgent:
+                    type: string
+                    pattern: ^[^:]+:[^:]+(?::[^:]+)?$
+                  followUpBehavior:
+                    type: string
+                    enum:
+                    - queue
+                    - steer
+                  customSystemPrompt:
+                    type: string
+                    maxLength: 4096
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: User or connected account not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: User operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: userId
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                autoRestartVm:
+                  type: boolean
+                defaultProjectId:
+                  type:
+                  - string
+                  - 'null'
+                  minLength: 1
+                  maxLength: 255
+                gpgKey:
+                  type: string
+                  maxLength: 32768
+                includeTemboCommitAttribution:
+                  type: boolean
+                desktopNotificationsEnabled:
+                  type: boolean
+                desktopNotificationPreferences:
+                  type: object
+                  properties:
+                    awaitingApproval:
+                      type: boolean
+                    pullRequestOpened:
+                      type: boolean
+                    pullRequestReviewRequested:
+                      type: boolean
+                  additionalProperties: false
+                appearancePreferences:
+                  type: object
+                  properties:
+                    appTheme:
+                      type: string
+                      enum:
+                      - light
+                      - dark
+                      - system
+                    accentTheme:
+                      type: object
+                      properties:
+                        themeId:
+                          type: string
+                          maxLength: 255
+                        customSurface:
+                          type:
+                          - string
+                          - 'null'
+                          maxLength: 4096
+                        customAccent:
+                          type:
+                          - string
+                          - 'null'
+                          maxLength: 4096
+                        customIntensity:
+                          type: number
+                          minimum: 0.25
+                          maximum: 2
+                        systemLight:
+                          type: string
+                          maxLength: 255
+                        systemDark:
+                          type: string
+                          maxLength: 255
+                      additionalProperties: false
+                  additionalProperties: false
+                appSidebarPreferences:
+                  type: object
+                  properties:
+                    open:
+                      type: boolean
+                    sessionOwnerScope:
+                      type: string
+                      enum:
+                      - mine
+                      - team
+                    sessionSortBy:
+                      type: string
+                      enum:
+                      - createdAt
+                      - updatedAt
+                    sessionOrganization:
+                      type: string
+                      enum:
+                      - list
+                      - project
+                    showArchivedSessions:
+                      type: boolean
+                    width:
+                      type: number
+                      minimum: 0
+                      maximum: 10000
+                    rightSidebar:
+                      type: object
+                      propertyNames:
+                        type: string
+                        minLength: 1
+                        maxLength: 255
+                      additionalProperties:
+                        type: object
+                        properties:
+                          open:
+                            type: boolean
+                          width:
+                            type: string
+                            maxLength: 255
+                        additionalProperties: false
+                  additionalProperties: false
+                diffPreferences:
+                  type: object
+                  properties:
+                    style:
+                      type: string
+                      enum:
+                      - unified
+                      - split
+                    indicators:
+                      type: string
+                      enum:
+                      - classic
+                      - bars
+                      - none
+                    overflow:
+                      type: string
+                      enum:
+                      - scroll
+                      - wrap
+                    showLineNumbers:
+                      type: boolean
+                    expandUnchanged:
+                      type: boolean
+                    showFileTree:
+                      type: boolean
+                    fileTreePosition:
+                      type: string
+                      enum:
+                      - left
+                      - right
+                    fileTreeView:
+                      type: string
+                      enum:
+                      - list
+                      - tree
+                    lightTheme:
+                      type: string
+                      maxLength: 255
+                    darkTheme:
+                      type: string
+                      maxLength: 255
+                  additionalProperties: false
+                dashboardPreferences:
+                  type: object
+                  properties:
+                    taskFilters:
+                      type: object
+                      properties:
+                        statusFilter:
+                          type: array
+                          items:
+                            type: string
+                            maxLength: 4096
+                          maxItems: 100
+                        sortBy:
+                          type: string
+                          enum:
+                          - createdAt
+                          - updatedAt
+                        searchQuery:
+                          type: string
+                          maxLength: 4096
+                        integrationType:
+                          type: array
+                          items:
+                            type: string
+                            maxLength: 4096
+                          maxItems: 100
+                        externalId:
+                          type: string
+                          maxLength: 4096
+                        projectFilter:
+                          type: array
+                          items:
+                            type: string
+                            maxLength: 4096
+                          maxItems: 100
+                        authorFilter:
+                          type: array
+                          items:
+                            type: string
+                            maxLength: 4096
+                          maxItems: 100
+                        prStatusFilter:
+                          type: array
+                          items:
+                            type: string
+                            maxLength: 4096
+                          maxItems: 100
+                        automationFilter:
+                          type: array
+                          items:
+                            type: string
+                            maxLength: 4096
+                          maxItems: 100
+                      additionalProperties: false
+                  additionalProperties: false
+                composerPreferences:
+                  type: object
+                  properties:
+                    lastSelectedRepositories:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            maxLength: 4096
+                          name:
+                            type: string
+                            maxLength: 4096
+                          type:
+                            type: string
+                            maxLength: 255
+                        required:
+                        - id
+                        additionalProperties: false
+                      maxItems: 100
+                  additionalProperties: false
+                reviewPreferences:
+                  type: object
+                  properties:
+                    fileSortMode:
+                      type: string
+                      enum:
+                      - tree
+                      - path-asc
+                      - path-desc
+                      - largest
+                      - smallest
+                    excludedFilePatterns:
+                      type: array
+                      items:
+                        type: string
+                        minLength: 1
+                        maxLength: 255
+                      maxItems: 100
+                    sections:
+                      type: object
+                      propertyNames:
+                        type: string
+                        minLength: 1
+                        maxLength: 255
+                      additionalProperties:
+                        type: boolean
+                    hideBotComments:
+                      type: boolean
+                    layout:
+                      type: object
+                      properties:
+                        focusChatHeight:
+                          type: number
+                          exclusiveMinimum: 0
+                          maximum: 10000
+                        activeTab:
+                          type: string
+                          maxLength: 255
+                        activeViewMode:
+                          type: string
+                          maxLength: 255
+                        focusChatOpen:
+                          type: boolean
+                        focusMode:
+                          type: boolean
+                        leftDesktopSidebarOpen:
+                          type: boolean
+                        leftDesktopSidebarWidth:
+                          type: number
+                          minimum: 0
+                          maximum: 10000
+                        rightDesktopSidebarOpen:
+                          type: boolean
+                        rightDesktopSidebarWidth:
+                          type: number
+                          minimum: 0
+                          maximum: 10000
+                      additionalProperties: false
+                  additionalProperties: false
+                diffLightTheme:
+                  type: string
+                  maxLength: 255
+                diffDarkTheme:
+                  type: string
+                  maxLength: 255
+                defaultAgent:
+                  type:
+                  - string
+                  - 'null'
+                  pattern: ^[^:]+:[^:]+(?::[^:]+)?$
+                  maxLength: 255
+                followUpBehavior:
+                  type: string
+                  enum:
+                  - queue
+                  - steer
+                customSystemPrompt:
+                  type: string
+                  maxLength: 4096
+              additionalProperties: false
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/users/{userId}/subscriptions:
+    get:
+      operationId: retrieveUserSubscriptions
+      summary: Retrieve user subscriptions
+      description: Retrieve connection statuses and available ChatGPT and Claude usage. Provider usage errors are reported without failing the response.
+      tags:
+      - Users
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Retrieve user subscriptions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  chatgpt:
+                    type: object
+                    properties:
+                      connected:
+                        type: boolean
+                      usage:
+                        type:
+                        - object
+                        - 'null'
+                        properties:
+                          planType:
+                            type: string
+                            enum:
+                            - free
+                            - go
+                            - plus
+                            - pro
+                            - prolite
+                            - team
+                            - self_serve_business_prolite
+                            - self_serve_business_usage_based
+                            - business
+                            - ent26
+                            - enterprise_cbp_automation
+                            - enterprise_cbp_usage_based
+                            - enterprise
+                            - edu
+                            - edu_plus
+                            - edu_pro
+                            - unknown
+                          rateLimits:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                limitId:
+                                  type:
+                                  - string
+                                  - 'null'
+                                limitName:
+                                  type:
+                                  - string
+                                  - 'null'
+                                planType:
+                                  type:
+                                  - string
+                                  - 'null'
+                                  enum:
+                                  - free
+                                  - go
+                                  - plus
+                                  - pro
+                                  - prolite
+                                  - team
+                                  - self_serve_business_prolite
+                                  - self_serve_business_usage_based
+                                  - business
+                                  - ent26
+                                  - enterprise_cbp_automation
+                                  - enterprise_cbp_usage_based
+                                  - enterprise
+                                  - edu
+                                  - edu_plus
+                                  - edu_pro
+                                  - unknown
+                                  - null
+                                primary:
+                                  type:
+                                  - object
+                                  - 'null'
+                                  properties:
+                                    usedPercent:
+                                      type: number
+                                    windowDurationMins:
+                                      type:
+                                      - integer
+                                      - 'null'
+                                      exclusiveMinimum: 0
+                                    resetsAt:
+                                      type:
+                                      - integer
+                                      - 'null'
+                                      minimum: 0
+                                  required:
+                                  - usedPercent
+                                  - windowDurationMins
+                                  - resetsAt
+                                  additionalProperties: false
+                                secondary:
+                                  type:
+                                  - object
+                                  - 'null'
+                                  properties:
+                                    usedPercent:
+                                      type: number
+                                    windowDurationMins:
+                                      type:
+                                      - integer
+                                      - 'null'
+                                      exclusiveMinimum: 0
+                                    resetsAt:
+                                      type:
+                                      - integer
+                                      - 'null'
+                                      minimum: 0
+                                  required:
+                                  - usedPercent
+                                  - windowDurationMins
+                                  - resetsAt
+                                  additionalProperties: false
+                                credits:
+                                  type:
+                                  - object
+                                  - 'null'
+                                  properties:
+                                    hasCredits:
+                                      type: boolean
+                                    unlimited:
+                                      type: boolean
+                                    balance:
+                                      type:
+                                      - string
+                                      - 'null'
+                                  required:
+                                  - hasCredits
+                                  - unlimited
+                                  - balance
+                                  additionalProperties: false
+                                individualLimit:
+                                  type:
+                                  - object
+                                  - 'null'
+                                  properties:
+                                    limit:
+                                      type: string
+                                    used:
+                                      type: string
+                                    remainingPercent:
+                                      type: number
+                                    resetsAt:
+                                      type: integer
+                                      minimum: 0
+                                  required:
+                                  - limit
+                                  - used
+                                  - remainingPercent
+                                  - resetsAt
+                                  additionalProperties: false
+                                spendControlReached:
+                                  type:
+                                  - boolean
+                                  - 'null'
+                                rateLimitReachedType:
+                                  type:
+                                  - string
+                                  - 'null'
+                                  enum:
+                                  - rate_limit_reached
+                                  - workspace_owner_credits_depleted
+                                  - workspace_member_credits_depleted
+                                  - workspace_owner_usage_limit_reached
+                                  - workspace_member_usage_limit_reached
+                                  - unknown
+                                  - null
+                              required:
+                              - limitId
+                              - limitName
+                              - planType
+                              - primary
+                              - secondary
+                              - credits
+                              - individualLimit
+                              - spendControlReached
+                              - rateLimitReachedType
+                              additionalProperties: false
+                          rateLimitResetCredits:
+                            type:
+                            - object
+                            - 'null'
+                            properties:
+                              availableCount:
+                                type: integer
+                                minimum: 0
+                              credits:
+                                type:
+                                - array
+                                - 'null'
+                                items:
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: string
+                                    resetType:
+                                      type: string
+                                      enum:
+                                      - codexRateLimits
+                                      - unknown
+                                    status:
+                                      type: string
+                                      enum:
+                                      - available
+                                      - redeeming
+                                      - redeemed
+                                      - unknown
+                                    grantedAt:
+                                      type: integer
+                                      minimum: 0
+                                    expiresAt:
+                                      type:
+                                      - integer
+                                      - 'null'
+                                      minimum: 0
+                                    title:
+                                      type:
+                                      - string
+                                      - 'null'
+                                    description:
+                                      type:
+                                      - string
+                                      - 'null'
+                                  required:
+                                  - id
+                                  - resetType
+                                  - status
+                                  - grantedAt
+                                  - expiresAt
+                                  - title
+                                  - description
+                                  additionalProperties: false
+                            required:
+                            - availableCount
+                            - credits
+                            additionalProperties: false
+                          tokenUsage:
+                            type: object
+                            properties:
+                              summary:
+                                type: object
+                                properties:
+                                  lifetimeTokens:
+                                    type:
+                                    - integer
+                                    - 'null'
+                                    minimum: 0
+                                  peakDailyTokens:
+                                    type:
+                                    - integer
+                                    - 'null'
+                                    minimum: 0
+                                  longestRunningTurnSec:
+                                    type:
+                                    - integer
+                                    - 'null'
+                                    minimum: 0
+                                  currentStreakDays:
+                                    type:
+                                    - integer
+                                    - 'null'
+                                    minimum: 0
+                                  longestStreakDays:
+                                    type:
+                                    - integer
+                                    - 'null'
+                                    minimum: 0
+                                required:
+                                - lifetimeTokens
+                                - peakDailyTokens
+                                - longestRunningTurnSec
+                                - currentStreakDays
+                                - longestStreakDays
+                                additionalProperties: false
+                              dailyUsageBuckets:
+                                type:
+                                - array
+                                - 'null'
+                                items:
+                                  type: object
+                                  properties:
+                                    startDate:
+                                      type: string
+                                      format: date
+                                    tokens:
+                                      type: integer
+                                      minimum: 0
+                                  required:
+                                  - startDate
+                                  - tokens
+                                  additionalProperties: false
+                            required:
+                            - summary
+                            - dailyUsageBuckets
+                            additionalProperties: false
+                          fetchedAt:
+                            type: string
+                            format: date-time
+                        required:
+                        - planType
+                        - rateLimits
+                        - rateLimitResetCredits
+                        - tokenUsage
+                        - fetchedAt
+                        additionalProperties: false
+                      usageError:
+                        type:
+                        - object
+                        - 'null'
+                        properties:
+                          code:
+                            type: string
+                            enum:
+                            - reconnectRequired
+                            - rateLimited
+                            - unavailable
+                          message:
+                            type: string
+                          retryAfter:
+                            type:
+                            - string
+                            - 'null'
+                        required:
+                        - code
+                        - message
+                        - retryAfter
+                        additionalProperties: false
+                    required:
+                    - connected
+                    - usage
+                    - usageError
+                    additionalProperties: false
+                  claude:
+                    type: object
+                    properties:
+                      connected:
+                        type: boolean
+                      reconnectRequired:
+                        type: boolean
+                      usage:
+                        type:
+                        - object
+                        - 'null'
+                        properties:
+                          rateLimits:
+                            type: array
+                            items:
+                              oneOf:
+                              - type: object
+                                properties:
+                                  key:
+                                    type: string
+                                    const: five_hour
+                                  label:
+                                    type: string
+                                    const: 5-hour limit
+                                  detail:
+                                    type: 'null'
+                                  remainingPercent:
+                                    type: integer
+                                    minimum: 0
+                                    maximum: 100
+                                  resetsAt:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    minimum: 0
+                                required:
+                                - key
+                                - label
+                                - detail
+                                - remainingPercent
+                                - resetsAt
+                                additionalProperties: false
+                              - type: object
+                                properties:
+                                  key:
+                                    type: string
+                                    const: seven_day
+                                  label:
+                                    type: string
+                                    const: Weekly limit
+                                  detail:
+                                    type: 'null'
+                                  remainingPercent:
+                                    type: integer
+                                    minimum: 0
+                                    maximum: 100
+                                  resetsAt:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    minimum: 0
+                                required:
+                                - key
+                                - label
+                                - detail
+                                - remainingPercent
+                                - resetsAt
+                                additionalProperties: false
+                              - type: object
+                                properties:
+                                  key:
+                                    type: string
+                                    const: seven_day_oauth_apps
+                                  label:
+                                    type: string
+                                    const: Weekly limit · OAuth apps
+                                  detail:
+                                    type: 'null'
+                                  remainingPercent:
+                                    type: integer
+                                    minimum: 0
+                                    maximum: 100
+                                  resetsAt:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    minimum: 0
+                                required:
+                                - key
+                                - label
+                                - detail
+                                - remainingPercent
+                                - resetsAt
+                                additionalProperties: false
+                              - type: object
+                                properties:
+                                  key:
+                                    type: string
+                                    const: seven_day_opus
+                                  label:
+                                    type: string
+                                    const: Weekly limit · Opus
+                                  detail:
+                                    type: 'null'
+                                  remainingPercent:
+                                    type: integer
+                                    minimum: 0
+                                    maximum: 100
+                                  resetsAt:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    minimum: 0
+                                required:
+                                - key
+                                - label
+                                - detail
+                                - remainingPercent
+                                - resetsAt
+                                additionalProperties: false
+                              - type: object
+                                properties:
+                                  key:
+                                    type: string
+                                    const: seven_day_sonnet
+                                  label:
+                                    type: string
+                                    const: Weekly limit · Sonnet
+                                  detail:
+                                    type: 'null'
+                                  remainingPercent:
+                                    type: integer
+                                    minimum: 0
+                                    maximum: 100
+                                  resetsAt:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    minimum: 0
+                                required:
+                                - key
+                                - label
+                                - detail
+                                - remainingPercent
+                                - resetsAt
+                                additionalProperties: false
+                              - type: object
+                                properties:
+                                  key:
+                                    type: string
+                                    const: seven_day_cowork
+                                  label:
+                                    type: string
+                                    const: Weekly limit · Cowork
+                                  detail:
+                                    type: 'null'
+                                  remainingPercent:
+                                    type: integer
+                                    minimum: 0
+                                    maximum: 100
+                                  resetsAt:
+                                    type:
+                                    - number
+                                    - 'null'
+                                    minimum: 0
+                                required:
+                                - key
+                                - label
+                                - detail
+                                - remainingPercent
+                                - resetsAt
+                                additionalProperties: false
+                        required:
+                        - rateLimits
+                        additionalProperties: false
+                      usageError:
+                        type:
+                        - object
+                        - 'null'
+                        properties:
+                          code:
+                            type: string
+                            enum:
+                            - reconnectRequired
+                            - rateLimited
+                            - unavailable
+                          message:
+                            type: string
+                          retryAfter:
+                            type:
+                            - string
+                            - 'null'
+                        required:
+                        - code
+                        - message
+                        - retryAfter
+                        additionalProperties: false
+                    required:
+                    - connected
+                    - reconnectRequired
+                    - usage
+                    - usageError
+                    additionalProperties: false
+                  supergrok:
+                    type: object
+                    properties:
+                      connected:
+                        type: boolean
+                    required:
+                    - connected
+                    additionalProperties: false
+                required:
+                - chatgpt
+                - claude
+                - supergrok
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: User or connected account not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: User operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '502':
+          description: The subscription provider is unavailable
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: userId
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+        required: true
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/users/{userId}/subscriptions/reset:
+    post:
+      operationId: resetUserSubscription
+      summary: Reset user subscription usage
+      description: Redeem an earned ChatGPT rate-limit reset.
+      tags:
+      - Users
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Reset user subscription usage
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  outcome:
+                    type: string
+                    enum:
+                    - reset
+                    - alreadyRedeemed
+                    - nothingToReset
+                    - noCredit
+                required:
+                - outcome
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: User or connected account not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: The subscription is disconnected or requires reconnecting
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: User operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '502':
+          description: The subscription provider is unavailable
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: userId
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                idempotencyKey:
+                  type: string
+                  format: uuid
+                provider:
+                  type: string
+                  const: chatgpt
+              required:
+              - idempotencyKey
+              - provider
+              additionalProperties: false
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/users/{userId}/profile-picture:
+    get:
+      operationId: retrieveUserProfilePicture
+      summary: Retrieve a user profile picture
+      description: Redirect to a user's profile picture. Signed URLs are valid for one hour.
+      tags:
+      - Users
+      security:
+      - apiKey: []
+      responses:
+        '302':
+          description: Redirect to the user profile picture
+          headers:
+            Location:
+              description: Signed or external profile picture URL
+              schema:
+                type: string
+                format: uri
+        '400':
+          description: Invalid request or unsupported image type, size, or deployment mode.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: Authentication is required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: User or profile picture not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: User operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '503':
+          description: Image storage is unavailable
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: userId
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+        required: true
+    put:
+      operationId: updateUserProfilePicture
+      summary: Update your profile picture
+      description: Upload a JPEG, PNG, GIF, or WebP profile picture up to 5 MB.
+      tags:
+      - Users
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Update your profile picture
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    type: string
+                    minLength: 1
+                    maxLength: 255
+                  url:
+                    type: string
+                    format: uri
+                required:
+                - userId
+                - url
+                additionalProperties: false
+        '400':
+          description: Invalid request or unsupported image type, size, or deployment mode.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: Authentication is required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: User or profile picture not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '413':
+          description: Request body exceeds 5 MB
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: User operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '503':
+          description: Image storage is unavailable
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+              required:
+              - file
+              additionalProperties: false
+      parameters:
+      - in: path
+        name: userId
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+        required: true
+    delete:
+      operationId: deleteUserProfilePicture
+      summary: Delete your profile picture
+      description: Delete your profile picture. This succeeds if no picture exists.
+      tags:
+      - Users
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Delete your profile picture
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    type: string
+                    minLength: 1
+                    maxLength: 255
+                  deleted:
+                    type: boolean
+                    const: true
+                required:
+                - userId
+                - deleted
+                additionalProperties: false
+        '400':
+          description: Invalid request or unsupported image type, size, or deployment mode.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: Authentication is required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: User or profile picture not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: User operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '503':
+          description: Image storage is unavailable
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: userId
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+        required: true
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+components:
+  securitySchemes:
+    apiKey:
+      type: http
+      scheme: bearer
+x-refined-from:
+- tembo-openapi-original.json
+- tembo-openapi.yml

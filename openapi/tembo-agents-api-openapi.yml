@@ -1,0 +1,5484 @@
+openapi: 3.2.0
+info:
+  title: Tembo Agents API
+  version: 1.0.0
+  description: 'Operations tagged Agents across 2 of this provider''s published API definitions: tembo-openapi-original.json, tembo-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.tembo.io/
+  description: Tembo API
+tags:
+- name: Agents
+paths:
+  /v1/agents:
+    get:
+      operationId: listAgents
+      summary: List agents
+      description: List agents available in your organization, with optional search, status, integration, and author filters.
+      tags:
+      - Agents
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: List agents
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                        organizationId:
+                          type:
+                          - string
+                          - 'null'
+                          minLength: 1
+                          maxLength: 255
+                        organizationName:
+                          type:
+                          - string
+                          - 'null'
+                        createdBy:
+                          type:
+                          - string
+                          - 'null'
+                        name:
+                          type: string
+                        instructions:
+                          oneOf:
+                          - $ref: '#/components/schemas/TipTapDocument'
+                            description: Instructions for the agent as a rich-text document. Mentions can reference integrations used by the agent.
+                          - type: 'null'
+                        agent:
+                          type:
+                          - string
+                          - 'null'
+                          description: Runtime and model selection key; not the ID of an agent resource.
+                        mcpServers:
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 200
+                          maxItems: 100
+                          description: Selected MCP server identifiers, including built-in server keys.
+                        artifactType:
+                          type:
+                          - string
+                          - 'null'
+                          enum:
+                          - PullRequest
+                          - ToolCall
+                          - Plan
+                          - Response
+                          - File
+                          - Service
+                          - Source
+                          - null
+                        createdAt:
+                          type: string
+                          format: date-time
+                        archivedAt:
+                          type:
+                          - string
+                          - 'null'
+                          format: date-time
+                        enabledAt:
+                          type:
+                          - string
+                          - 'null'
+                          format: date-time
+                        lastRun:
+                          type:
+                          - object
+                          - 'null'
+                          properties:
+                            id:
+                              type: string
+                              format: uuid
+                            sessionId:
+                              type:
+                              - string
+                              - 'null'
+                            status:
+                              type: string
+                            createdAt:
+                              type: string
+                              format: date-time
+                            updatedAt:
+                              type: string
+                              format: date-time
+                            durationMs:
+                              type: integer
+                              description: Measured duration of the agent run in milliseconds.
+                            errorMessage:
+                              type:
+                              - string
+                              - 'null'
+                          required:
+                          - id
+                          - sessionId
+                          - status
+                          - createdAt
+                          - updatedAt
+                          - durationMs
+                          - errorMessage
+                          additionalProperties: false
+                        runCount:
+                          type: integer
+                          minimum: 0
+                        scheduleCount:
+                          type: integer
+                          minimum: 0
+                        triggerCount:
+                          type: integer
+                          minimum: 0
+                        hasPausedSchedule:
+                          type: boolean
+                        hasPausedTrigger:
+                          type: boolean
+                        integrationIds:
+                          type: array
+                          items:
+                            type: string
+                            format: uuid
+                        integrationTypes:
+                          type: array
+                          items:
+                            type: string
+                        codeRepositoryCount:
+                          type: integer
+                          minimum: 0
+                      required:
+                      - id
+                      - organizationId
+                      - organizationName
+                      - createdBy
+                      - name
+                      - instructions
+                      - agent
+                      - mcpServers
+                      - artifactType
+                      - createdAt
+                      - archivedAt
+                      - enabledAt
+                      - lastRun
+                      - runCount
+                      - scheduleCount
+                      - triggerCount
+                      - hasPausedSchedule
+                      - hasPausedTrigger
+                      - integrationIds
+                      - integrationTypes
+                      - codeRepositoryCount
+                      additionalProperties: false
+                  nextCursor:
+                    type:
+                    - string
+                    - 'null'
+                  filterOptions:
+                    type: object
+                    properties:
+                      totalCount:
+                        type: integer
+                        minimum: 0
+                      integrationTypes:
+                        type: array
+                        items:
+                          type: string
+                    required:
+                    - totalCount
+                    - integrationTypes
+                    additionalProperties: false
+                required:
+                - items
+                - nextCursor
+                - filterOptions
+                additionalProperties: false
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Resource conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Agent operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: query
+        name: cursor
+        schema:
+          type: string
+          maxLength: 2000
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 50
+      - in: query
+        name: ids
+        schema:
+          type: string
+          maxLength: 10000
+      - in: query
+        name: search
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 200
+      - in: query
+        name: archived
+        schema:
+          type: boolean
+      - in: query
+        name: sort
+        schema:
+          type: string
+          enum:
+          - latestRun
+          - runCount
+      - in: query
+        name: status
+        schema:
+          type: string
+          maxLength: 10000
+      - in: query
+        name: integration
+        schema:
+          type: string
+          maxLength: 10000
+      - in: query
+        name: author
+        schema:
+          type: string
+          maxLength: 10000
+    post:
+      operationId: createAgent
+      summary: Create an agent
+      description: Create an agent from instructions, a template, or another agent. sourceAgentId cannot be combined with other fields. Template creation accepts only templateName, name, and triggers; creation from scratch requires name.
+      tags:
+      - Agents
+      security:
+      - apiKey: []
+      responses:
+        '201':
+          description: Create an agent
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  name:
+                    type: string
+                  key:
+                    type:
+                    - string
+                    - 'null'
+                  sandboxSize:
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - nano
+                    - micro
+                    - small
+                    - medium
+                    - large
+                    - xl
+                    - xxl
+                    - ultra
+                    - null
+                  projectId:
+                    type:
+                    - string
+                    - 'null'
+                  templateId:
+                    type:
+                    - string
+                    - 'null'
+                  contentVersion:
+                    type: integer
+                    default: 1
+                  script:
+                    type:
+                    - string
+                    - 'null'
+                  artifactType:
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - PullRequest
+                    - ToolCall
+                    - Plan
+                    - Response
+                    - File
+                    - Service
+                    - Source
+                    - null
+                  createdAt:
+                    type: string
+                    format: date-time
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  archivedAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  enabledAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  organizationId:
+                    type:
+                    - string
+                    - 'null'
+                    minLength: 1
+                    maxLength: 255
+                  organizationName:
+                    type:
+                    - string
+                    - 'null'
+                  createdBy:
+                    type:
+                    - string
+                    - 'null'
+                  instructions:
+                    oneOf:
+                    - $ref: '#/components/schemas/TipTapDocument'
+                      description: Instructions for the agent as a rich-text document. Mentions can reference integrations used by the agent.
+                    - type: 'null'
+                  agent:
+                    type:
+                    - string
+                    - 'null'
+                    description: Runtime and model selection key; not the ID of an agent resource.
+                  agentOptions:
+                    $ref: '#/components/schemas/AgentOptionsInput'
+                  mcpServers:
+                    type: array
+                    items:
+                      type: string
+                      minLength: 1
+                      maxLength: 200
+                    maxItems: 100
+                    description: Selected MCP server identifiers, including built-in server keys.
+                  userState:
+                    oneOf:
+                    - $ref: '#/components/schemas/AgentState'
+                    - type: 'null'
+                  codeRepositories:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                        name:
+                          type: string
+                        owner:
+                          type:
+                          - string
+                          - 'null'
+                        integrationId:
+                          type: string
+                          format: uuid
+                        integrationType:
+                          type: string
+                      required:
+                      - id
+                      - name
+                      - owner
+                      - integrationId
+                      - integrationType
+                      additionalProperties: false
+                    maxItems: 250
+                  lastRun:
+                    type:
+                    - object
+                    - 'null'
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                      sessionId:
+                        type:
+                        - string
+                        - 'null'
+                      status:
+                        type: string
+                      createdAt:
+                        type: string
+                        format: date-time
+                      updatedAt:
+                        type: string
+                        format: date-time
+                      durationMs:
+                        type: integer
+                        description: Measured duration of the agent run in milliseconds.
+                      errorMessage:
+                        type:
+                        - string
+                        - 'null'
+                    required:
+                    - id
+                    - sessionId
+                    - status
+                    - createdAt
+                    - updatedAt
+                    - durationMs
+                    - errorMessage
+                    additionalProperties: false
+                  runCount:
+                    type: integer
+                    minimum: 0
+                  scheduleCount:
+                    type: integer
+                    minimum: 0
+                  triggerCount:
+                    type: integer
+                    minimum: 0
+                  hasPausedSchedule:
+                    type: boolean
+                  hasPausedTrigger:
+                    type: boolean
+                  integrationIds:
+                    type: array
+                    items:
+                      type: string
+                      format: uuid
+                  integrationTypes:
+                    type: array
+                    items:
+                      type: string
+                required:
+                - id
+                - name
+                - key
+                - sandboxSize
+                - projectId
+                - templateId
+                - contentVersion
+                - script
+                - artifactType
+                - createdAt
+                - updatedAt
+                - archivedAt
+                - enabledAt
+                - organizationId
+                - organizationName
+                - createdBy
+                - instructions
+                - agent
+                - agentOptions
+                - mcpServers
+                - userState
+                - codeRepositories
+                - lastRun
+                - runCount
+                - scheduleCount
+                - triggerCount
+                - hasPausedSchedule
+                - hasPausedTrigger
+                - integrationIds
+                - integrationTypes
+                additionalProperties: false
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Resource conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Agent operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 200
+                instructions:
+                  $ref: '#/components/schemas/TipTapDocument'
+                  description: Instructions for the agent as a rich-text document. Mentions can reference integrations used by the agent.
+                mcpServers:
+                  type: array
+                  items:
+                    type: string
+                    minLength: 1
+                    maxLength: 200
+                  maxItems: 100
+                agent:
+                  type: string
+                  minLength: 1
+                  maxLength: 200
+                agentOptions:
+                  $ref: '#/components/schemas/AgentOptionsInput'
+                sandboxSize:
+                  type:
+                  - string
+                  - 'null'
+                  enum:
+                  - nano
+                  - micro
+                  - small
+                  - medium
+                  - large
+                  - xl
+                  - xxl
+                  - ultra
+                  - null
+                projectId:
+                  anyOf:
+                  - type: string
+                    format: uuid
+                  - type: string
+                    const: tembo
+                  - type: 'null'
+                artifactType:
+                  type:
+                  - string
+                  - 'null'
+                  enum:
+                  - PullRequest
+                  - ToolCall
+                  - Plan
+                  - Response
+                  - File
+                  - Service
+                  - Source
+                  - null
+                repositoryIds:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+                  maxItems: 250
+                triggers:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        minLength: 1
+                        maxLength: 200
+                      integrationType:
+                        type: string
+                        minLength: 1
+                        maxLength: 100
+                      integrationId:
+                        type: string
+                        format: uuid
+                      filters:
+                        $ref: '#/components/schemas/TriggerFilters'
+                    required:
+                    - name
+                    additionalProperties: false
+                  maxItems: 50
+                schedules:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      cron:
+                        type: string
+                        minLength: 1
+                        maxLength: 500
+                    required:
+                    - cron
+                    additionalProperties: false
+                  maxItems: 50
+                templateName:
+                  type: string
+                  enum:
+                  - addTestCoverage
+                  - addTestCoverageFromJira
+                  - autoAgentsMdMaintainer
+                  - autoDocsMaintainer
+                  - commitOfTheDay
+                  - customerHealthMonitoringAgent
+                  - deadCodeCleanup
+                  - dependencySweepAgent
+                  - autoFixCi
+                  - autoFixSentryError
+                  - dailySlackChangelog
+                  - duplicateTicketDetector
+                  - fixBugsReportedInSlack
+                  - enrichGithubIssue
+                  - enrichJiraIssue
+                  - enrichLinearIssue
+                  - hubspotCallTaskCoach
+                  - hubspotEmailTaskDrafter
+                  - hubspotTicketToLinearBug
+                  - prDescription
+                  - prReview
+                  - pagePerformanceReport
+                  - prioritizeSentry
+                  - productFaqAgent
+                  - productFinanceAgent
+                  - queryPerformanceReport
+                  - securityFixFromJira
+                  - securityScan
+                  - skillProgressionMap
+                  - slackChannelListener
+                  - slopCop
+                  - testAudit
+                  - staleCodeComments
+                  - stalePullRequestNotifier
+                  - summarizeChangesDaily
+                  - triageNewJiraBug
+                sourceAgentId:
+                  type: string
+                  format: uuid
+              additionalProperties: false
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/agents/templates:
+    get:
+      operationId: listAgentTemplates
+      summary: List agent templates
+      description: List reusable agent templates and their configuration requirements.
+      tags:
+      - Agents
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: List agent templates
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          enum:
+                          - addTestCoverage
+                          - addTestCoverageFromJira
+                          - autoAgentsMdMaintainer
+                          - autoDocsMaintainer
+                          - commitOfTheDay
+                          - customerHealthMonitoringAgent
+                          - deadCodeCleanup
+                          - dependencySweepAgent
+                          - autoFixCi
+                          - autoFixSentryError
+                          - dailySlackChangelog
+                          - duplicateTicketDetector
+                          - fixBugsReportedInSlack
+                          - enrichGithubIssue
+                          - enrichJiraIssue
+                          - enrichLinearIssue
+                          - hubspotCallTaskCoach
+                          - hubspotEmailTaskDrafter
+                          - hubspotTicketToLinearBug
+                          - prDescription
+                          - prReview
+                          - pagePerformanceReport
+                          - prioritizeSentry
+                          - productFaqAgent
+                          - productFinanceAgent
+                          - queryPerformanceReport
+                          - securityFixFromJira
+                          - securityScan
+                          - skillProgressionMap
+                          - slackChannelListener
+                          - slopCop
+                          - testAudit
+                          - staleCodeComments
+                          - stalePullRequestNotifier
+                          - summarizeChangesDaily
+                          - triageNewJiraBug
+                        title:
+                          type: string
+                        description:
+                          type: string
+                        label:
+                          type: string
+                          enum:
+                          - Code Review
+                          - Productivity
+                          - Documentation
+                          - Reporting
+                          - Monitoring
+                          - Management
+                        instructions:
+                          $ref: '#/components/schemas/TipTapDocument'
+                          description: Instructions for the agent as a rich-text document. Mentions can reference integrations used by the agent.
+                        connectedApps:
+                          type: array
+                          items:
+                            type: string
+                        artifactType:
+                          type:
+                          - string
+                          - 'null'
+                          enum:
+                          - PullRequest
+                          - ToolCall
+                          - Plan
+                          - Response
+                          - File
+                          - Service
+                          - Source
+                          - null
+                        agent:
+                          type: string
+                        triggers:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              name:
+                                type: string
+                              displayName:
+                                type: string
+                              integrationType:
+                                type: string
+                              filters:
+                                $ref: '#/components/schemas/TriggerFilters'
+                            required:
+                            - name
+                            - displayName
+                            - integrationType
+                            additionalProperties: false
+                        schedules:
+                          type: array
+                          items:
+                            type: string
+                        requiredParams:
+                          type: array
+                          items:
+                            type: string
+                            const: repository
+                      required:
+                      - name
+                      - title
+                      - description
+                      - label
+                      - instructions
+                      - connectedApps
+                      - agent
+                      additionalProperties: false
+                  nextCursor:
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - addTestCoverage
+                    - addTestCoverageFromJira
+                    - autoAgentsMdMaintainer
+                    - autoDocsMaintainer
+                    - commitOfTheDay
+                    - customerHealthMonitoringAgent
+                    - deadCodeCleanup
+                    - dependencySweepAgent
+                    - autoFixCi
+                    - autoFixSentryError
+                    - dailySlackChangelog
+                    - duplicateTicketDetector
+                    - fixBugsReportedInSlack
+                    - enrichGithubIssue
+                    - enrichJiraIssue
+                    - enrichLinearIssue
+                    - hubspotCallTaskCoach
+                    - hubspotEmailTaskDrafter
+                    - hubspotTicketToLinearBug
+                    - prDescription
+                    - prReview
+                    - pagePerformanceReport
+                    - prioritizeSentry
+                    - productFaqAgent
+                    - productFinanceAgent
+                    - queryPerformanceReport
+                    - securityFixFromJira
+                    - securityScan
+                    - skillProgressionMap
+                    - slackChannelListener
+                    - slopCop
+                    - testAudit
+                    - staleCodeComments
+                    - stalePullRequestNotifier
+                    - summarizeChangesDaily
+                    - triageNewJiraBug
+                    - null
+                required:
+                - items
+                - nextCursor
+                additionalProperties: false
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Resource conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Agent operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: query
+        name: cursor
+        schema:
+          type: string
+          enum:
+          - addTestCoverage
+          - addTestCoverageFromJira
+          - autoAgentsMdMaintainer
+          - autoDocsMaintainer
+          - commitOfTheDay
+          - customerHealthMonitoringAgent
+          - deadCodeCleanup
+          - dependencySweepAgent
+          - autoFixCi
+          - autoFixSentryError
+          - dailySlackChangelog
+          - duplicateTicketDetector
+          - fixBugsReportedInSlack
+          - enrichGithubIssue
+          - enrichJiraIssue
+          - enrichLinearIssue
+          - hubspotCallTaskCoach
+          - hubspotEmailTaskDrafter
+          - hubspotTicketToLinearBug
+          - prDescription
+          - prReview
+          - pagePerformanceReport
+          - prioritizeSentry
+          - productFaqAgent
+          - productFinanceAgent
+          - queryPerformanceReport
+          - securityFixFromJira
+          - securityScan
+          - skillProgressionMap
+          - slackChannelListener
+          - slopCop
+          - testAudit
+          - staleCodeComments
+          - stalePullRequestNotifier
+          - summarizeChangesDaily
+          - triageNewJiraBug
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 50
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/agents/templates/{templateName}:
+    get:
+      operationId: retrieveAgentTemplate
+      summary: Retrieve an agent template
+      description: Retrieve a reusable agent template by name, including its instructions and required parameters.
+      tags:
+      - Agents
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Retrieve an agent template
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    enum:
+                    - addTestCoverage
+                    - addTestCoverageFromJira
+                    - autoAgentsMdMaintainer
+                    - autoDocsMaintainer
+                    - commitOfTheDay
+                    - customerHealthMonitoringAgent
+                    - deadCodeCleanup
+                    - dependencySweepAgent
+                    - autoFixCi
+                    - autoFixSentryError
+                    - dailySlackChangelog
+                    - duplicateTicketDetector
+                    - fixBugsReportedInSlack
+                    - enrichGithubIssue
+                    - enrichJiraIssue
+                    - enrichLinearIssue
+                    - hubspotCallTaskCoach
+                    - hubspotEmailTaskDrafter
+                    - hubspotTicketToLinearBug
+                    - prDescription
+                    - prReview
+                    - pagePerformanceReport
+                    - prioritizeSentry
+                    - productFaqAgent
+                    - productFinanceAgent
+                    - queryPerformanceReport
+                    - securityFixFromJira
+                    - securityScan
+                    - skillProgressionMap
+                    - slackChannelListener
+                    - slopCop
+                    - testAudit
+                    - staleCodeComments
+                    - stalePullRequestNotifier
+                    - summarizeChangesDaily
+                    - triageNewJiraBug
+                  title:
+                    type: string
+                  description:
+                    type: string
+                  label:
+                    type: string
+                    enum:
+                    - Code Review
+                    - Productivity
+                    - Documentation
+                    - Reporting
+                    - Monitoring
+                    - Management
+                  instructions:
+                    $ref: '#/components/schemas/TipTapDocument'
+                    description: Instructions for the agent as a rich-text document. Mentions can reference integrations used by the agent.
+                  connectedApps:
+                    type: array
+                    items:
+                      type: string
+                  artifactType:
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - PullRequest
+                    - ToolCall
+                    - Plan
+                    - Response
+                    - File
+                    - Service
+                    - Source
+                    - null
+                  agent:
+                    type: string
+                  triggers:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        displayName:
+                          type: string
+                        integrationType:
+                          type: string
+                        filters:
+                          $ref: '#/components/schemas/TriggerFilters'
+                      required:
+                      - name
+                      - displayName
+                      - integrationType
+                      additionalProperties: false
+                  schedules:
+                    type: array
+                    items:
+                      type: string
+                  requiredParams:
+                    type: array
+                    items:
+                      type: string
+                      const: repository
+                required:
+                - name
+                - title
+                - description
+                - label
+                - instructions
+                - connectedApps
+                - agent
+                additionalProperties: false
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Resource conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Agent operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: templateName
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 200
+        required: true
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/agents/{agentId}:
+    get:
+      operationId: retrieveAgent
+      summary: Retrieve an agent
+      description: Retrieve an agent and its configuration, repository associations, and run summary.
+      tags:
+      - Agents
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Retrieve an agent
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  name:
+                    type: string
+                  key:
+                    type:
+                    - string
+                    - 'null'
+                  sandboxSize:
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - nano
+                    - micro
+                    - small
+                    - medium
+                    - large
+                    - xl
+                    - xxl
+                    - ultra
+                    - null
+                  projectId:
+                    type:
+                    - string
+                    - 'null'
+                  templateId:
+                    type:
+                    - string
+                    - 'null'
+                  contentVersion:
+                    type: integer
+                    default: 1
+                  script:
+                    type:
+                    - string
+                    - 'null'
+                  artifactType:
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - PullRequest
+                    - ToolCall
+                    - Plan
+                    - Response
+                    - File
+                    - Service
+                    - Source
+                    - null
+                  createdAt:
+                    type: string
+                    format: date-time
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  archivedAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  enabledAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  organizationId:
+                    type:
+                    - string
+                    - 'null'
+                    minLength: 1
+                    maxLength: 255
+                  organizationName:
+                    type:
+                    - string
+                    - 'null'
+                  createdBy:
+                    type:
+                    - string
+                    - 'null'
+                  instructions:
+                    oneOf:
+                    - $ref: '#/components/schemas/TipTapDocument'
+                      description: Instructions for the agent as a rich-text document. Mentions can reference integrations used by the agent.
+                    - type: 'null'
+                  agent:
+                    type:
+                    - string
+                    - 'null'
+                    description: Runtime and model selection key; not the ID of an agent resource.
+                  agentOptions:
+                    $ref: '#/components/schemas/AgentOptionsInput'
+                  mcpServers:
+                    type: array
+                    items:
+                      type: string
+                      minLength: 1
+                      maxLength: 200
+                    maxItems: 100
+                    description: Selected MCP server identifiers, including built-in server keys.
+                  userState:
+                    oneOf:
+                    - $ref: '#/components/schemas/AgentState'
+                    - type: 'null'
+                  codeRepositories:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                        name:
+                          type: string
+                        owner:
+                          type:
+                          - string
+                          - 'null'
+                        integrationId:
+                          type: string
+                          format: uuid
+                        integrationType:
+                          type: string
+                      required:
+                      - id
+                      - name
+                      - owner
+                      - integrationId
+                      - integrationType
+                      additionalProperties: false
+                    maxItems: 250
+                  lastRun:
+                    type:
+                    - object
+                    - 'null'
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                      sessionId:
+                        type:
+                        - string
+                        - 'null'
+                      status:
+                        type: string
+                      createdAt:
+                        type: string
+                        format: date-time
+                      updatedAt:
+                        type: string
+                        format: date-time
+                      durationMs:
+                        type: integer
+                        description: Measured duration of the agent run in milliseconds.
+                      errorMessage:
+                        type:
+                        - string
+                        - 'null'
+                    required:
+                    - id
+                    - sessionId
+                    - status
+                    - createdAt
+                    - updatedAt
+                    - durationMs
+                    - errorMessage
+                    additionalProperties: false
+                  runCount:
+                    type: integer
+                    minimum: 0
+                  scheduleCount:
+                    type: integer
+                    minimum: 0
+                  triggerCount:
+                    type: integer
+                    minimum: 0
+                  hasPausedSchedule:
+                    type: boolean
+                  hasPausedTrigger:
+                    type: boolean
+                  integrationIds:
+                    type: array
+                    items:
+                      type: string
+                      format: uuid
+                  integrationTypes:
+                    type: array
+                    items:
+                      type: string
+                required:
+                - id
+                - name
+                - key
+                - sandboxSize
+                - projectId
+                - templateId
+                - contentVersion
+                - script
+                - artifactType
+                - createdAt
+                - updatedAt
+                - archivedAt
+                - enabledAt
+                - organizationId
+                - organizationName
+                - createdBy
+                - instructions
+                - agent
+                - agentOptions
+                - mcpServers
+                - userState
+                - codeRepositories
+                - lastRun
+                - runCount
+                - scheduleCount
+                - triggerCount
+                - hasPausedSchedule
+                - hasPausedTrigger
+                - integrationIds
+                - integrationTypes
+                additionalProperties: false
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Resource conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Agent operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: agentId
+        schema:
+          type: string
+          format: uuid
+        required: true
+    patch:
+      operationId: updateAgent
+      summary: Update an agent
+      description: Update agent configuration. Supply expectedUpdatedAt to reject an update if the agent changed since it was retrieved. Enabling or archiving an agent also updates its schedules and triggers.
+      tags:
+      - Agents
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Update an agent
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  name:
+                    type: string
+                  key:
+                    type:
+                    - string
+                    - 'null'
+                  sandboxSize:
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - nano
+                    - micro
+                    - small
+                    - medium
+                    - large
+                    - xl
+                    - xxl
+                    - ultra
+                    - null
+                  projectId:
+                    type:
+                    - string
+                    - 'null'
+                  templateId:
+                    type:
+                    - string
+                    - 'null'
+                  contentVersion:
+                    type: integer
+                    default: 1
+                  script:
+                    type:
+                    - string
+                    - 'null'
+                  artifactType:
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - PullRequest
+                    - ToolCall
+                    - Plan
+                    - Response
+                    - File
+                    - Service
+                    - Source
+                    - null
+                  createdAt:
+                    type: string
+                    format: date-time
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  archivedAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  enabledAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  organizationId:
+                    type:
+                    - string
+                    - 'null'
+                    minLength: 1
+                    maxLength: 255
+                  organizationName:
+                    type:
+                    - string
+                    - 'null'
+                  createdBy:
+                    type:
+                    - string
+                    - 'null'
+                  instructions:
+                    oneOf:
+                    - $ref: '#/components/schemas/TipTapDocument'
+                      description: Instructions for the agent as a rich-text document. Mentions can reference integrations used by the agent.
+                    - type: 'null'
+                  agent:
+                    type:
+                    - string
+                    - 'null'
+                    description: Runtime and model selection key; not the ID of an agent resource.
+                  agentOptions:
+                    $ref: '#/components/schemas/AgentOptionsInput'
+                  mcpServers:
+                    type: array
+                    items:
+                      type: string
+                      minLength: 1
+                      maxLength: 200
+                    maxItems: 100
+                    description: Selected MCP server identifiers, including built-in server keys.
+                  userState:
+                    oneOf:
+                    - $ref: '#/components/schemas/AgentState'
+                    - type: 'null'
+                  codeRepositories:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                        name:
+                          type: string
+                        owner:
+                          type:
+                          - string
+                          - 'null'
+                        integrationId:
+                          type: string
+                          format: uuid
+                        integrationType:
+                          type: string
+                      required:
+                      - id
+                      - name
+                      - owner
+                      - integrationId
+                      - integrationType
+                      additionalProperties: false
+                    maxItems: 250
+                  lastRun:
+                    type:
+                    - object
+                    - 'null'
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                      sessionId:
+                        type:
+                        - string
+                        - 'null'
+                      status:
+                        type: string
+                      createdAt:
+                        type: string
+                        format: date-time
+                      updatedAt:
+                        type: string
+                        format: date-time
+                      durationMs:
+                        type: integer
+                        description: Measured duration of the agent run in milliseconds.
+                      errorMessage:
+                        type:
+                        - string
+                        - 'null'
+                    required:
+                    - id
+                    - sessionId
+                    - status
+                    - createdAt
+                    - updatedAt
+                    - durationMs
+                    - errorMessage
+                    additionalProperties: false
+                  runCount:
+                    type: integer
+                    minimum: 0
+                  scheduleCount:
+                    type: integer
+                    minimum: 0
+                  triggerCount:
+                    type: integer
+                    minimum: 0
+                  hasPausedSchedule:
+                    type: boolean
+                  hasPausedTrigger:
+                    type: boolean
+                  integrationIds:
+                    type: array
+                    items:
+                      type: string
+                      format: uuid
+                  integrationTypes:
+                    type: array
+                    items:
+                      type: string
+                required:
+                - id
+                - name
+                - key
+                - sandboxSize
+                - projectId
+                - templateId
+                - contentVersion
+                - script
+                - artifactType
+                - createdAt
+                - updatedAt
+                - archivedAt
+                - enabledAt
+                - organizationId
+                - organizationName
+                - createdBy
+                - instructions
+                - agent
+                - agentOptions
+                - mcpServers
+                - userState
+                - codeRepositories
+                - lastRun
+                - runCount
+                - scheduleCount
+                - triggerCount
+                - hasPausedSchedule
+                - hasPausedTrigger
+                - integrationIds
+                - integrationTypes
+                additionalProperties: false
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Resource conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Agent operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: agentId
+        schema:
+          type: string
+          format: uuid
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                expectedUpdatedAt:
+                  type: string
+                  format: date-time
+                  description: Value of updatedAt from the last retrieved agent. A concurrent change causes a conflict instead of overwriting newer changes.
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 200
+                key:
+                  type:
+                  - string
+                  - 'null'
+                  minLength: 1
+                  maxLength: 200
+                instructions:
+                  oneOf:
+                  - $ref: '#/components/schemas/TipTapDocument'
+                    description: Instructions for the agent as a rich-text document. Mentions can reference integrations used by the agent.
+                  - type: 'null'
+                mcpServers:
+                  type: array
+                  items:
+                    type: string
+                    minLength: 1
+                    maxLength: 200
+                  maxItems: 100
+                agent:
+                  type:
+                  - string
+                  - 'null'
+                  minLength: 1
+                  maxLength: 200
+                agentOptions:
+                  $ref: '#/components/schemas/AgentOptionsInput'
+                userState:
+                  $ref: '#/components/schemas/AgentState'
+                sandboxSize:
+                  type:
+                  - string
+                  - 'null'
+                  - 'null'
+                  enum:
+                  - nano
+                  - micro
+                  - small
+                  - medium
+                  - large
+                  - xl
+                  - xxl
+                  - ultra
+                  - null
+                  - null
+                projectId:
+                  anyOf:
+                  - type: string
+                    format: uuid
+                  - type: string
+                    const: tembo
+                  - type: 'null'
+                templateId:
+                  type:
+                  - string
+                  - 'null'
+                  maxLength: 200
+                script:
+                  type:
+                  - string
+                  - 'null'
+                  maxLength: 100000
+                artifactType:
+                  type:
+                  - string
+                  - 'null'
+                  - 'null'
+                  enum:
+                  - PullRequest
+                  - ToolCall
+                  - Plan
+                  - Response
+                  - File
+                  - Service
+                  - Source
+                  - null
+                  - null
+                repositoryIds:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+                  maxItems: 250
+                enabled:
+                  type: boolean
+                archived:
+                  type: boolean
+              additionalProperties: false
+    delete:
+      operationId: deleteAgent
+      summary: Delete an agent
+      description: Delete an agent and disable its scheduled and triggered jobs.
+      tags:
+      - Agents
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Delete an agent
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  deleted:
+                    type: boolean
+                    const: true
+                  id:
+                    type: string
+                    format: uuid
+                required:
+                - deleted
+                - id
+                additionalProperties: false
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Resource conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Agent operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: agentId
+        schema:
+          type: string
+          format: uuid
+        required: true
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/agents/{agentId}/content-revisions:
+    get:
+      operationId: listAgentContentRevisions
+      summary: List agent instruction revisions
+      description: List saved revisions of an agent’s instruction JSON document, newest first. Revisions do not include other agent configuration. Author details are redacted from public API responses.
+      tags:
+      - Agents
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: List agent instruction revisions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        version:
+                          type: integer
+                          exclusiveMinimum: 0
+                        authorId:
+                          type:
+                          - string
+                          - 'null'
+                        authorName:
+                          type:
+                          - string
+                          - 'null'
+                        source:
+                          type: string
+                        restoredFromVersion:
+                          type:
+                          - integer
+                          - 'null'
+                          exclusiveMinimum: 0
+                        createdAt:
+                          type: string
+                          format: date-time
+                      required:
+                      - version
+                      - authorId
+                      - authorName
+                      - source
+                      - restoredFromVersion
+                      - createdAt
+                      additionalProperties: false
+                  nextCursor:
+                    type:
+                    - string
+                    - 'null'
+                required:
+                - items
+                - nextCursor
+                additionalProperties: false
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Resource conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Agent operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: agentId
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - in: query
+        name: cursor
+        schema:
+          type: string
+          pattern: ^[1-9]\d*$
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 50
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/agents/{agentId}/content-revisions/{version}:
+    get:
+      operationId: retrieveAgentContentRevision
+      summary: Retrieve an agent instruction revision
+      description: Retrieve the instruction JSON document saved in one revision. Other agent configuration is not included. Author details are redacted from public API responses.
+      tags:
+      - Agents
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Retrieve an agent instruction revision
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  version:
+                    type: integer
+                    exclusiveMinimum: 0
+                  authorId:
+                    type:
+                    - string
+                    - 'null'
+                  authorName:
+                    type:
+                    - string
+                    - 'null'
+                  source:
+                    type: string
+                  restoredFromVersion:
+                    type:
+                    - integer
+                    - 'null'
+                    exclusiveMinimum: 0
+                  createdAt:
+                    type: string
+                    format: date-time
+                  instructions:
+                    oneOf:
+                    - $ref: '#/components/schemas/TipTapDocument'
+                      description: Instructions for the agent as a rich-text document. Mentions can reference integrations used by the agent.
+                    - type: 'null'
+                    description: The instruction JSON document saved in this revision. Other agent configuration is not versioned.
+                required:
+                - version
+                - authorId
+                - authorName
+                - source
+                - restoredFromVersion
+                - createdAt
+                - instructions
+                additionalProperties: false
+                description: A saved revision of an agent’s instruction JSON document.
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Resource conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Agent operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: agentId
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - in: path
+        name: version
+        schema:
+          type: integer
+          exclusiveMinimum: 0
+        required: true
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/agents/{agentId}/content-revisions/{version}/restore:
+    post:
+      operationId: restoreAgentContentRevision
+      summary: Restore agent instructions
+      description: Restore a saved instruction JSON document and its mentioned integrations, without reverting other agent configuration. A changed document creates a new revision attributed to the caller. Supply the agent’s current contentVersion as expectedContentVersion; a concurrent instruction change returns 409.
+      tags:
+      - Agents
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Restore agent instructions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  name:
+                    type: string
+                  key:
+                    type:
+                    - string
+                    - 'null'
+                  sandboxSize:
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - nano
+                    - micro
+                    - small
+                    - medium
+                    - large
+                    - xl
+                    - xxl
+                    - ultra
+                    - null
+                  projectId:
+                    type:
+                    - string
+                    - 'null'
+                  templateId:
+                    type:
+                    - string
+                    - 'null'
+                  contentVersion:
+                    type: integer
+                    default: 1
+                  script:
+                    type:
+                    - string
+                    - 'null'
+                  artifactType:
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - PullRequest
+                    - ToolCall
+                    - Plan
+                    - Response
+                    - File
+                    - Service
+                    - Source
+                    - null
+                  createdAt:
+                    type: string
+                    format: date-time
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  archivedAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  enabledAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  organizationId:
+                    type:
+                    - string
+                    - 'null'
+                    minLength: 1
+                    maxLength: 255
+                  organizationName:
+                    type:
+                    - string
+                    - 'null'
+                  createdBy:
+                    type:
+                    - string
+                    - 'null'
+                  instructions:
+                    oneOf:
+                    - $ref: '#/components/schemas/TipTapDocument'
+                      description: Instructions for the agent as a rich-text document. Mentions can reference integrations used by the agent.
+                    - type: 'null'
+                  agent:
+                    type:
+                    - string
+                    - 'null'
+                    description: Runtime and model selection key; not the ID of an agent resource.
+                  agentOptions:
+                    $ref: '#/components/schemas/AgentOptionsInput'
+                  mcpServers:
+                    type: array
+                    items:
+                      type: string
+                      minLength: 1
+                      maxLength: 200
+                    maxItems: 100
+                    description: Selected MCP server identifiers, including built-in server keys.
+                  userState:
+                    oneOf:
+                    - $ref: '#/components/schemas/AgentState'
+                    - type: 'null'
+                  codeRepositories:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                        name:
+                          type: string
+                        owner:
+                          type:
+                          - string
+                          - 'null'
+                        integrationId:
+                          type: string
+                          format: uuid
+                        integrationType:
+                          type: string
+                      required:
+                      - id
+                      - name
+                      - owner
+                      - integrationId
+                      - integrationType
+                      additionalProperties: false
+                    maxItems: 250
+                  lastRun:
+                    type:
+                    - object
+                    - 'null'
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                      sessionId:
+                        type:
+                        - string
+                        - 'null'
+                      status:
+                        type: string
+                      createdAt:
+                        type: string
+                        format: date-time
+                      updatedAt:
+                        type: string
+                        format: date-time
+                      durationMs:
+                        type: integer
+                        description: Measured duration of the agent run in milliseconds.
+                      errorMessage:
+                        type:
+                        - string
+                        - 'null'
+                    required:
+                    - id
+                    - sessionId
+                    - status
+                    - createdAt
+                    - updatedAt
+                    - durationMs
+                    - errorMessage
+                    additionalProperties: false
+                  runCount:
+                    type: integer
+                    minimum: 0
+                  scheduleCount:
+                    type: integer
+                    minimum: 0
+                  triggerCount:
+                    type: integer
+                    minimum: 0
+                  hasPausedSchedule:
+                    type: boolean
+                  hasPausedTrigger:
+                    type: boolean
+                  integrationIds:
+                    type: array
+                    items:
+                      type: string
+                      format: uuid
+                  integrationTypes:
+                    type: array
+                    items:
+                      type: string
+                required:
+                - id
+                - name
+                - key
+                - sandboxSize
+                - projectId
+                - templateId
+                - contentVersion
+                - script
+                - artifactType
+                - createdAt
+                - updatedAt
+                - archivedAt
+                - enabledAt
+                - organizationId
+                - organizationName
+                - createdBy
+                - instructions
+                - agent
+                - agentOptions
+                - mcpServers
+                - userState
+                - codeRepositories
+                - lastRun
+                - runCount
+                - scheduleCount
+                - triggerCount
+                - hasPausedSchedule
+                - hasPausedTrigger
+                - integrationIds
+                - integrationTypes
+                additionalProperties: false
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Resource conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Agent operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: agentId
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - in: path
+        name: version
+        schema:
+          type: integer
+          exclusiveMinimum: 0
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                expectedContentVersion:
+                  type: integer
+                  exclusiveMinimum: 0
+                  description: The agent’s current instruction version, used to reject a restore if the instructions have changed.
+              required:
+              - expectedContentVersion
+              additionalProperties: false
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/agents/{agentId}/schedules:
+    get:
+      operationId: listAgentSchedules
+      summary: List agent schedules
+      description: List the schedules configured for an agent.
+      tags:
+      - Agents
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: List agent schedules
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                        cron:
+                          type: string
+                        lastRunAt:
+                          type:
+                          - string
+                          - 'null'
+                          format: date-time
+                        nextRunAt:
+                          type:
+                          - string
+                          - 'null'
+                          format: date-time
+                        enabledAt:
+                          type:
+                          - string
+                          - 'null'
+                          format: date-time
+                        createdAt:
+                          type: string
+                          format: date-time
+                        updatedAt:
+                          type: string
+                          format: date-time
+                        agentId:
+                          type: string
+                          format: uuid
+                      required:
+                      - id
+                      - cron
+                      - lastRunAt
+                      - nextRunAt
+                      - enabledAt
+                      - createdAt
+                      - updatedAt
+                      - agentId
+                      additionalProperties: false
+                  nextCursor:
+                    type:
+                    - string
+                    - 'null'
+                    format: uuid
+                required:
+                - items
+                - nextCursor
+                additionalProperties: false
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Resource conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Agent operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: agentId
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - in: query
+        name: cursor
+        schema:
+          type: string
+          format: uuid
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 50
+    post:
+      operationId: createAgentSchedule
+      summary: Create an agent schedule
+      description: Create a recurring schedule that starts agent runs using a cron expression.
+      tags:
+      - Agents
+      security:
+      - apiKey: []
+      responses:
+        '201':
+          description: Create an agent schedule
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  cron:
+                    type: string
+                  lastRunAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  nextRunAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  enabledAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  createdAt:
+                    type: string
+                    format: date-time
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  agentId:
+                    type: string
+                    format: uuid
+                required:
+                - id
+                - cron
+                - lastRunAt
+                - nextRunAt
+                - enabledAt
+                - createdAt
+                - updatedAt
+                - agentId
+                additionalProperties: false
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Resource conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Agent operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: agentId
+        schema:
+          type: string
+          format: uuid
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cron:
+                  type: string
+                  minLength: 1
+                  maxLength: 500
+              required:
+              - cron
+              additionalProperties: false
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/agents/{agentId}/schedules/{scheduleId}:
+    get:
+      operationId: retrieveAgentSchedule
+      summary: Retrieve an agent schedule
+      description: Retrieve an agent schedule, including its enabled state and next execution time.
+      tags:
+      - Agents
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Retrieve an agent schedule
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  cron:
+                    type: string
+                  lastRunAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  nextRunAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  enabledAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  createdAt:
+                    type: string
+                    format: date-time
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  agentId:
+                    type: string
+                    format: uuid
+                required:
+                - id
+                - cron
+                - lastRunAt
+                - nextRunAt
+                - enabledAt
+                - createdAt
+                - updatedAt
+                - agentId
+                additionalProperties: false
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Resource conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Agent operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: agentId
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - in: path
+        name: scheduleId
+        schema:
+          type: string
+          format: uuid
+        required: true
+    patch:
+      operationId: updateAgentSchedule
+      summary: Update an agent schedule
+      description: Update an agent schedule, including its cron expression or enabled state.
+      tags:
+      - Agents
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Update an agent schedule
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  cron:
+                    type: string
+                  lastRunAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  nextRunAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  enabledAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  createdAt:
+                    type: string
+                    format: date-time
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  agentId:
+                    type: string
+                    format: uuid
+                required:
+                - id
+                - cron
+                - lastRunAt
+                - nextRunAt
+                - enabledAt
+                - createdAt
+                - updatedAt
+                - agentId
+                additionalProperties: false
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Resource conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Agent operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: agentId
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - in: path
+        name: scheduleId
+        schema:
+          type: string
+          format: uuid
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cron:
+                  type: string
+                  minLength: 1
+                  maxLength: 500
+              required:
+              - cron
+              additionalProperties: false
+    delete:
+      operationId: deleteAgentSchedule
+      summary: Delete an agent schedule
+      description: Delete a recurring agent schedule.
+      tags:
+      - Agents
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Delete an agent schedule
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  deleted:
+                    type: boolean
+                    const: true
+                  id:
+                    type: string
+                    format: uuid
+                required:
+                - deleted
+                - id
+                additionalProperties: false
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Resource conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Agent operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: agentId
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - in: path
+        name: scheduleId
+        schema:
+          type: string
+          format: uuid
+        required: true
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/agents/{agentId}/triggers:
+    get:
+      operationId: listAgentTriggers
+      summary: List agent triggers
+      description: List the integration events configured to start runs of an agent.
+      tags:
+      - Agents
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: List agent triggers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                        triggerName:
+                          type: string
+                        enabledAt:
+                          type:
+                          - string
+                          - 'null'
+                          format: date-time
+                        createdAt:
+                          type: string
+                          format: date-time
+                        updatedAt:
+                          type: string
+                          format: date-time
+                        agentId:
+                          type: string
+                          format: uuid
+                        triggerDisplayName:
+                          type: string
+                          minLength: 1
+                          maxLength: 200
+                        integrationId:
+                          type:
+                          - string
+                          - 'null'
+                          format: uuid
+                        integrationType:
+                          type:
+                          - string
+                          - 'null'
+                        filters:
+                          $ref: '#/components/schemas/TriggerFilters'
+                      required:
+                      - id
+                      - triggerName
+                      - enabledAt
+                      - createdAt
+                      - updatedAt
+                      - agentId
+                      - triggerDisplayName
+                      - integrationId
+                      - integrationType
+                      - filters
+                      additionalProperties: false
+                  nextCursor:
+                    type:
+                    - string
+                    - 'null'
+                    format: uuid
+                required:
+                - items
+                - nextCursor
+                additionalProperties: false
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Resource conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Agent operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: agentId
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - in: query
+        name: cursor
+        schema:
+          type: string
+          format: uuid
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 50
+    post:
+      operationId: createAgentTrigger
+      summary: Create an agent trigger
+      description: Configure an integration event to start agent runs. Available filters depend on the integration and event name.
+      tags:
+      - Agents
+      security:
+      - apiKey: []
+      responses:
+        '201':
+          description: Create an agent trigger
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  triggerName:
+                    type: string
+                  enabledAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  createdAt:
+                    type: string
+                    format: date-time
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  agentId:
+                    type: string
+                    format: uuid
+                  triggerDisplayName:
+                    type: string
+                    minLength: 1
+                    maxLength: 200
+                  integrationId:
+                    type:
+                    - string
+                    - 'null'
+                    format: uuid
+                  integrationType:
+                    type:
+                    - string
+                    - 'null'
+                  filters:
+                    $ref: '#/components/schemas/TriggerFilters'
+                required:
+                - id
+                - triggerName
+                - enabledAt
+                - createdAt
+                - updatedAt
+                - agentId
+                - triggerDisplayName
+                - integrationId
+                - integrationType
+                - filters
+                additionalProperties: false
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Resource conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Agent operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: agentId
+        schema:
+          type: string
+          format: uuid
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 200
+                integrationType:
+                  type: string
+                  minLength: 1
+                  maxLength: 100
+                integrationId:
+                  type: string
+                  format: uuid
+                filters:
+                  $ref: '#/components/schemas/TriggerFilters'
+              required:
+              - name
+              additionalProperties: false
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/agents/{agentId}/triggers/{triggerId}:
+    get:
+      operationId: retrieveAgentTrigger
+      summary: Retrieve an agent trigger
+      description: Retrieve an agent trigger and its integration event filters.
+      tags:
+      - Agents
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Retrieve an agent trigger
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  triggerName:
+                    type: string
+                  enabledAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  createdAt:
+                    type: string
+                    format: date-time
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  agentId:
+                    type: string
+                    format: uuid
+                  triggerDisplayName:
+                    type: string
+                    minLength: 1
+                    maxLength: 200
+                  integrationId:
+                    type:
+                    - string
+                    - 'null'
+                    format: uuid
+                  integrationType:
+                    type:
+                    - string
+                    - 'null'
+                  filters:
+                    $ref: '#/components/schemas/TriggerFilters'
+                required:
+                - id
+                - triggerName
+                - enabledAt
+                - createdAt
+                - updatedAt
+                - agentId
+                - triggerDisplayName
+                - integrationId
+                - integrationType
+                - filters
+                additionalProperties: false
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Resource conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Agent operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: agentId
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - in: path
+        name: triggerId
+        schema:
+          type: string
+          format: uuid
+        required: true
+    patch:
+      operationId: updateAgentTrigger
+      summary: Update an agent trigger
+      description: Update an agent trigger configuration or enabled state.
+      tags:
+      - Agents
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Update an agent trigger
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  triggerName:
+                    type: string
+                  enabledAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  createdAt:
+                    type: string
+                    format: date-time
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  agentId:
+                    type: string
+                    format: uuid
+                  triggerDisplayName:
+                    type: string
+                    minLength: 1
+                    maxLength: 200
+                  integrationId:
+                    type:
+                    - string
+                    - 'null'
+                    format: uuid
+                  integrationType:
+                    type:
+                    - string
+                    - 'null'
+                  filters:
+                    $ref: '#/components/schemas/TriggerFilters'
+                required:
+                - id
+                - triggerName
+                - enabledAt
+                - createdAt
+                - updatedAt
+                - agentId
+                - triggerDisplayName
+                - integrationId
+                - integrationType
+                - filters
+                additionalProperties: false
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Resource conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Agent operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: agentId
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - in: path
+        name: triggerId
+        schema:
+          type: string
+          format: uuid
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 200
+                integrationId:
+                  type: string
+                  format: uuid
+                filters:
+                  $ref: '#/components/schemas/TriggerFilters'
+              required:
+              - name
+              additionalProperties: false
+    delete:
+      operationId: deleteAgentTrigger
+      summary: Delete an agent trigger
+      description: Delete an integration event trigger for an agent.
+      tags:
+      - Agents
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Delete an agent trigger
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  deleted:
+                    type: boolean
+                    const: true
+                  id:
+                    type: string
+                    format: uuid
+                required:
+                - deleted
+                - id
+                additionalProperties: false
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Resource conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Agent operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: agentId
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - in: path
+        name: triggerId
+        schema:
+          type: string
+          format: uuid
+        required: true
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/agents/{agentId}/runs:
+    get:
+      operationId: listAgentRuns
+      summary: List agent runs
+      description: List executions of an agent, including status, linked session, measured duration, and failure summary.
+      tags:
+      - Agents
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: List agent runs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                        sessionId:
+                          type:
+                          - string
+                          - 'null'
+                        status:
+                          type: string
+                        createdAt:
+                          type: string
+                          format: date-time
+                        updatedAt:
+                          type: string
+                          format: date-time
+                        durationMs:
+                          type: integer
+                          description: Measured duration of the agent run in milliseconds.
+                        errorMessage:
+                          type:
+                          - string
+                          - 'null'
+                      required:
+                      - id
+                      - sessionId
+                      - status
+                      - createdAt
+                      - updatedAt
+                      - durationMs
+                      - errorMessage
+                      additionalProperties: false
+                  nextCursor:
+                    type:
+                    - string
+                    - 'null'
+                    format: uuid
+                required:
+                - items
+                - nextCursor
+                additionalProperties: false
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Resource conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Agent operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: agentId
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - in: query
+        name: cursor
+        schema:
+          type: string
+          format: uuid
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 50
+    post:
+      operationId: createAgentRun
+      summary: Create an agent run
+      description: Queue an agent run. The entire JSON object body is passed to the agent as event input; no eventPayload wrapper is needed. Omit the body to run without event input. The response confirms queuing, not completed execution.
+      tags:
+      - Agents
+      security:
+      - apiKey: []
+      responses:
+        '201':
+          description: Create an agent run
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  jobId:
+                    type: string
+                    format: uuid
+                  agentId:
+                    type: string
+                    format: uuid
+                  status:
+                    type: string
+                    const: queued
+                required:
+                - jobId
+                - agentId
+                - status
+                additionalProperties: false
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Resource conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Agent operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentRunEventPayload'
+      parameters:
+      - in: path
+        name: agentId
+        schema:
+          type: string
+          format: uuid
+        required: true
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/agents/{agentId}/runs/{runId}:
+    get:
+      operationId: retrieveAgentRun
+      summary: Retrieve an agent run
+      description: Retrieve the status, linked session, measured duration, and failure summary of an agent run.
+      tags:
+      - Agents
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Retrieve an agent run
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  sessionId:
+                    type:
+                    - string
+                    - 'null'
+                  status:
+                    type: string
+                  createdAt:
+                    type: string
+                    format: date-time
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  durationMs:
+                    type: integer
+                    description: Measured duration of the agent run in milliseconds.
+                  errorMessage:
+                    type:
+                    - string
+                    - 'null'
+                required:
+                - id
+                - sessionId
+                - status
+                - createdAt
+                - updatedAt
+                - durationMs
+                - errorMessage
+                additionalProperties: false
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Resource conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Agent operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: agentId
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - in: path
+        name: runId
+        schema:
+          type: string
+          format: uuid
+        required: true
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+components:
+  schemas:
+    GithubWorkflowRunCompletedFilters:
+      type: object
+      properties:
+        repositories:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the workflow run is in one of the repositories
+        workflowNames:
+          type: array
+          items:
+            type: string
+          description: Only trigger for specific workflow names
+        branches:
+          type: array
+          items:
+            type: string
+          description: Only trigger for specific branches
+        conclusions:
+          type: array
+          items:
+            type: string
+            enum:
+            - success
+            - failure
+            - neutral
+            - cancelled
+            - timed_out
+            - action_required
+            - stale
+            - skipped
+          description: Only trigger for these completed workflow results, such as success
+        events:
+          type: array
+          items:
+            type: string
+            minLength: 1
+          description: Only trigger for these originating GitHub events; use schedule for cron runs, not push or pull_request
+    LinearIssueLabelAddedFilters:
+      type: object
+      properties:
+        teams:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the issue belongs to one of the specified teams
+        assignedTo:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the issue is assigned to one of the specified users
+        labels:
+          type: array
+          items:
+            type: string
+          description: Only trigger if one of the specified labels was added to the issue
+    GithubTemboPullRequestOpenedFilters:
+      type: object
+      properties:
+        repositories:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the pull request is in one of the repositories
+        draftPrs:
+          type: boolean
+          description: Also trigger for draft pull requests
+    SentryIssueCreatedFilters:
+      type: object
+      properties:
+        priorities:
+          type: array
+          items:
+            type: string
+            enum:
+            - high
+            - medium
+            - low
+          description: Only trigger if the issue has one of the specified priorities
+        projectSlugs:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the issue is in one of the specified projects
+    TipTapMentionAttributes:
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+        label:
+          type:
+          - string
+          - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+        mentionSuggestionChar:
+          type:
+          - string
+          - 'null'
+        metadata:
+          type:
+          - object
+          - 'null'
+          properties:
+            integrationType:
+              type: string
+            codeRepositoryId:
+              type: string
+            isHeader:
+              type: boolean
+            argumentHint:
+              type: string
+            commandName:
+              type: string
+            source:
+              type: string
+          additionalProperties: {}
+      additionalProperties: {}
+    SlackMessageReactionAddedFilters:
+      type: object
+      properties:
+        emojis:
+          type: array
+          items:
+            type: string
+          description: Only trigger if one of these emoji reactions is added
+        channels:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the reaction is added in one of these channels
+        users:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the reaction is added by one of these user names
+    AtlassianIssueUpdatedFilters:
+      type: object
+      properties:
+        projects:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the issue is in one of the specified projects
+        issueTypes:
+          type: array
+          items:
+            type: string
+          description: Only trigger for the specified issue types, such as Story, Bug, or Sub-task.
+        assignedTo:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the issue is assigned to one of the specified users
+        labels:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the issue has at least one of the specified labels
+    GitlabIssueClosedFilters:
+      type: object
+      properties:
+        repositories:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the issue is in one of the repositories
+        closedBy:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the issue was closed by one of the specified users
+        temboIssues:
+          type: boolean
+          description: Enable agent for Tembo-created issues (disabled by default)
+    GithubPullRequestMergedFilters:
+      type: object
+      properties:
+        repositories:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the pull request is in one of the repositories
+        mergedBy:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the pull request was merged by one of the specified users
+        temboPrs:
+          type: boolean
+          default: true
+          description: Enable agent for Tembo-created pull requests (enabled by default)
+    GithubWorkflowRunFailedFilters:
+      type: object
+      properties:
+        repositories:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the workflow run is in one of the repositories
+        workflowNames:
+          type: array
+          items:
+            type: string
+          description: Only trigger for specific workflow names
+        branches:
+          type: array
+          items:
+            type: string
+          description: Only trigger for specific branches
+    AtlassianIssueLabelAddedFilters:
+      type: object
+      properties:
+        projects:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the issue is in one of the specified projects
+        teams:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the issue belongs to one of these Jira teams. Enter exact team names or team IDs (from the team profile URL).
+        labels:
+          type: array
+          items:
+            type: string
+          description: Only trigger if one of the specified labels was added
+    AgentRunEventPayload:
+      type: object
+      additionalProperties: {}
+      description: Custom webhook input. Arbitrary keys and nested JSON values are preserved and passed to the agent.
+    GithubPullRequestReadyForReviewFilters:
+      type: object
+      properties:
+        repositories:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the pull request is in one of the repositories
+        openedBy:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the pull request was opened by one of the specified users
+        temboPrs:
+          type: boolean
+          default: true
+          description: Enable agent for Tembo-created pull requests (enabled by default)
+    GithubPullRequestOpenedFilters:
+      type: object
+      properties:
+        repositories:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the pull request is in one of the repositories
+        labels:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the pull request has at least one of the specified labels
+        openedBy:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the pull request was opened by one of the specified users
+        branches:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the pull request targets one of these branches
+        draftPrs:
+          type: boolean
+          description: Trigger also for draft pull requests (disabled by default)
+        temboPrs:
+          type: boolean
+          default: true
+          description: Enable agent for Tembo-created pull requests (enabled by default)
+    AgentOptionsInput:
+      anyOf:
+      - type: object
+        properties:
+          reasoningLevel:
+            type: string
+            minLength: 1
+            maxLength: 100
+          mode:
+            type: string
+            enum:
+            - normal
+            - planning
+          speed:
+            type: string
+            enum:
+            - normal
+            - fast
+            - ultrafast
+          goal:
+            type: object
+            properties:
+              enabled:
+                type: boolean
+              objective:
+                type: string
+                maxLength: 100000
+            additionalProperties: false
+        additionalProperties: true
+      - $ref: '#/components/schemas/RuntimeAgentOptions'
+      description: Execution settings for the selected agent runtime, including provider-specific options.
+    TriggerFilters:
+      anyOf:
+      - allOf:
+        - $ref: '#/components/schemas/AtlassianIssueAddedToBoardFilters'
+        additionalProperties: {}
+      - allOf:
+        - $ref: '#/components/schemas/AtlassianIssueAssignedToUserFilters'
+        additionalProperties: {}
+      - allOf:
+        - $ref: '#/components/schemas/AtlassianIssueCommentCreatedFilters'
+        additionalProperties: {}
+      - allOf:
+        - $ref: '#/components/schemas/AtlassianIssueCreatedFilters'
+        additionalProperties: {}
+      - allOf:
+        - $ref: '#/components/schemas/AtlassianIssueLabelAddedFilters'
+        additionalProperties: {}
+      - allOf:
+        - $ref: '#/components/schemas/AtlassianIssueStatusChangedFilters'
+        additionalProperties: {}
+      - allOf:
+        - $ref: '#/components/schemas/AtlassianIssueUpdatedFilters'
+        additionalProperties: {}
+      - allOf:
+        - $ref: '#/components/schemas/BitbucketPullRequestOpenedFilters'
+        additionalProperties: {}
+      - allOf:
+        - $ref: '#/components/schemas/GithubCreateFilters'
+        additionalProperties: {}
+      - allOf:
+        - $ref: '#/components/schemas/GithubIssueClosedFilters'
+        additionalProperties: {}
+      - allOf:
+        - $ref: '#/components/schemas/GithubIssueCommentCreatedFilters'
+        additionalProperties: {}
+      - allOf:
+        - $ref: '#/components/schemas/GithubIssueOpenedFilters'
+        additionalProperties: {}
+      - allOf:
+        - $ref: '#/components/schemas/GithubPullRequestClosedFilters'
+        additionalProperties: {}
+      - allOf:
+        - $ref: '#/components/schemas/GithubPullRequestMergedFilters'
+        additionalProperties: {}
+      - allOf:
+        - $ref: '#/components/schemas/GithubPullRequestOpenedFilters'
+        additionalProperties: {}
+      - allOf:
+        - $ref: '#/components/schemas/GithubPullRequestReadyForReviewFilters'
+        additionalProperties: {}
+      - allOf:
+        - $ref: '#/components/schemas/GithubReleasePublishedFilters'
+        additionalProperties: {}
+      - allOf:
+        - $ref: '#/components/schemas/GithubPullRequestSynchronizeFilters'
+        additionalProperties: {}
+      - allOf:
+        - $ref: '#/components/schemas/GithubTemboPullRequestOpenedFilters'
+        additionalProperties: {}
+      - allOf:
+        - $ref: '#/components/schemas/GithubWorkflowRunFailedFilters'
+        additionalProperties: {}
+      - allOf:
+        - $ref: '#/components/schemas/GithubWorkflowRunCompletedFilters'
+        additionalProperties: {}
+      - allOf:
+        - $ref: '#/components/schemas/GitlabBotMergeRequestCommentFilters'
+        additionalProperties: {}
+      - allOf:
+        - $ref: '#/components/schemas/GitlabIssueClosedFilters'
+        additionalProperties: {}
+      - allOf:
+        - $ref: '#/components/schemas/GitlabIssueOpenedFilters'
+        additionalProperties: {}
+      - allOf:
+        - $ref: '#/components/schemas/GitlabMergeRequestClosedFilters'
+        additionalProperties: {}
+      - allOf:
+        - $ref: '#/components/schemas/GitlabMergeRequestMergedFilters'
+        additionalProperties: {}
+      - allOf:
+        - $ref: '#/components/schemas/GitlabMergeRequestOpenedFilters'
+        additionalProperties: {}
+      - allOf:
+        - $ref: '#/components/schemas/GitlabMergeRequestUpdatedFilters'
+        additionalProperties: {}
+      - allOf:
+        - $ref: '#/components/schemas/GitlabPipelineFailedFilters'
+        additionalProperties: {}
+      - allOf:
+        - $ref: '#/components/schemas/GitlabRefCreatedFilters'
+        additionalProperties: {}
+      - allOf:
+        - $ref: '#/components/schemas/LinearIssueCreateFilters'
+        additionalProperties: {}
+      - allOf:
+        - $ref: '#/components/schemas/LinearIssueLabelAddedFilters'
+        additionalProperties: {}
+      - allOf:
+        - $ref: '#/components/schemas/LinearIssueStatusChangedFilters'
+        additionalProperties: {}
+      - allOf:
+        - $ref: '#/components/schemas/LinearIssueUpdatedFilters'
+        additionalProperties: {}
+      - allOf:
+        - $ref: '#/components/schemas/SentryIssueCreatedFilters'
+        additionalProperties: {}
+      - allOf:
+        - $ref: '#/components/schemas/SlackMessageReactionAddedFilters'
+        additionalProperties: {}
+      - allOf:
+        - $ref: '#/components/schemas/SlackMessageSentInChannelFilters'
+        additionalProperties: {}
+      - type: object
+        properties:
+          spaces:
+            type: array
+            items:
+              type: string
+            description: Only trigger if the page is in a space with one of these names or IDs
+          titleContains:
+            type: array
+            items:
+              type: string
+            description: Only trigger if the page title contains one of these substrings
+        additionalProperties: {}
+      - type: object
+        properties:
+          spaces:
+            type: array
+            items:
+              type: string
+            description: Only trigger if the page is in a space with one of these names or IDs
+          titleContains:
+            type: array
+            items:
+              type: string
+            description: Only trigger if the page title contains one of these substrings
+          previousSpaces:
+            type: array
+            items:
+              type: string
+            description: Only trigger if the page was moved from a space with one of these names or IDs
+        additionalProperties: {}
+      - type: object
+        properties:
+          spaces:
+            type: array
+            items:
+              type: string
+            description: Only trigger if the page is in a space with one of these names or IDs
+          titleContains:
+            type: array
+            items:
+              type: string
+            description: Only trigger if the page title contains one of these substrings
+          locations:
+            type: array
+            items:
+              type: string
+              enum:
+              - footer
+              - inline
+            description: Only trigger for footer comments, inline comments, or both
+        additionalProperties: {}
+      - type: object
+        properties:
+          spaces:
+            type: array
+            items:
+              type: string
+            description: Only trigger if the page is in a space with one of these names or IDs
+          titleContains:
+            type: array
+            items:
+              type: string
+            description: Only trigger if the page title contains one of these substrings
+          labels:
+            type: array
+            items:
+              type: string
+            description: Only trigger if the added label has one of these values
+          commentContains:
+            type: array
+            items:
+              type: string
+            description: Only trigger if the comment contains one of these substrings
+        additionalProperties: {}
+      - type: object
+        properties:
+          spaces:
+            type: array
+            items:
+              type: string
+            description: Only trigger if the page is in a space with one of these names or IDs
+          titleContains:
+            type: array
+            items:
+              type: string
+            description: Only trigger if the page title contains one of these substrings
+          labels:
+            type: array
+            items:
+              type: string
+            description: Only trigger if the removed label has one of these values
+          commentContains:
+            type: array
+            items:
+              type: string
+            description: Only trigger if the comment contains one of these substrings
+        additionalProperties: {}
+      - allOf:
+        - $ref: '#/components/schemas/EmptyTriggerFilters'
+        additionalProperties: {}
+      description: Conditions that determine whether the selected integration event starts the agent. Available fields depend on the integration and event type.
+    AtlassianIssueStatusChangedFilters:
+      type: object
+      properties:
+        projects:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the issue is in one of the specified projects
+        statuses:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the issue was moved to one of the specified statuses
+        previousStatuses:
+          type: array
+          items:
+            type: string
+          description: Only trigger when the issue changes from one of the specified previous statuses.
+        issueTypes:
+          type: array
+          items:
+            type: string
+          description: Only trigger for the specified issue types, such as Story, Bug, or Sub-task.
+        assignedTo:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the issue is assigned to one of the specified users
+        labels:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the issue has at least one of the specified labels
+    TipTapExtensionAttributes:
+      type: object
+      additionalProperties: {}
+    AtlassianIssueAddedToBoardFilters:
+      type: object
+      properties:
+        projects:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the issue is in one of the specified projects
+        boards:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the issue is on one of the specified boards
+        statuses:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the issue was moved to one of the specified statuses (board columns)
+        assignedTo:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the issue is assigned to one of the specified users
+        labels:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the issue has at least one of the specified labels
+        includeNewIssues:
+          type: boolean
+          description: Also trigger for newly created issues (not just status changes)
+    GitlabMergeRequestUpdatedFilters:
+      type: object
+      properties:
+        repositories:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the merge request is in one of the repositories
+        pushedBy:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the commits were pushed by one of the specified users
+        draftMrs:
+          type: boolean
+          description: Include draft merge requests. Drafts are excluded when omitted or false.
+        temboMrs:
+          type: boolean
+          description: Enable agent for Tembo-created merge requests (disabled by default)
+    LinearIssueUpdatedFilters:
+      type: object
+      properties:
+        teams:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the issue belongs to one of the specified teams
+        states:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the issue state type matches one of the specified types
+        assignedTo:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the issue is assigned to one of the specified users
+        labels:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the issue has at least one of the specified labels
+        temboIssues:
+          type: boolean
+          description: Enable agent for Tembo-updated issues (disabled by default)
+    GithubReleasePublishedFilters:
+      type: object
+      properties:
+        repositories:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the release is in one of the repositories
+    AtlassianIssueCommentCreatedFilters:
+      type: object
+      properties:
+        projects:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the issue is in one of the specified projects
+        commentedBy:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the comment was added by one of the specified users
+        messageContains:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the comment contains one of these substrings
+        labels:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the issue has at least one of the specified labels
+    GitlabPipelineFailedFilters:
+      type: object
+      properties:
+        repositories:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the pipeline is in one of the repositories
+        branches:
+          type: array
+          items:
+            type: string
+          description: Only trigger for specific branches
+    GitlabBotMergeRequestCommentFilters:
+      type: object
+      properties:
+        repositories:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the comment is in one of the repositories
+        botUsernames:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the comment is from one of these bot usernames
+    RuntimeAgentOptions:
+      type: object
+      additionalProperties: {}
+      description: Runtime-specific execution settings and provider extensions.
+    GithubPullRequestClosedFilters:
+      type: object
+      properties:
+        repositories:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the pull request is in one of the repositories
+        openedBy:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the pull request was opened by one of the specified users
+        temboPrs:
+          type: boolean
+          default: true
+          description: Enable agent for Tembo-created pull requests (enabled by default)
+    GitlabIssueOpenedFilters:
+      type: object
+      properties:
+        repositories:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the issue is in one of the repositories
+        openedBy:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the issue was opened by one of the specified users
+        temboIssues:
+          type: boolean
+          description: Enable agent for Tembo-created issues (disabled by default)
+    GitlabMergeRequestClosedFilters:
+      type: object
+      properties:
+        repositories:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the merge request is in one of the repositories
+        closedBy:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the merge request was closed by one of the specified users
+        temboMrs:
+          type: boolean
+          description: Enable agent for Tembo-created merge requests (disabled by default)
+    BitbucketPullRequestOpenedFilters:
+      type: object
+      properties:
+        repositories:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the pull request is in one of the repositories
+        openedBy:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the pull request was opened by one of the specified users
+        temboPrs:
+          type: boolean
+          description: Enable agent for Tembo-created pull requests (disabled by default)
+    GitlabRefCreatedFilters:
+      type: object
+      properties:
+        repositories:
+          type: array
+          items:
+            type: string
+        refType:
+          type: array
+          items:
+            type: string
+            enum:
+            - branch
+            - tag
+          description: 'Only trigger for the specified Git reference type: branch or tag.'
+        branchNames:
+          type: array
+          items:
+            type: string
+        tagNames:
+          type: array
+          items:
+            type: string
+    GitlabMergeRequestMergedFilters:
+      type: object
+      properties:
+        repositories:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the merge request is in one of the repositories
+        mergedBy:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the merge request was merged by one of the specified users
+        temboMrs:
+          type: boolean
+          description: Enable agent for Tembo-created merge requests (disabled by default)
+    GithubIssueOpenedFilters:
+      type: object
+      properties:
+        repositories:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the issue is in one of the repositories
+        openedBy:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the issue was opened by one of the specified users
+        temboIssues:
+          type: boolean
+          description: Enable agent for Tembo-created issues (disabled by default)
+    TipTapMark:
+      type: object
+      properties:
+        type:
+          type: string
+          minLength: 1
+          maxLength: 100
+          not:
+            enum:
+            - link
+        attrs:
+          $ref: '#/components/schemas/TipTapExtensionAttributes'
+      required:
+      - type
+      additionalProperties: {}
+    SlackMessageSentInChannelFilters:
+      type: object
+      properties:
+        channels:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the message is sent in one of the channels
+        users:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the message was sent by one of these user names
+        messageContains:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the message contains one of these substrings
+        messageNotContains:
+          type: array
+          items:
+            type: string
+          description: Skip messages containing any of these case-sensitive substrings (for example, On-call handover:)
+    GithubIssueClosedFilters:
+      type: object
+      properties:
+        repositories:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the issue is in one of the repositories
+        openedBy:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the issue was opened by one of the specified users
+        temboIssues:
+          type: boolean
+          description: Enable agent for Tembo-created issues (disabled by default)
+    GithubCreateFilters:
+      type: object
+      properties:
+        repositories:
+          type: array
+          items:
+            type: string
+        refType:
+          type: array
+          items:
+            type: string
+            enum:
+            - branch
+            - tag
+          description: 'Only trigger for the specified Git reference type: branch or tag.'
+        branchNames:
+          type: array
+          items:
+            type: string
+        tagNames:
+          type: array
+          items:
+            type: string
+    TipTapDocument:
+      anyOf:
+      - $ref: '#/components/schemas/TipTapNode'
+      - $ref: '#/components/schemas/CustomDocument'
+      description: Rich-text document containing text, formatting, images, and mentions. A document typically has a "doc" root with nested content nodes.
+      example:
+        type: doc
+        content:
+        - type: paragraph
+          content:
+          - type: text
+            text: Hello
+    AgentState:
+      type: object
+      additionalProperties: {}
+      description: User-defined state keyed by name. Values may be any JSON value, including nested objects and arrays. No application-specific keys are required.
+    GitlabMergeRequestOpenedFilters:
+      type: object
+      properties:
+        repositories:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the merge request is in one of the repositories
+        draftMrs:
+          type: boolean
+          description: Include draft merge requests. Drafts are excluded when omitted or false.
+        temboMrs:
+          type: boolean
+          description: Enable agent for Tembo-created merge requests (disabled by default)
+    TipTapImageAttributes:
+      type: object
+      properties:
+        src:
+          type:
+          - string
+          - 'null'
+        alt:
+          type:
+          - string
+          - 'null'
+        title:
+          type:
+          - string
+          - 'null'
+        width:
+          type:
+          - string
+          - 'null'
+        data-uploading:
+          type:
+          - string
+          - 'null'
+        data-placeholder-id:
+          type:
+          - string
+          - 'null'
+        upload-progress:
+          type:
+          - string
+          - 'null'
+      additionalProperties: {}
+    AtlassianIssueCreatedFilters:
+      type: object
+      properties:
+        projects:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the issue is in one of the specified projects
+        assignedTo:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the issue is assigned to one of the specified users
+        issueTypes:
+          type: array
+          items:
+            type: string
+          description: Only trigger for the specified issue types, such as Story, Bug, or Sub-task.
+        labels:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the issue has at least one of the specified labels
+    LinearIssueStatusChangedFilters:
+      type: object
+      properties:
+        teams:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the issue belongs to one of the specified teams
+        statuses:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the issue was moved to one of the specified statuses
+        previousStatuses:
+          type: array
+          items:
+            type: string
+          description: Only trigger when the issue changes from one of the specified previous statuses.
+        assignedTo:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the issue is assigned to one of the specified users
+        labels:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the issue has at least one of the specified labels
+    GithubIssueCommentCreatedFilters:
+      type: object
+      properties:
+        repositories:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the comment is in one of the repositories
+        commentedBy:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the comment was created by one of the specified users
+        commentOn:
+          type: array
+          items:
+            type: string
+            enum:
+            - issues
+            - pull_requests
+          description: Trigger on comments on issues, pull requests, or both
+        messageContains:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the comment contains one of these substrings
+    CustomDocument:
+      type: object
+      additionalProperties: {}
+      description: Rich-text content with custom document properties and node attributes.
+    TipTapLinkMark:
+      type: object
+      properties:
+        type:
+          type: string
+          const: link
+        attrs:
+          type: object
+          properties:
+            href:
+              type:
+              - string
+              - 'null'
+            target:
+              type:
+              - string
+              - 'null'
+            rel:
+              type:
+              - string
+              - 'null'
+            class:
+              type:
+              - string
+              - 'null'
+            title:
+              type:
+              - string
+              - 'null'
+          additionalProperties: {}
+      required:
+      - type
+      additionalProperties: {}
+    LinearIssueCreateFilters:
+      type: object
+      properties:
+        teams:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the issue belongs to one of the specified teams
+        states:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the issue state type matches one of the specified types
+        openedBy:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the issue was opened by one of the specified users
+        assignedTo:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the issue is assigned to one of the specified users
+        labels:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the issue has at least one of the specified labels
+        temboIssues:
+          type: boolean
+          description: Enable agent for Tembo-created issues (disabled by default)
+    EmptyTriggerFilters:
+      type: object
+    TipTapContentNode:
+      type: object
+      properties:
+        text:
+          type: string
+          maxLength: 1000000
+        marks:
+          type: array
+          items:
+            anyOf:
+            - $ref: '#/components/schemas/TipTapLinkMark'
+            - $ref: '#/components/schemas/TipTapMark'
+          maxItems: 1000
+        type:
+          type: string
+          minLength: 1
+          maxLength: 100
+          not:
+            enum:
+            - image
+            - mention
+            - heading
+            - orderedList
+            - taskItem
+            - codeBlock
+        attrs:
+          $ref: '#/components/schemas/TipTapExtensionAttributes'
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/TipTapNode'
+          maxItems: 10000
+      additionalProperties: {}
+    GithubPullRequestSynchronizeFilters:
+      type: object
+      properties:
+        repositories:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the pull request is in one of the repositories
+        pushedBy:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the commits were pushed by one of the specified users
+        draftPrs:
+          type: boolean
+          description: Trigger even if the pull request is a draft
+        temboPrs:
+          type: boolean
+          default: true
+          description: Enable agent for Tembo-created pull requests (enabled by default)
+    TipTapNode:
+      anyOf:
+      - oneOf:
+        - type: object
+          properties:
+            text:
+              type: string
+              maxLength: 1000000
+            marks:
+              type: array
+              items:
+                anyOf:
+                - $ref: '#/components/schemas/TipTapLinkMark'
+                - $ref: '#/components/schemas/TipTapMark'
+              maxItems: 1000
+            type:
+              type: string
+              const: image
+            attrs:
+              $ref: '#/components/schemas/TipTapImageAttributes'
+            content:
+              type: array
+              items:
+                $ref: '#/components/schemas/TipTapNode'
+              maxItems: 10000
+          required:
+          - type
+          additionalProperties: {}
+        - type: object
+          properties:
+            text:
+              type: string
+              maxLength: 1000000
+            marks:
+              type: array
+              items:
+                anyOf:
+                - $ref: '#/components/schemas/TipTapLinkMark'
+                - $ref: '#/components/schemas/TipTapMark'
+              maxItems: 1000
+            type:
+              type: string
+              const: mention
+            attrs:
+              $ref: '#/components/schemas/TipTapMentionAttributes'
+            content:
+              type: array
+              items:
+                $ref: '#/components/schemas/TipTapNode'
+              maxItems: 10000
+          required:
+          - type
+          additionalProperties: {}
+        - type: object
+          properties:
+            text:
+              type: string
+              maxLength: 1000000
+            marks:
+              type: array
+              items:
+                anyOf:
+                - $ref: '#/components/schemas/TipTapLinkMark'
+                - $ref: '#/components/schemas/TipTapMark'
+              maxItems: 1000
+            type:
+              type: string
+              const: heading
+            attrs:
+              type: object
+              properties:
+                level:
+                  type: integer
+                  minimum: 1
+                  maximum: 6
+              additionalProperties: {}
+            content:
+              type: array
+              items:
+                $ref: '#/components/schemas/TipTapNode'
+              maxItems: 10000
+          required:
+          - type
+          additionalProperties: {}
+        - type: object
+          properties:
+            text:
+              type: string
+              maxLength: 1000000
+            marks:
+              type: array
+              items:
+                anyOf:
+                - $ref: '#/components/schemas/TipTapLinkMark'
+                - $ref: '#/components/schemas/TipTapMark'
+              maxItems: 1000
+            type:
+              type: string
+              const: orderedList
+            attrs:
+              type: object
+              properties:
+                start:
+                  type: integer
+                type:
+                  type:
+                  - string
+                  - 'null'
+              additionalProperties: {}
+            content:
+              type: array
+              items:
+                $ref: '#/components/schemas/TipTapNode'
+              maxItems: 10000
+          required:
+          - type
+          additionalProperties: {}
+        - type: object
+          properties:
+            text:
+              type: string
+              maxLength: 1000000
+            marks:
+              type: array
+              items:
+                anyOf:
+                - $ref: '#/components/schemas/TipTapLinkMark'
+                - $ref: '#/components/schemas/TipTapMark'
+              maxItems: 1000
+            type:
+              type: string
+              const: taskItem
+            attrs:
+              type: object
+              properties:
+                checked:
+                  type: boolean
+              additionalProperties: {}
+            content:
+              type: array
+              items:
+                $ref: '#/components/schemas/TipTapNode'
+              maxItems: 10000
+          required:
+          - type
+          additionalProperties: {}
+        - type: object
+          properties:
+            text:
+              type: string
+              maxLength: 1000000
+            marks:
+              type: array
+              items:
+                anyOf:
+                - $ref: '#/components/schemas/TipTapLinkMark'
+                - $ref: '#/components/schemas/TipTapMark'
+              maxItems: 1000
+            type:
+              type: string
+              const: codeBlock
+            attrs:
+              type: object
+              properties:
+                language:
+                  type:
+                  - string
+                  - 'null'
+              additionalProperties: {}
+            content:
+              type: array
+              items:
+                $ref: '#/components/schemas/TipTapNode'
+              maxItems: 10000
+          required:
+          - type
+          additionalProperties: {}
+      - $ref: '#/components/schemas/TipTapContentNode'
+    AtlassianIssueAssignedToUserFilters:
+      type: object
+      properties:
+        projects:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the issue is in one of the specified projects
+        assignedTo:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the issue is assigned to one of the specified users
+        labels:
+          type: array
+          items:
+            type: string
+          description: Only trigger if the issue has at least one of the specified labels
+        includeNewIssues:
+          type: boolean
+          description: Also trigger for newly created issues that are already assigned
+  securitySchemes:
+    apiKey:
+      type: http
+      scheme: bearer
+x-refined-from:
+- tembo-openapi-original.json
+- tembo-openapi.yml

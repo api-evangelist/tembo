@@ -1,0 +1,4945 @@
+openapi: 3.2.0
+info:
+  title: Tembo Sessions API
+  version: 1.0.0
+  description: 'Operations tagged Sessions across 2 of this provider''s published API definitions: tembo-openapi-original.json, tembo-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.tembo.io/
+  description: Tembo API
+tags:
+- name: Sessions
+paths:
+  /v1/sessions/live:
+    post:
+      operationId: sessionLiveTicket
+      summary: Authorize live session changes
+      description: Issue a 30-second, session-bound WebSocket ticket.
+      tags:
+      - Sessions
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Authorize live session changes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ticket:
+                    type: string
+                required:
+                - ticket
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: The session is private
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: The caller is not permitted to perform this operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Session resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Session operation conflicts with existing data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Session operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '502':
+          description: Session runtime or provider operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                scope:
+                  type: object
+                  properties:
+                    sessionId:
+                      type: string
+                      format: uuid
+                  required:
+                  - sessionId
+                  additionalProperties: false
+              required:
+              - scope
+              additionalProperties: false
+    get:
+      operationId: sessionLive
+      summary: Live session changes
+      tags:
+      - Sessions
+      responses:
+        '101':
+          description: Authorized native WebSocket
+        '401':
+          description: Invalid or expired live ticket
+        '404':
+          description: Session not found
+      parameters:
+      - in: query
+        name: ticket
+        schema:
+          type: string
+          minLength: 1
+        required: true
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/sessions/sources:
+    get:
+      operationId: listSessionSources
+      summary: List session sources
+      description: List session sources in the authenticated organization.
+      tags:
+      - Sessions
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: List session sources
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        createdAt:
+                          type: string
+                          format: date-time
+                        enabledAt:
+                          type:
+                          - string
+                          - 'null'
+                          format: date-time
+                        externalId:
+                          type:
+                          - string
+                          - 'null'
+                        externalUrl:
+                          type:
+                          - string
+                          - 'null'
+                        id:
+                          type: string
+                          format: uuid
+                        lastScannedAt:
+                          type:
+                          - string
+                          - 'null'
+                          format: date-time
+                        lastSeenAt:
+                          type:
+                          - string
+                          - 'null'
+                          format: date-time
+                        name:
+                          type: string
+                        type:
+                          type: string
+                        updatedAt:
+                          type: string
+                          format: date-time
+                        integration:
+                          type:
+                          - object
+                          - 'null'
+                          properties:
+                            type:
+                              type: string
+                          required:
+                          - type
+                        repositories:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                                format: uuid
+                              name:
+                                type: string
+                              owner:
+                                type:
+                                - string
+                                - 'null'
+                              baseBranch:
+                                type:
+                                - string
+                                - 'null'
+                              provider:
+                                type: string
+                            required:
+                            - id
+                            - name
+                            - owner
+                            - baseBranch
+                            - provider
+                            additionalProperties: false
+                      required:
+                      - createdAt
+                      - enabledAt
+                      - externalId
+                      - externalUrl
+                      - id
+                      - lastScannedAt
+                      - lastSeenAt
+                      - name
+                      - type
+                      - updatedAt
+                      - integration
+                      - repositories
+                      additionalProperties: false
+                  nextCursor:
+                    type:
+                    - string
+                    - 'null'
+                    format: uuid
+                  totalCount:
+                    type: integer
+                    minimum: 0
+                required:
+                - items
+                - nextCursor
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: The session is private
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: The caller is not permitted to perform this operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Session resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Session operation conflicts with existing data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Session operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '502':
+          description: Session runtime or provider operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: query
+        name: cursor
+        schema:
+          type: string
+          format: uuid
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 50
+      - in: query
+        name: enabled
+        schema:
+          type: boolean
+      - in: query
+        name: includeTotal
+        schema:
+          type: boolean
+          default: false
+      - in: query
+        name: integrationId
+        schema:
+          type: string
+          format: uuid
+      - in: query
+        name: search
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 1000
+      - in: query
+        name: sessionId
+        schema:
+          type: string
+          format: uuid
+      - in: query
+        name: types
+        schema:
+          type: array
+          items:
+            type: string
+            minLength: 1
+          default: []
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/sessions/sources/{sourceId}:
+    get:
+      operationId: retrieveSessionSource
+      summary: Retrieve a session source
+      description: Retrieve one session source.
+      tags:
+      - Sessions
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Retrieve a session source
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  createdAt:
+                    type: string
+                    format: date-time
+                  enabledAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  externalId:
+                    type:
+                    - string
+                    - 'null'
+                  externalUrl:
+                    type:
+                    - string
+                    - 'null'
+                  id:
+                    type: string
+                    format: uuid
+                  lastScannedAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  lastSeenAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  name:
+                    type: string
+                  type:
+                    type: string
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  integration:
+                    type:
+                    - object
+                    - 'null'
+                    properties:
+                      type:
+                        type: string
+                    required:
+                    - type
+                  repositories:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                        name:
+                          type: string
+                        owner:
+                          type:
+                          - string
+                          - 'null'
+                        baseBranch:
+                          type:
+                          - string
+                          - 'null'
+                        provider:
+                          type: string
+                      required:
+                      - id
+                      - name
+                      - owner
+                      - baseBranch
+                      - provider
+                      additionalProperties: false
+                required:
+                - createdAt
+                - enabledAt
+                - externalId
+                - externalUrl
+                - id
+                - lastScannedAt
+                - lastSeenAt
+                - name
+                - type
+                - updatedAt
+                - integration
+                - repositories
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: The session is private
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: The caller is not permitted to perform this operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Session resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Session operation conflicts with existing data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Session operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '502':
+          description: Session runtime or provider operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: sourceId
+        schema:
+          type: string
+          format: uuid
+        required: true
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/sessions:
+    get:
+      operationId: listSessions
+      summary: List sessions
+      description: List sessions you have permission to access, with cursor pagination.
+      tags:
+      - Sessions
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: List sessions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        agent:
+                          type:
+                          - string
+                          - 'null'
+                        agentId:
+                          type:
+                          - string
+                          - 'null'
+                          format: uuid
+                        createdAt:
+                          type: string
+                          format: date-time
+                        externalId:
+                          type:
+                          - string
+                          - 'null'
+                        id:
+                          type: string
+                          format: uuid
+                        kind:
+                          type: string
+                        lastQueuedAt:
+                          type:
+                          - string
+                          - 'null'
+                          format: date-time
+                        lastSeenAt:
+                          type: string
+                          format: date-time
+                        level:
+                          type: integer
+                        projectId:
+                          type:
+                          - string
+                          - 'null'
+                        title:
+                          type: string
+                        updatedAt:
+                          type: string
+                          format: date-time
+                        visibility:
+                          type: string
+                          enum:
+                          - public
+                          - private
+                          default: public
+                        artifacts:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                                format: uuid
+                              pullRequests:
+                                type: array
+                                items:
+                                  type: object
+                                  properties:
+                                    agent:
+                                      type:
+                                      - string
+                                      - 'null'
+                                    codeRepository:
+                                      type:
+                                      - object
+                                      - 'null'
+                                      properties:
+                                        id:
+                                          type: string
+                                          format: uuid
+                                        provider:
+                                          type: string
+                                      required:
+                                      - id
+                                      - provider
+                                      additionalProperties: false
+                                    id:
+                                      type: string
+                                      format: uuid
+                                    isDraft:
+                                      type: boolean
+                                    status:
+                                      type: string
+                                      enum:
+                                      - open
+                                      - merged
+                                      - closed
+                                    url:
+                                      type: string
+                                      format: uri
+                                  required:
+                                  - agent
+                                  - codeRepository
+                                  - id
+                                  - isDraft
+                                  - status
+                                  - url
+                                  additionalProperties: false
+                              type:
+                                type: string
+                                enum:
+                                - PullRequest
+                                - ToolCall
+                                - Plan
+                                - Response
+                                - File
+                                - Service
+                                - Source
+                            required:
+                            - id
+                            - pullRequests
+                            - type
+                            additionalProperties: false
+                        diffSummary:
+                          type:
+                          - object
+                          - 'null'
+                          properties:
+                            additions:
+                              type: integer
+                            deletions:
+                              type: integer
+                          required:
+                          - additions
+                          - deletions
+                          additionalProperties: false
+                        isPinned:
+                          type: boolean
+                        project:
+                          type:
+                          - object
+                          - 'null'
+                          properties:
+                            id:
+                              type: string
+                              format: uuid
+                            name:
+                              type: string
+                            icon:
+                              type: string
+                              enum:
+                              - folder
+                              - code
+                              - terminal
+                              - book
+                              - brain
+                              - bug
+                              - building
+                              - cloud
+                              - globe
+                              - idea
+                              - tools
+                              - magic
+                              - processor
+                              - sandbox
+                              - server
+                              - tasks
+                              - tactics
+                              - images
+                              - database
+                              - api
+                              - mobile
+                              - package
+                            color:
+                              type: string
+                              enum:
+                              - neutral
+                              - red
+                              - orange
+                              - yellow
+                              - green
+                              - teal
+                              - blue
+                              - purple
+                              - pink
+                          required:
+                          - id
+                          - name
+                          - icon
+                          - color
+                          additionalProperties: false
+                        sessionSource:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              format: uuid
+                            name:
+                              type: string
+                            type:
+                              type: string
+                            repositories:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  id:
+                                    type: string
+                                    format: uuid
+                                required:
+                                - id
+                                additionalProperties: false
+                          required:
+                          - id
+                          - name
+                          - type
+                          - repositories
+                          additionalProperties: false
+                        sourcePullRequest:
+                          type:
+                          - object
+                          - 'null'
+                          properties:
+                            id:
+                              type: string
+                              format: uuid
+                            url:
+                              type: string
+                              format: uri
+                            title:
+                              type:
+                              - string
+                              - 'null'
+                            status:
+                              type: string
+                              enum:
+                              - open
+                              - merged
+                              - closed
+                            isDraft:
+                              type: boolean
+                          required:
+                          - id
+                          - url
+                          - title
+                          - status
+                          - isDraft
+                          additionalProperties: false
+                        state:
+                          type: object
+                          properties:
+                            current:
+                              type: string
+                              enum:
+                              - inProgress
+                              - queued
+                              - completed
+                              - failed
+                              - cancelled
+                            isQueued:
+                              type: boolean
+                            isCancelled:
+                              type: boolean
+                            isCompleted:
+                              type: boolean
+                            isFailed:
+                              type: boolean
+                            inProgress:
+                              type: boolean
+                          required:
+                          - isQueued
+                          - isCancelled
+                          - isCompleted
+                          - isFailed
+                          - inProgress
+                          additionalProperties: false
+                      required:
+                      - agent
+                      - agentId
+                      - createdAt
+                      - externalId
+                      - id
+                      - kind
+                      - lastQueuedAt
+                      - lastSeenAt
+                      - level
+                      - projectId
+                      - title
+                      - updatedAt
+                      - visibility
+                      - artifacts
+                      - diffSummary
+                      - isPinned
+                      - project
+                      - sessionSource
+                      - sourcePullRequest
+                      - state
+                      additionalProperties: false
+                  nextCursor:
+                    type:
+                    - string
+                    - 'null'
+                  totalCount:
+                    type: integer
+                    minimum: 0
+                required:
+                - items
+                - nextCursor
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: The session is private
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: The caller is not permitted to perform this operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Session resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Session operation conflicts with existing data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Session operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '502':
+          description: Session runtime or provider operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: query
+        name: agentId
+        schema:
+          type: string
+          format: uuid
+      - in: query
+        name: createdBy
+        schema:
+          type: array
+          items:
+            type: string
+            minLength: 1
+          default: []
+      - in: query
+        name: createdAfter
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: cursor
+        schema:
+          type: string
+          maxLength: 500
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 50
+      - in: query
+        name: excludePinned
+        schema:
+          type: boolean
+      - in: query
+        name: externalIds
+        schema:
+          type: array
+          items:
+            type: string
+            minLength: 1
+          default: []
+      - in: query
+        name: hasProject
+        schema:
+          type: boolean
+      - in: query
+        name: includeArchived
+        schema:
+          type: boolean
+          default: true
+      - in: query
+        name: includeTotal
+        schema:
+          type: boolean
+          default: false
+      - in: query
+        name: participant
+        schema:
+          type: array
+          items:
+            type: string
+            minLength: 1
+          default: []
+      - in: query
+        name: pendingReviewerKeys
+        schema:
+          type: array
+          items:
+            type: string
+            minLength: 1
+          default: []
+      - in: query
+        name: projectIds
+        schema:
+          type: array
+          items:
+            type: string
+            minLength: 1
+          default: []
+      - in: query
+        name: pullRequestStatuses
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - open
+            - merged
+            - closed
+          default: []
+      - in: query
+        name: repositoryIds
+        schema:
+          type: array
+          items:
+            type: string
+            minLength: 1
+          default: []
+      - in: query
+        name: search
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 1000
+      - in: query
+        name: sortBy
+        schema:
+          type: string
+          enum:
+          - lastQueuedAt
+          - createdAt
+          - updatedAt
+          default: lastQueuedAt
+      - in: query
+        name: sourceIds
+        schema:
+          type: array
+          items:
+            type: string
+            minLength: 1
+          default: []
+      - in: query
+        name: sourceTypes
+        schema:
+          type: array
+          items:
+            type: string
+            minLength: 1
+          default: []
+      - in: query
+        name: state
+        schema:
+          type: string
+          enum:
+          - all
+          - active
+          - archived
+          default: all
+    post:
+      operationId: createSession
+      summary: Create a session
+      description: Create a session for a task. Provide the initial prompt in description and optionally configure its repositories and agent.
+      tags:
+      - Sessions
+      security:
+      - apiKey: []
+      responses:
+        '201':
+          description: Create a session
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  agent:
+                    type:
+                    - string
+                    - 'null'
+                  agentId:
+                    type:
+                    - string
+                    - 'null'
+                    format: uuid
+                  artifactType:
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - PullRequest
+                    - ToolCall
+                    - Plan
+                    - Response
+                    - File
+                    - Service
+                    - Source
+                    - null
+                  baseBranch:
+                    type:
+                    - string
+                    - 'null'
+                  branchName:
+                    type:
+                    - string
+                    - 'null'
+                  createdAt:
+                    type: string
+                    format: date-time
+                  externalId:
+                    type:
+                    - string
+                    - 'null'
+                  externalUrl:
+                    type:
+                    - string
+                    - 'null'
+                  id:
+                    type: string
+                    format: uuid
+                  kind:
+                    type: string
+                  lastQueuedAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  lastSeenAt:
+                    type: string
+                    format: date-time
+                  level:
+                    type: integer
+                  mode:
+                    type: string
+                    enum:
+                    - normal
+                    - planning
+                    default: normal
+                  projectId:
+                    type:
+                    - string
+                    - 'null'
+                  sandboxSize:
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - nano
+                    - micro
+                    - small
+                    - medium
+                    - large
+                    - xl
+                    - xxl
+                    - ultra
+                    - null
+                  sessionType:
+                    type: string
+                    enum:
+                    - Chat
+                    - Terminal
+                    default: Chat
+                  targetBranch:
+                    type:
+                    - string
+                    - 'null'
+                  title:
+                    type: string
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  visibility:
+                    type: string
+                    enum:
+                    - public
+                    - private
+                    default: public
+                  artifacts:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                        type:
+                          type: string
+                          enum:
+                          - PullRequest
+                          - ToolCall
+                          - Plan
+                          - Response
+                          - File
+                          - Service
+                          - Source
+                        createdAt:
+                          type: string
+                          format: date-time
+                        updatedAt:
+                          type: string
+                          format: date-time
+                        pullRequests:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                                format: uuid
+                              url:
+                                type: string
+                                format: uri
+                              title:
+                                type:
+                                - string
+                                - 'null'
+                              status:
+                                type: string
+                                enum:
+                                - open
+                                - merged
+                                - closed
+                              isDraft:
+                                type: boolean
+                              sourceBranch:
+                                type:
+                                - string
+                                - 'null'
+                              createdAt:
+                                type: string
+                                format: date-time
+                              agent:
+                                type:
+                                - string
+                                - 'null'
+                              diff:
+                                type:
+                                - object
+                                - 'null'
+                                properties:
+                                  additions:
+                                    type: integer
+                                    minimum: 0
+                                  deletions:
+                                    type: integer
+                                    minimum: 0
+                                  data:
+                                    type: string
+                                    maxLength: 1000000
+                              updatedAt:
+                                type: string
+                                format: date-time
+                              baseBranch:
+                                type:
+                                - string
+                                - 'null'
+                                maxLength: 500
+                              headSha:
+                                type:
+                                - string
+                                - 'null'
+                                maxLength: 200
+                              author:
+                                type:
+                                - object
+                                - 'null'
+                                properties:
+                                  avatarUrl:
+                                    type:
+                                    - string
+                                    - 'null'
+                                    format: uri
+                                  login:
+                                    type:
+                                    - string
+                                    - 'null'
+                                    maxLength: 500
+                                required:
+                                - avatarUrl
+                                - login
+                                additionalProperties: false
+                              codeRepository:
+                                type:
+                                - object
+                                - 'null'
+                                properties:
+                                  id:
+                                    type: string
+                                    format: uuid
+                                  name:
+                                    type: string
+                                  owner:
+                                    type:
+                                    - string
+                                    - 'null'
+                                  baseBranch:
+                                    type:
+                                    - string
+                                    - 'null'
+                                  provider:
+                                    type: string
+                                required:
+                                - id
+                                - name
+                                - owner
+                                - baseBranch
+                                - provider
+                                additionalProperties: false
+                            required:
+                            - id
+                            - url
+                            - title
+                            - status
+                            - isDraft
+                            - sourceBranch
+                            - createdAt
+                            - agent
+                            - diff
+                            - updatedAt
+                            - baseBranch
+                            - headSha
+                            - author
+                            - codeRepository
+                            additionalProperties: false
+                      required:
+                      - id
+                      - type
+                      - createdAt
+                      - updatedAt
+                      - pullRequests
+                      additionalProperties: false
+                  description:
+                    type:
+                    - string
+                    - 'null'
+                  diffSummary:
+                    type:
+                    - object
+                    - 'null'
+                    properties:
+                      additions:
+                        type: integer
+                      deletions:
+                        type: integer
+                    required:
+                    - additions
+                    - deletions
+                    additionalProperties: false
+                  htmlUrl:
+                    type: string
+                    format: uri
+                  isPinned:
+                    type: boolean
+                  project:
+                    type:
+                    - object
+                    - 'null'
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                      name:
+                        type: string
+                      icon:
+                        type: string
+                        enum:
+                        - folder
+                        - code
+                        - terminal
+                        - book
+                        - brain
+                        - bug
+                        - building
+                        - cloud
+                        - globe
+                        - idea
+                        - tools
+                        - magic
+                        - processor
+                        - sandbox
+                        - server
+                        - tasks
+                        - tactics
+                        - images
+                        - database
+                        - api
+                        - mobile
+                        - package
+                      color:
+                        type: string
+                        enum:
+                        - neutral
+                        - red
+                        - orange
+                        - yellow
+                        - green
+                        - teal
+                        - blue
+                        - purple
+                        - pink
+                    required:
+                    - id
+                    - name
+                    - icon
+                    - color
+                    additionalProperties: false
+                  sessionSource:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                      name:
+                        type: string
+                      type:
+                        type: string
+                      repositories:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              format: uuid
+                            name:
+                              type: string
+                            provider:
+                              type: string
+                          required:
+                          - id
+                          - name
+                          - provider
+                          additionalProperties: false
+                    required:
+                    - id
+                    - name
+                    - type
+                    - repositories
+                    additionalProperties: false
+                  sourcePullRequest:
+                    type:
+                    - object
+                    - 'null'
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                      url:
+                        type: string
+                        format: uri
+                      title:
+                        type:
+                        - string
+                        - 'null'
+                      status:
+                        type: string
+                        enum:
+                        - open
+                        - merged
+                        - closed
+                      isDraft:
+                        type: boolean
+                    required:
+                    - id
+                    - url
+                    - title
+                    - status
+                    - isDraft
+                    additionalProperties: false
+                  state:
+                    type: object
+                    properties:
+                      current:
+                        type: string
+                        enum:
+                        - inProgress
+                        - queued
+                        - completed
+                        - failed
+                        - cancelled
+                      isQueued:
+                        type: boolean
+                      isCancelled:
+                        type: boolean
+                      isCompleted:
+                        type: boolean
+                      isFailed:
+                        type: boolean
+                      inProgress:
+                        type: boolean
+                    required:
+                    - isQueued
+                    - isCancelled
+                    - isCompleted
+                    - isFailed
+                    - inProgress
+                    additionalProperties: false
+                required:
+                - agent
+                - agentId
+                - artifactType
+                - baseBranch
+                - branchName
+                - createdAt
+                - externalId
+                - externalUrl
+                - id
+                - kind
+                - lastQueuedAt
+                - lastSeenAt
+                - level
+                - mode
+                - projectId
+                - sandboxSize
+                - sessionType
+                - targetBranch
+                - title
+                - updatedAt
+                - visibility
+                - artifacts
+                - description
+                - diffSummary
+                - htmlUrl
+                - isPinned
+                - project
+                - sessionSource
+                - sourcePullRequest
+                - state
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: The session is private
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: The caller is not permitted to perform this operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Session resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Session operation conflicts with existing data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Session operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '502':
+          description: Session runtime or provider operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                agent:
+                  type: string
+                  minLength: 1
+                  maxLength: 500
+                baseBranch:
+                  type:
+                  - string
+                  - 'null'
+                  minLength: 1
+                  maxLength: 500
+                mcpServers:
+                  type: array
+                  items:
+                    type: string
+                    minLength: 1
+                    maxLength: 500
+                  maxItems: 100
+                  default: []
+                projectId:
+                  type:
+                  - string
+                  - 'null'
+                sandboxSize:
+                  type: string
+                  enum:
+                  - nano
+                  - micro
+                  - small
+                  - medium
+                  - large
+                  - xl
+                  - xxl
+                  - ultra
+                targetBranch:
+                  type:
+                  - string
+                  - 'null'
+                  minLength: 1
+                  maxLength: 500
+                visibility:
+                  type: string
+                  enum:
+                  - private
+                  - public
+                agentOptions:
+                  $ref: '#/components/schemas/AgentOptions'
+                branchName:
+                  type:
+                  - string
+                  - 'null'
+                  minLength: 1
+                  maxLength: 500
+                codeRepositoryIds:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+                  maxItems: 100
+                description:
+                  type: string
+                  minLength: 1
+                  maxLength: 1000000
+                  description: Initial task or prompt for the session.
+                id:
+                  type: string
+                  format: uuid
+                richContent:
+                  $ref: '#/components/schemas/SessionTipTapDocument'
+                  description: Optional rich-text representation of the initial task. Provide description separately.
+                pullRequestId:
+                  type: string
+                  format: uuid
+                queueRightAway:
+                  type: boolean
+                sessionMode:
+                  type: string
+                  enum:
+                  - chat
+                  - terminal
+                startupAgent:
+                  type: string
+                  enum:
+                  - claudeCode
+                  - codex
+                  - opencode
+                  - pi
+                  - amp
+                  - cursor
+              required:
+              - description
+              additionalProperties: false
+              example:
+                description: Fix the authentication bug in the login component
+                projectId: your-project-id
+                agent: claudeCode:claude-fable-5-1
+                codeRepositoryIds:
+                - 123e4567-e89b-12d3-a456-426614174000
+                baseBranch: main
+                targetBranch: main
+                visibility: private
+                mcpServers: []
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/sessions/{sessionId}/fork:
+    post:
+      operationId: forkSession
+      summary: Fork a session
+      description: Create an independent session from a fresh workspace snapshot, or the latest saved snapshot when stopped, without replaying messages or adding context.
+      tags:
+      - Sessions
+      security:
+      - apiKey: []
+      responses:
+        '201':
+          description: Fork a session
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  agent:
+                    type:
+                    - string
+                    - 'null'
+                  agentId:
+                    type:
+                    - string
+                    - 'null'
+                    format: uuid
+                  artifactType:
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - PullRequest
+                    - ToolCall
+                    - Plan
+                    - Response
+                    - File
+                    - Service
+                    - Source
+                    - null
+                  baseBranch:
+                    type:
+                    - string
+                    - 'null'
+                  branchName:
+                    type:
+                    - string
+                    - 'null'
+                  createdAt:
+                    type: string
+                    format: date-time
+                  externalId:
+                    type:
+                    - string
+                    - 'null'
+                  externalUrl:
+                    type:
+                    - string
+                    - 'null'
+                  id:
+                    type: string
+                    format: uuid
+                  kind:
+                    type: string
+                  lastQueuedAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  lastSeenAt:
+                    type: string
+                    format: date-time
+                  level:
+                    type: integer
+                  mode:
+                    type: string
+                    enum:
+                    - normal
+                    - planning
+                    default: normal
+                  projectId:
+                    type:
+                    - string
+                    - 'null'
+                  sandboxSize:
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - nano
+                    - micro
+                    - small
+                    - medium
+                    - large
+                    - xl
+                    - xxl
+                    - ultra
+                    - null
+                  sessionType:
+                    type: string
+                    enum:
+                    - Chat
+                    - Terminal
+                    default: Chat
+                  targetBranch:
+                    type:
+                    - string
+                    - 'null'
+                  title:
+                    type: string
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  visibility:
+                    type: string
+                    enum:
+                    - public
+                    - private
+                    default: public
+                  artifacts:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                        type:
+                          type: string
+                          enum:
+                          - PullRequest
+                          - ToolCall
+                          - Plan
+                          - Response
+                          - File
+                          - Service
+                          - Source
+                        createdAt:
+                          type: string
+                          format: date-time
+                        updatedAt:
+                          type: string
+                          format: date-time
+                        pullRequests:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                                format: uuid
+                              url:
+                                type: string
+                                format: uri
+                              title:
+                                type:
+                                - string
+                                - 'null'
+                              status:
+                                type: string
+                                enum:
+                                - open
+                                - merged
+                                - closed
+                              isDraft:
+                                type: boolean
+                              sourceBranch:
+                                type:
+                                - string
+                                - 'null'
+                              createdAt:
+                                type: string
+                                format: date-time
+                              agent:
+                                type:
+                                - string
+                                - 'null'
+                              diff:
+                                type:
+                                - object
+                                - 'null'
+                                properties:
+                                  additions:
+                                    type: integer
+                                    minimum: 0
+                                  deletions:
+                                    type: integer
+                                    minimum: 0
+                                  data:
+                                    type: string
+                                    maxLength: 1000000
+                              updatedAt:
+                                type: string
+                                format: date-time
+                              baseBranch:
+                                type:
+                                - string
+                                - 'null'
+                                maxLength: 500
+                              headSha:
+                                type:
+                                - string
+                                - 'null'
+                                maxLength: 200
+                              author:
+                                type:
+                                - object
+                                - 'null'
+                                properties:
+                                  avatarUrl:
+                                    type:
+                                    - string
+                                    - 'null'
+                                    format: uri
+                                  login:
+                                    type:
+                                    - string
+                                    - 'null'
+                                    maxLength: 500
+                                required:
+                                - avatarUrl
+                                - login
+                                additionalProperties: false
+                              codeRepository:
+                                type:
+                                - object
+                                - 'null'
+                                properties:
+                                  id:
+                                    type: string
+                                    format: uuid
+                                  name:
+                                    type: string
+                                  owner:
+                                    type:
+                                    - string
+                                    - 'null'
+                                  baseBranch:
+                                    type:
+                                    - string
+                                    - 'null'
+                                  provider:
+                                    type: string
+                                required:
+                                - id
+                                - name
+                                - owner
+                                - baseBranch
+                                - provider
+                                additionalProperties: false
+                            required:
+                            - id
+                            - url
+                            - title
+                            - status
+                            - isDraft
+                            - sourceBranch
+                            - createdAt
+                            - agent
+                            - diff
+                            - updatedAt
+                            - baseBranch
+                            - headSha
+                            - author
+                            - codeRepository
+                            additionalProperties: false
+                      required:
+                      - id
+                      - type
+                      - createdAt
+                      - updatedAt
+                      - pullRequests
+                      additionalProperties: false
+                  description:
+                    type:
+                    - string
+                    - 'null'
+                  diffSummary:
+                    type:
+                    - object
+                    - 'null'
+                    properties:
+                      additions:
+                        type: integer
+                      deletions:
+                        type: integer
+                    required:
+                    - additions
+                    - deletions
+                    additionalProperties: false
+                  htmlUrl:
+                    type: string
+                    format: uri
+                  isPinned:
+                    type: boolean
+                  project:
+                    type:
+                    - object
+                    - 'null'
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                      name:
+                        type: string
+                      icon:
+                        type: string
+                        enum:
+                        - folder
+                        - code
+                        - terminal
+                        - book
+                        - brain
+                        - bug
+                        - building
+                        - cloud
+                        - globe
+                        - idea
+                        - tools
+                        - magic
+                        - processor
+                        - sandbox
+                        - server
+                        - tasks
+                        - tactics
+                        - images
+                        - database
+                        - api
+                        - mobile
+                        - package
+                      color:
+                        type: string
+                        enum:
+                        - neutral
+                        - red
+                        - orange
+                        - yellow
+                        - green
+                        - teal
+                        - blue
+                        - purple
+                        - pink
+                    required:
+                    - id
+                    - name
+                    - icon
+                    - color
+                    additionalProperties: false
+                  sessionSource:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                      name:
+                        type: string
+                      type:
+                        type: string
+                      repositories:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              format: uuid
+                            name:
+                              type: string
+                            provider:
+                              type: string
+                          required:
+                          - id
+                          - name
+                          - provider
+                          additionalProperties: false
+                    required:
+                    - id
+                    - name
+                    - type
+                    - repositories
+                    additionalProperties: false
+                  sourcePullRequest:
+                    type:
+                    - object
+                    - 'null'
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                      url:
+                        type: string
+                        format: uri
+                      title:
+                        type:
+                        - string
+                        - 'null'
+                      status:
+                        type: string
+                        enum:
+                        - open
+                        - merged
+                        - closed
+                      isDraft:
+                        type: boolean
+                    required:
+                    - id
+                    - url
+                    - title
+                    - status
+                    - isDraft
+                    additionalProperties: false
+                  state:
+                    type: object
+                    properties:
+                      current:
+                        type: string
+                        enum:
+                        - inProgress
+                        - queued
+                        - completed
+                        - failed
+                        - cancelled
+                      isQueued:
+                        type: boolean
+                      isCancelled:
+                        type: boolean
+                      isCompleted:
+                        type: boolean
+                      isFailed:
+                        type: boolean
+                      inProgress:
+                        type: boolean
+                    required:
+                    - isQueued
+                    - isCancelled
+                    - isCompleted
+                    - isFailed
+                    - inProgress
+                    additionalProperties: false
+                required:
+                - agent
+                - agentId
+                - artifactType
+                - baseBranch
+                - branchName
+                - createdAt
+                - externalId
+                - externalUrl
+                - id
+                - kind
+                - lastQueuedAt
+                - lastSeenAt
+                - level
+                - mode
+                - projectId
+                - sandboxSize
+                - sessionType
+                - targetBranch
+                - title
+                - updatedAt
+                - visibility
+                - artifacts
+                - description
+                - diffSummary
+                - htmlUrl
+                - isPinned
+                - project
+                - sessionSource
+                - sourcePullRequest
+                - state
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: The session is private
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: The caller is not permitted to perform this operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Session resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Session operation conflicts with existing data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Session operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '502':
+          description: Session runtime or provider operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: sessionId
+        schema:
+          type: string
+          format: uuid
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                prompt:
+                  type: string
+                  minLength: 1
+                  maxLength: 1000000
+                title:
+                  type: string
+                  minLength: 1
+                  maxLength: 1000
+                queueRightAway:
+                  type: boolean
+                  default: true
+                  description: Start the supplied prompt immediately. Without a prompt, the fork waits for a new message.
+              additionalProperties: false
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/sessions/{sessionId}:
+    get:
+      operationId: retrieveSession
+      summary: Retrieve a session
+      description: Retrieve a session you have permission to access.
+      tags:
+      - Sessions
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Retrieve a session
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  agent:
+                    type:
+                    - string
+                    - 'null'
+                  agentId:
+                    type:
+                    - string
+                    - 'null'
+                    format: uuid
+                  artifactType:
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - PullRequest
+                    - ToolCall
+                    - Plan
+                    - Response
+                    - File
+                    - Service
+                    - Source
+                    - null
+                  baseBranch:
+                    type:
+                    - string
+                    - 'null'
+                  branchName:
+                    type:
+                    - string
+                    - 'null'
+                  createdAt:
+                    type: string
+                    format: date-time
+                  externalId:
+                    type:
+                    - string
+                    - 'null'
+                  externalUrl:
+                    type:
+                    - string
+                    - 'null'
+                  id:
+                    type: string
+                    format: uuid
+                  kind:
+                    type: string
+                  lastQueuedAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  lastSeenAt:
+                    type: string
+                    format: date-time
+                  level:
+                    type: integer
+                  mode:
+                    type: string
+                    enum:
+                    - normal
+                    - planning
+                    default: normal
+                  projectId:
+                    type:
+                    - string
+                    - 'null'
+                  sandboxSize:
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - nano
+                    - micro
+                    - small
+                    - medium
+                    - large
+                    - xl
+                    - xxl
+                    - ultra
+                    - null
+                  sessionType:
+                    type: string
+                    enum:
+                    - Chat
+                    - Terminal
+                    default: Chat
+                  targetBranch:
+                    type:
+                    - string
+                    - 'null'
+                  title:
+                    type: string
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  visibility:
+                    type: string
+                    enum:
+                    - public
+                    - private
+                    default: public
+                  artifacts:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                        type:
+                          type: string
+                          enum:
+                          - PullRequest
+                          - ToolCall
+                          - Plan
+                          - Response
+                          - File
+                          - Service
+                          - Source
+                        createdAt:
+                          type: string
+                          format: date-time
+                        updatedAt:
+                          type: string
+                          format: date-time
+                        pullRequests:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                                format: uuid
+                              url:
+                                type: string
+                                format: uri
+                              title:
+                                type:
+                                - string
+                                - 'null'
+                              status:
+                                type: string
+                                enum:
+                                - open
+                                - merged
+                                - closed
+                              isDraft:
+                                type: boolean
+                              sourceBranch:
+                                type:
+                                - string
+                                - 'null'
+                              createdAt:
+                                type: string
+                                format: date-time
+                              agent:
+                                type:
+                                - string
+                                - 'null'
+                              diff:
+                                type:
+                                - object
+                                - 'null'
+                                properties:
+                                  additions:
+                                    type: integer
+                                    minimum: 0
+                                  deletions:
+                                    type: integer
+                                    minimum: 0
+                                  data:
+                                    type: string
+                                    maxLength: 1000000
+                              updatedAt:
+                                type: string
+                                format: date-time
+                              baseBranch:
+                                type:
+                                - string
+                                - 'null'
+                                maxLength: 500
+                              headSha:
+                                type:
+                                - string
+                                - 'null'
+                                maxLength: 200
+                              author:
+                                type:
+                                - object
+                                - 'null'
+                                properties:
+                                  avatarUrl:
+                                    type:
+                                    - string
+                                    - 'null'
+                                    format: uri
+                                  login:
+                                    type:
+                                    - string
+                                    - 'null'
+                                    maxLength: 500
+                                required:
+                                - avatarUrl
+                                - login
+                                additionalProperties: false
+                              codeRepository:
+                                type:
+                                - object
+                                - 'null'
+                                properties:
+                                  id:
+                                    type: string
+                                    format: uuid
+                                  name:
+                                    type: string
+                                  owner:
+                                    type:
+                                    - string
+                                    - 'null'
+                                  baseBranch:
+                                    type:
+                                    - string
+                                    - 'null'
+                                  provider:
+                                    type: string
+                                required:
+                                - id
+                                - name
+                                - owner
+                                - baseBranch
+                                - provider
+                                additionalProperties: false
+                            required:
+                            - id
+                            - url
+                            - title
+                            - status
+                            - isDraft
+                            - sourceBranch
+                            - createdAt
+                            - agent
+                            - diff
+                            - updatedAt
+                            - baseBranch
+                            - headSha
+                            - author
+                            - codeRepository
+                            additionalProperties: false
+                      required:
+                      - id
+                      - type
+                      - createdAt
+                      - updatedAt
+                      - pullRequests
+                      additionalProperties: false
+                  description:
+                    type:
+                    - string
+                    - 'null'
+                  diffSummary:
+                    type:
+                    - object
+                    - 'null'
+                    properties:
+                      additions:
+                        type: integer
+                      deletions:
+                        type: integer
+                    required:
+                    - additions
+                    - deletions
+                    additionalProperties: false
+                  htmlUrl:
+                    type: string
+                    format: uri
+                  isPinned:
+                    type: boolean
+                  project:
+                    type:
+                    - object
+                    - 'null'
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                      name:
+                        type: string
+                      icon:
+                        type: string
+                        enum:
+                        - folder
+                        - code
+                        - terminal
+                        - book
+                        - brain
+                        - bug
+                        - building
+                        - cloud
+                        - globe
+                        - idea
+                        - tools
+                        - magic
+                        - processor
+                        - sandbox
+                        - server
+                        - tasks
+                        - tactics
+                        - images
+                        - database
+                        - api
+                        - mobile
+                        - package
+                      color:
+                        type: string
+                        enum:
+                        - neutral
+                        - red
+                        - orange
+                        - yellow
+                        - green
+                        - teal
+                        - blue
+                        - purple
+                        - pink
+                    required:
+                    - id
+                    - name
+                    - icon
+                    - color
+                    additionalProperties: false
+                  sessionSource:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                      name:
+                        type: string
+                      type:
+                        type: string
+                      repositories:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              format: uuid
+                            name:
+                              type: string
+                            provider:
+                              type: string
+                          required:
+                          - id
+                          - name
+                          - provider
+                          additionalProperties: false
+                    required:
+                    - id
+                    - name
+                    - type
+                    - repositories
+                    additionalProperties: false
+                  sourcePullRequest:
+                    type:
+                    - object
+                    - 'null'
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                      url:
+                        type: string
+                        format: uri
+                      title:
+                        type:
+                        - string
+                        - 'null'
+                      status:
+                        type: string
+                        enum:
+                        - open
+                        - merged
+                        - closed
+                      isDraft:
+                        type: boolean
+                    required:
+                    - id
+                    - url
+                    - title
+                    - status
+                    - isDraft
+                    additionalProperties: false
+                  state:
+                    type: object
+                    properties:
+                      current:
+                        type: string
+                        enum:
+                        - inProgress
+                        - queued
+                        - completed
+                        - failed
+                        - cancelled
+                      isQueued:
+                        type: boolean
+                      isCancelled:
+                        type: boolean
+                      isCompleted:
+                        type: boolean
+                      isFailed:
+                        type: boolean
+                      inProgress:
+                        type: boolean
+                    required:
+                    - isQueued
+                    - isCancelled
+                    - isCompleted
+                    - isFailed
+                    - inProgress
+                    additionalProperties: false
+                required:
+                - agent
+                - agentId
+                - artifactType
+                - baseBranch
+                - branchName
+                - createdAt
+                - externalId
+                - externalUrl
+                - id
+                - kind
+                - lastQueuedAt
+                - lastSeenAt
+                - level
+                - mode
+                - projectId
+                - sandboxSize
+                - sessionType
+                - targetBranch
+                - title
+                - updatedAt
+                - visibility
+                - artifacts
+                - description
+                - diffSummary
+                - htmlUrl
+                - isPinned
+                - project
+                - sessionSource
+                - sourcePullRequest
+                - state
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: The session is private
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: The caller is not permitted to perform this operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Session resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Session operation conflicts with existing data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Session operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '502':
+          description: Session runtime or provider operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: sessionId
+        schema:
+          type: string
+          format: uuid
+        required: true
+    patch:
+      operationId: updateSession
+      summary: Update a session
+      description: Update the configuration of a session you have permission to access.
+      tags:
+      - Sessions
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Update a session
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  agent:
+                    type:
+                    - string
+                    - 'null'
+                  agentId:
+                    type:
+                    - string
+                    - 'null'
+                    format: uuid
+                  artifactType:
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - PullRequest
+                    - ToolCall
+                    - Plan
+                    - Response
+                    - File
+                    - Service
+                    - Source
+                    - null
+                  baseBranch:
+                    type:
+                    - string
+                    - 'null'
+                  branchName:
+                    type:
+                    - string
+                    - 'null'
+                  createdAt:
+                    type: string
+                    format: date-time
+                  externalId:
+                    type:
+                    - string
+                    - 'null'
+                  externalUrl:
+                    type:
+                    - string
+                    - 'null'
+                  id:
+                    type: string
+                    format: uuid
+                  kind:
+                    type: string
+                  lastQueuedAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  lastSeenAt:
+                    type: string
+                    format: date-time
+                  level:
+                    type: integer
+                  mode:
+                    type: string
+                    enum:
+                    - normal
+                    - planning
+                    default: normal
+                  projectId:
+                    type:
+                    - string
+                    - 'null'
+                  sandboxSize:
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - nano
+                    - micro
+                    - small
+                    - medium
+                    - large
+                    - xl
+                    - xxl
+                    - ultra
+                    - null
+                  sessionType:
+                    type: string
+                    enum:
+                    - Chat
+                    - Terminal
+                    default: Chat
+                  targetBranch:
+                    type:
+                    - string
+                    - 'null'
+                  title:
+                    type: string
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  visibility:
+                    type: string
+                    enum:
+                    - public
+                    - private
+                    default: public
+                  artifacts:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                        type:
+                          type: string
+                          enum:
+                          - PullRequest
+                          - ToolCall
+                          - Plan
+                          - Response
+                          - File
+                          - Service
+                          - Source
+                        createdAt:
+                          type: string
+                          format: date-time
+                        updatedAt:
+                          type: string
+                          format: date-time
+                        pullRequests:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                                format: uuid
+                              url:
+                                type: string
+                                format: uri
+                              title:
+                                type:
+                                - string
+                                - 'null'
+                              status:
+                                type: string
+                                enum:
+                                - open
+                                - merged
+                                - closed
+                              isDraft:
+                                type: boolean
+                              sourceBranch:
+                                type:
+                                - string
+                                - 'null'
+                              createdAt:
+                                type: string
+                                format: date-time
+                              agent:
+                                type:
+                                - string
+                                - 'null'
+                              diff:
+                                type:
+                                - object
+                                - 'null'
+                                properties:
+                                  additions:
+                                    type: integer
+                                    minimum: 0
+                                  deletions:
+                                    type: integer
+                                    minimum: 0
+                                  data:
+                                    type: string
+                                    maxLength: 1000000
+                              updatedAt:
+                                type: string
+                                format: date-time
+                              baseBranch:
+                                type:
+                                - string
+                                - 'null'
+                                maxLength: 500
+                              headSha:
+                                type:
+                                - string
+                                - 'null'
+                                maxLength: 200
+                              author:
+                                type:
+                                - object
+                                - 'null'
+                                properties:
+                                  avatarUrl:
+                                    type:
+                                    - string
+                                    - 'null'
+                                    format: uri
+                                  login:
+                                    type:
+                                    - string
+                                    - 'null'
+                                    maxLength: 500
+                                required:
+                                - avatarUrl
+                                - login
+                                additionalProperties: false
+                              codeRepository:
+                                type:
+                                - object
+                                - 'null'
+                                properties:
+                                  id:
+                                    type: string
+                                    format: uuid
+                                  name:
+                                    type: string
+                                  owner:
+                                    type:
+                                    - string
+                                    - 'null'
+                                  baseBranch:
+                                    type:
+                                    - string
+                                    - 'null'
+                                  provider:
+                                    type: string
+                                required:
+                                - id
+                                - name
+                                - owner
+                                - baseBranch
+                                - provider
+                                additionalProperties: false
+                            required:
+                            - id
+                            - url
+                            - title
+                            - status
+                            - isDraft
+                            - sourceBranch
+                            - createdAt
+                            - agent
+                            - diff
+                            - updatedAt
+                            - baseBranch
+                            - headSha
+                            - author
+                            - codeRepository
+                            additionalProperties: false
+                      required:
+                      - id
+                      - type
+                      - createdAt
+                      - updatedAt
+                      - pullRequests
+                      additionalProperties: false
+                  description:
+                    type:
+                    - string
+                    - 'null'
+                  diffSummary:
+                    type:
+                    - object
+                    - 'null'
+                    properties:
+                      additions:
+                        type: integer
+                      deletions:
+                        type: integer
+                    required:
+                    - additions
+                    - deletions
+                    additionalProperties: false
+                  htmlUrl:
+                    type: string
+                    format: uri
+                  isPinned:
+                    type: boolean
+                  project:
+                    type:
+                    - object
+                    - 'null'
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                      name:
+                        type: string
+                      icon:
+                        type: string
+                        enum:
+                        - folder
+                        - code
+                        - terminal
+                        - book
+                        - brain
+                        - bug
+                        - building
+                        - cloud
+                        - globe
+                        - idea
+                        - tools
+                        - magic
+                        - processor
+                        - sandbox
+                        - server
+                        - tasks
+                        - tactics
+                        - images
+                        - database
+                        - api
+                        - mobile
+                        - package
+                      color:
+                        type: string
+                        enum:
+                        - neutral
+                        - red
+                        - orange
+                        - yellow
+                        - green
+                        - teal
+                        - blue
+                        - purple
+                        - pink
+                    required:
+                    - id
+                    - name
+                    - icon
+                    - color
+                    additionalProperties: false
+                  sessionSource:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                      name:
+                        type: string
+                      type:
+                        type: string
+                      repositories:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              format: uuid
+                            name:
+                              type: string
+                            provider:
+                              type: string
+                          required:
+                          - id
+                          - name
+                          - provider
+                          additionalProperties: false
+                    required:
+                    - id
+                    - name
+                    - type
+                    - repositories
+                    additionalProperties: false
+                  sourcePullRequest:
+                    type:
+                    - object
+                    - 'null'
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                      url:
+                        type: string
+                        format: uri
+                      title:
+                        type:
+                        - string
+                        - 'null'
+                      status:
+                        type: string
+                        enum:
+                        - open
+                        - merged
+                        - closed
+                      isDraft:
+                        type: boolean
+                    required:
+                    - id
+                    - url
+                    - title
+                    - status
+                    - isDraft
+                    additionalProperties: false
+                  state:
+                    type: object
+                    properties:
+                      current:
+                        type: string
+                        enum:
+                        - inProgress
+                        - queued
+                        - completed
+                        - failed
+                        - cancelled
+                      isQueued:
+                        type: boolean
+                      isCancelled:
+                        type: boolean
+                      isCompleted:
+                        type: boolean
+                      isFailed:
+                        type: boolean
+                      inProgress:
+                        type: boolean
+                    required:
+                    - isQueued
+                    - isCancelled
+                    - isCompleted
+                    - isFailed
+                    - inProgress
+                    additionalProperties: false
+                required:
+                - agent
+                - agentId
+                - artifactType
+                - baseBranch
+                - branchName
+                - createdAt
+                - externalId
+                - externalUrl
+                - id
+                - kind
+                - lastQueuedAt
+                - lastSeenAt
+                - level
+                - mode
+                - projectId
+                - sandboxSize
+                - sessionType
+                - targetBranch
+                - title
+                - updatedAt
+                - visibility
+                - artifacts
+                - description
+                - diffSummary
+                - htmlUrl
+                - isPinned
+                - project
+                - sessionSource
+                - sourcePullRequest
+                - state
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: The session is private
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: The caller is not permitted to perform this operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Session resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Session operation conflicts with existing data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Session operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '502':
+          description: Session runtime or provider operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: sessionId
+        schema:
+          type: string
+          format: uuid
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                agent:
+                  type:
+                  - string
+                  - 'null'
+                  minLength: 1
+                  maxLength: 500
+                agentOptions:
+                  $ref: '#/components/schemas/AgentOptions'
+                baseBranch:
+                  type:
+                  - string
+                  - 'null'
+                  minLength: 1
+                  maxLength: 500
+                branchName:
+                  type:
+                  - string
+                  - 'null'
+                  minLength: 1
+                  maxLength: 500
+                description:
+                  type: string
+                  minLength: 1
+                  maxLength: 1000000
+                richContent:
+                  oneOf:
+                  - $ref: '#/components/schemas/SessionTipTapDocument'
+                  - type: 'null'
+                level:
+                  type: integer
+                  minimum: 0
+                  maximum: 100
+                mcpServers:
+                  type: array
+                  items:
+                    type: string
+                    minLength: 1
+                    maxLength: 500
+                  maxItems: 100
+                mode:
+                  type: string
+                  enum:
+                  - normal
+                  - planning
+                projectId:
+                  type:
+                  - string
+                  - 'null'
+                sandboxSize:
+                  type:
+                  - string
+                  - 'null'
+                  enum:
+                  - nano
+                  - micro
+                  - small
+                  - medium
+                  - large
+                  - xl
+                  - xxl
+                  - ultra
+                  - null
+                targetBranch:
+                  type:
+                  - string
+                  - 'null'
+                  minLength: 1
+                  maxLength: 500
+                title:
+                  type: string
+                  minLength: 1
+                  maxLength: 1000
+                visibility:
+                  type: string
+                  enum:
+                  - private
+                  - public
+              additionalProperties: false
+    delete:
+      operationId: deleteSession
+      summary: Delete a session
+      description: Delete a session you have permission to access.
+      tags:
+      - Sessions
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Delete a session
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  deleted:
+                    type: boolean
+                    const: true
+                  id:
+                    type: string
+                    format: uuid
+                required:
+                - deleted
+                - id
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: The session is private
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: The caller is not permitted to perform this operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Session resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Session operation conflicts with existing data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Session operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '502':
+          description: Session runtime or provider operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: sessionId
+        schema:
+          type: string
+          format: uuid
+        required: true
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/sessions/{sessionId}/stop:
+    post:
+      operationId: stopSession
+      summary: Stop a session
+      description: Interrupt active session work and continue with the next queued message.
+      tags:
+      - Sessions
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Stop a session
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  cancelledSessions:
+                    type: integer
+                    minimum: 0
+                  cancelledJobs:
+                    type: integer
+                    minimum: 0
+                  stoppedRuntimeSessions:
+                    type: integer
+                    minimum: 0
+                  interruptedRuntimeTurns:
+                    type: integer
+                    minimum: 0
+                  cancelledRuntimeTurns:
+                    type: integer
+                    minimum: 0
+                required:
+                - cancelledSessions
+                - cancelledJobs
+                - stoppedRuntimeSessions
+                - interruptedRuntimeTurns
+                - cancelledRuntimeTurns
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: The session is private
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: The caller is not permitted to perform this operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Session resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Session operation conflicts with existing data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Session operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '502':
+          description: Session runtime or provider operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: sessionId
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - in: query
+        name: cancelQueued
+        schema:
+          type: boolean
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/sessions/{sessionId}/events:
+    get:
+      operationId: listSessionEvents
+      summary: List session events
+      description: List recorded session stream events with cursor pagination.
+      tags:
+      - Sessions
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: List session events
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        createdAt:
+                          type: string
+                          format: date-time
+                        eventType:
+                          type: string
+                        id:
+                          type: integer
+                          exclusiveMinimum: 0
+                        messageId:
+                          type:
+                          - string
+                          - 'null'
+                          format: uuid
+                        provider:
+                          type: string
+                          enum:
+                          - anthropic
+                          - openai
+                          - openai_responses
+                          - openai_completions
+                          - tembo
+                        sessionId:
+                          type: string
+                          format: uuid
+                        eventData:
+                          $ref: '#/components/schemas/SessionEventData'
+                      required:
+                      - createdAt
+                      - eventType
+                      - id
+                      - messageId
+                      - provider
+                      - sessionId
+                      - eventData
+                      additionalProperties: false
+                  nextCursor:
+                    type:
+                    - string
+                    - 'null'
+                required:
+                - items
+                - nextCursor
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: The session is private
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: The caller is not permitted to perform this operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Session resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Session operation conflicts with existing data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Session operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '502':
+          description: Session runtime or provider operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: sessionId
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - in: query
+        name: cursor
+        schema:
+          anyOf:
+          - type: string
+            pattern: ^\d+$
+          - type: integer
+            exclusiveMinimum: 0
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 50
+      - in: query
+        name: messageId
+        schema:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: string
+            const: 'null'
+        description: Filter by message ID, or "null" for session-level events.
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/sessions/{sessionId}/diffs:
+    get:
+      operationId: listSessionDiffs
+      summary: List session diffs
+      description: List recorded session diff metadata with cursor pagination.
+      tags:
+      - Sessions
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: List session diffs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        additions:
+                          type: integer
+                        baselineSha:
+                          type:
+                          - string
+                          - 'null'
+                        branch:
+                          type:
+                          - string
+                          - 'null'
+                        capturedAt:
+                          type: string
+                          format: date-time
+                        changedFiles:
+                          type: integer
+                        codeRepositoryId:
+                          type:
+                          - string
+                          - 'null'
+                          format: uuid
+                        deletions:
+                          type: integer
+                        hasChanges:
+                          type: boolean
+                        headSha:
+                          type:
+                          - string
+                          - 'null'
+                        id:
+                          type: string
+                          format: uuid
+                        remoteKey:
+                          type:
+                          - string
+                          - 'null'
+                        root:
+                          type: string
+                        sessionId:
+                          type: string
+                          format: uuid
+                        untrackedFiles:
+                          type: integer
+                      required:
+                      - additions
+                      - baselineSha
+                      - branch
+                      - capturedAt
+                      - changedFiles
+                      - codeRepositoryId
+                      - deletions
+                      - hasChanges
+                      - headSha
+                      - id
+                      - remoteKey
+                      - root
+                      - sessionId
+                      - untrackedFiles
+                      additionalProperties: false
+                  nextCursor:
+                    type:
+                    - string
+                    - 'null'
+                    format: uuid
+                required:
+                - items
+                - nextCursor
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: The session is private
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: The caller is not permitted to perform this operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Session resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Session operation conflicts with existing data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Session operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '502':
+          description: Session runtime or provider operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: sessionId
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - in: query
+        name: cursor
+        schema:
+          type: string
+          format: uuid
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 50
+      - in: query
+        name: hasChanges
+        schema:
+          type: boolean
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/sessions/{sessionId}/diffs/{diffId}:
+    get:
+      operationId: retrieveSessionDiff
+      summary: Retrieve a session diff
+      description: Retrieve one recorded session diff and its content.
+      tags:
+      - Sessions
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Retrieve a session diff
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  additions:
+                    type: integer
+                  baselineSha:
+                    type:
+                    - string
+                    - 'null'
+                  branch:
+                    type:
+                    - string
+                    - 'null'
+                  capturedAt:
+                    type: string
+                    format: date-time
+                  changedFiles:
+                    type: integer
+                  codeRepositoryId:
+                    type:
+                    - string
+                    - 'null'
+                    format: uuid
+                  deletions:
+                    type: integer
+                  hasChanges:
+                    type: boolean
+                  headSha:
+                    type:
+                    - string
+                    - 'null'
+                  id:
+                    type: string
+                    format: uuid
+                  remoteKey:
+                    type:
+                    - string
+                    - 'null'
+                  root:
+                    type: string
+                  sessionId:
+                    type: string
+                    format: uuid
+                  untrackedFiles:
+                    type: integer
+                  data:
+                    type: string
+                required:
+                - additions
+                - baselineSha
+                - branch
+                - capturedAt
+                - changedFiles
+                - codeRepositoryId
+                - deletions
+                - hasChanges
+                - headSha
+                - id
+                - remoteKey
+                - root
+                - sessionId
+                - untrackedFiles
+                - data
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: The session is private
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: The caller is not permitted to perform this operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Session resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Session operation conflicts with existing data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Session operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '502':
+          description: Session runtime or provider operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: sessionId
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - in: path
+        name: diffId
+        schema:
+          type: string
+          format: uuid
+        required: true
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+components:
+  schemas:
+    CustomDocument:
+      type: object
+      additionalProperties: {}
+      description: Rich-text content with custom document properties and node attributes.
+    AgentOptions:
+      type: object
+      properties:
+        reasoningLevel:
+          type: string
+          minLength: 1
+          maxLength: 100
+        mode:
+          type: string
+          enum:
+          - normal
+          - planning
+        speed:
+          type: string
+          enum:
+          - normal
+          - fast
+          - ultrafast
+        goal:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+            objective:
+              type: string
+              maxLength: 100000
+          additionalProperties: false
+      additionalProperties: false
+    SessionEventData:
+      type: object
+      properties:
+        type:
+          type: string
+          maxLength: 100
+        scope:
+          type: object
+          properties:
+            kind:
+              type: string
+              enum:
+              - foreground
+              - subagent
+              - background
+            parentToolUseId:
+              type: string
+              maxLength: 1000
+            taskId:
+              type: string
+              maxLength: 1000
+          required:
+          - kind
+        source:
+          type: string
+          maxLength: 500
+        providerEvent:
+          type: boolean
+        delivery:
+          type: string
+          enum:
+          - realtime
+          - persist
+        event:
+          type: object
+          properties:
+            event:
+              type: string
+              maxLength: 500
+            message:
+              type: string
+              maxLength: 1000000
+            provider:
+              type: string
+              maxLength: 100
+            messageId:
+              type: string
+              maxLength: 1000
+          required:
+          - event
+          - message
+        index:
+          type: integer
+        itemId:
+          type: string
+          maxLength: 1000
+        sequenceNumber:
+          type: integer
+        accumulatedText:
+          type: string
+          maxLength: 1000000
+        deltaType:
+          type: string
+          enum:
+          - text_delta
+          - input_json_delta
+        responsePhase:
+          type: string
+          enum:
+          - commentary
+          - final_answer
+        toolName:
+          type: string
+          maxLength: 1000
+        toolResult:
+          type: object
+          properties:
+            status:
+              type: string
+              enum:
+              - running
+              - completed
+              - error
+            output:
+              type: string
+            exitCode:
+              type: number
+            error:
+              type: string
+          required:
+          - status
+        snapshotId:
+          type: string
+        snapshotCreatedAt:
+          type: string
+      required:
+      - type
+    TipTapLinkMark:
+      type: object
+      properties:
+        type:
+          type: string
+          const: link
+        attrs:
+          type: object
+          properties:
+            href:
+              type:
+              - string
+              - 'null'
+            target:
+              type:
+              - string
+              - 'null'
+            rel:
+              type:
+              - string
+              - 'null'
+            class:
+              type:
+              - string
+              - 'null'
+            title:
+              type:
+              - string
+              - 'null'
+          additionalProperties: {}
+      required:
+      - type
+      additionalProperties: {}
+    TipTapMark:
+      type: object
+      properties:
+        type:
+          type: string
+          minLength: 1
+          maxLength: 100
+          not:
+            enum:
+            - link
+        attrs:
+          $ref: '#/components/schemas/TipTapExtensionAttributes'
+      required:
+      - type
+      additionalProperties: {}
+    SessionDocumentNode:
+      type: object
+      properties:
+        type:
+          type: string
+          minLength: 1
+          maxLength: 100
+        text:
+          type: string
+          maxLength: 1000000
+        attrs:
+          type: object
+          additionalProperties: {}
+        marks:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                minLength: 1
+                maxLength: 100
+              attrs:
+                type: object
+                additionalProperties: {}
+            required:
+            - type
+            additionalProperties: false
+          maxItems: 1000
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/SessionDocumentNode'
+          maxItems: 10000
+      additionalProperties: false
+    TipTapExtensionAttributes:
+      type: object
+      additionalProperties: {}
+    TipTapMentionAttributes:
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+        label:
+          type:
+          - string
+          - 'null'
+        type:
+          type:
+          - string
+          - 'null'
+        mentionSuggestionChar:
+          type:
+          - string
+          - 'null'
+        metadata:
+          type:
+          - object
+          - 'null'
+          properties:
+            integrationType:
+              type: string
+            codeRepositoryId:
+              type: string
+            isHeader:
+              type: boolean
+            argumentHint:
+              type: string
+            commandName:
+              type: string
+            source:
+              type: string
+          additionalProperties: {}
+      additionalProperties: {}
+    TipTapDocument:
+      anyOf:
+      - $ref: '#/components/schemas/TipTapNode'
+      - $ref: '#/components/schemas/CustomDocument'
+      description: Rich-text document containing text, formatting, images, and mentions. A document typically has a "doc" root with nested content nodes.
+      example:
+        type: doc
+        content:
+        - type: paragraph
+          content:
+          - type: text
+            text: Hello
+    TipTapNode:
+      anyOf:
+      - oneOf:
+        - type: object
+          properties:
+            text:
+              type: string
+              maxLength: 1000000
+            marks:
+              type: array
+              items:
+                anyOf:
+                - $ref: '#/components/schemas/TipTapLinkMark'
+                - $ref: '#/components/schemas/TipTapMark'
+              maxItems: 1000
+            type:
+              type: string
+              const: image
+            attrs:
+              $ref: '#/components/schemas/TipTapImageAttributes'
+            content:
+              type: array
+              items:
+                $ref: '#/components/schemas/TipTapNode'
+              maxItems: 10000
+          required:
+          - type
+          additionalProperties: {}
+        - type: object
+          properties:
+            text:
+              type: string
+              maxLength: 1000000
+            marks:
+              type: array
+              items:
+                anyOf:
+                - $ref: '#/components/schemas/TipTapLinkMark'
+                - $ref: '#/components/schemas/TipTapMark'
+              maxItems: 1000
+            type:
+              type: string
+              const: mention
+            attrs:
+              $ref: '#/components/schemas/TipTapMentionAttributes'
+            content:
+              type: array
+              items:
+                $ref: '#/components/schemas/TipTapNode'
+              maxItems: 10000
+          required:
+          - type
+          additionalProperties: {}
+        - type: object
+          properties:
+            text:
+              type: string
+              maxLength: 1000000
+            marks:
+              type: array
+              items:
+                anyOf:
+                - $ref: '#/components/schemas/TipTapLinkMark'
+                - $ref: '#/components/schemas/TipTapMark'
+              maxItems: 1000
+            type:
+              type: string
+              const: heading
+            attrs:
+              type: object
+              properties:
+                level:
+                  type: integer
+                  minimum: 1
+                  maximum: 6
+              additionalProperties: {}
+            content:
+              type: array
+              items:
+                $ref: '#/components/schemas/TipTapNode'
+              maxItems: 10000
+          required:
+          - type
+          additionalProperties: {}
+        - type: object
+          properties:
+            text:
+              type: string
+              maxLength: 1000000
+            marks:
+              type: array
+              items:
+                anyOf:
+                - $ref: '#/components/schemas/TipTapLinkMark'
+                - $ref: '#/components/schemas/TipTapMark'
+              maxItems: 1000
+            type:
+              type: string
+              const: orderedList
+            attrs:
+              type: object
+              properties:
+                start:
+                  type: integer
+                type:
+                  type:
+                  - string
+                  - 'null'
+              additionalProperties: {}
+            content:
+              type: array
+              items:
+                $ref: '#/components/schemas/TipTapNode'
+              maxItems: 10000
+          required:
+          - type
+          additionalProperties: {}
+        - type: object
+          properties:
+            text:
+              type: string
+              maxLength: 1000000
+            marks:
+              type: array
+              items:
+                anyOf:
+                - $ref: '#/components/schemas/TipTapLinkMark'
+                - $ref: '#/components/schemas/TipTapMark'
+              maxItems: 1000
+            type:
+              type: string
+              const: taskItem
+            attrs:
+              type: object
+              properties:
+                checked:
+                  type: boolean
+              additionalProperties: {}
+            content:
+              type: array
+              items:
+                $ref: '#/components/schemas/TipTapNode'
+              maxItems: 10000
+          required:
+          - type
+          additionalProperties: {}
+        - type: object
+          properties:
+            text:
+              type: string
+              maxLength: 1000000
+            marks:
+              type: array
+              items:
+                anyOf:
+                - $ref: '#/components/schemas/TipTapLinkMark'
+                - $ref: '#/components/schemas/TipTapMark'
+              maxItems: 1000
+            type:
+              type: string
+              const: codeBlock
+            attrs:
+              type: object
+              properties:
+                language:
+                  type:
+                  - string
+                  - 'null'
+              additionalProperties: {}
+            content:
+              type: array
+              items:
+                $ref: '#/components/schemas/TipTapNode'
+              maxItems: 10000
+          required:
+          - type
+          additionalProperties: {}
+      - $ref: '#/components/schemas/TipTapContentNode'
+    TipTapContentNode:
+      type: object
+      properties:
+        text:
+          type: string
+          maxLength: 1000000
+        marks:
+          type: array
+          items:
+            anyOf:
+            - $ref: '#/components/schemas/TipTapLinkMark'
+            - $ref: '#/components/schemas/TipTapMark'
+          maxItems: 1000
+        type:
+          type: string
+          minLength: 1
+          maxLength: 100
+          not:
+            enum:
+            - image
+            - mention
+            - heading
+            - orderedList
+            - taskItem
+            - codeBlock
+        attrs:
+          $ref: '#/components/schemas/TipTapExtensionAttributes'
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/TipTapNode'
+          maxItems: 10000
+      additionalProperties: {}
+    TipTapImageAttributes:
+      type: object
+      properties:
+        src:
+          type:
+          - string
+          - 'null'
+        alt:
+          type:
+          - string
+          - 'null'
+        title:
+          type:
+          - string
+          - 'null'
+        width:
+          type:
+          - string
+          - 'null'
+        data-uploading:
+          type:
+          - string
+          - 'null'
+        data-placeholder-id:
+          type:
+          - string
+          - 'null'
+        upload-progress:
+          type:
+          - string
+          - 'null'
+      additionalProperties: {}
+    SessionTipTapDocument:
+      allOf:
+      - $ref: '#/components/schemas/SessionDocumentNode'
+      - $ref: '#/components/schemas/TipTapDocument'
+  securitySchemes:
+    apiKey:
+      type: http
+      scheme: bearer
+x-refined-from:
+- tembo-openapi-original.json
+- tembo-openapi.yml

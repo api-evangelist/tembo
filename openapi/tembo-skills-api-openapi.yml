@@ -1,0 +1,830 @@
+openapi: 3.2.0
+info:
+  title: Tembo Skills API
+  version: 1.0.0
+  description: 'Operations tagged Skills across 2 of this provider''s published API definitions: tembo-openapi-original.json, tembo-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.tembo.io/
+  description: Tembo API
+tags:
+- name: Skills
+paths:
+  /v1/skills/marketplace:
+    get:
+      operationId: listMarketplaceSkills
+      summary: List marketplace skills
+      description: List popular marketplace skills or search the catalog. Results have no continuation cursor.
+      tags:
+      - Skills
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: List marketplace skills
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        source:
+                          anyOf:
+                          - type: string
+                            pattern: ^[a-zA-Z0-9_-]+\/[a-zA-Z0-9_.-]+$
+                            maxLength: 300
+                          - type: string
+                            pattern: ^[a-zA-Z0-9_-]+(?:\.[a-zA-Z0-9_-]+)+$
+                            maxLength: 253
+                        skillId:
+                          type: string
+                          pattern: ^[a-zA-Z0-9][a-zA-Z0-9_.-]*$
+                          maxLength: 255
+                        name:
+                          type: string
+                          minLength: 1
+                        installs:
+                          type: integer
+                          minimum: 0
+                      required:
+                      - source
+                      - skillId
+                      - name
+                      - installs
+                      additionalProperties: false
+                  nextCursor:
+                    type: 'null'
+                    description: Always null; marketplace results have no continuation page.
+                required:
+                - items
+                - nextCursor
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Skill not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Skill operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '502':
+          description: The skill marketplace is unavailable or returned invalid data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: query
+        name: cursor
+        schema:
+          type: string
+          const: ''
+        description: No continuation cursor is supported for marketplace results.
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 50
+      - in: query
+        name: search
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 500
+        description: Search the marketplace catalog. Omit to list popular skills.
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/skills/marketplace/{skillId}:
+    get:
+      operationId: retrieveMarketplaceSkill
+      summary: Retrieve a marketplace skill
+      description: Retrieve the files and content hash for a marketplace skill. This does not install the skill.
+      tags:
+      - Skills
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Retrieve a marketplace skill
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  source:
+                    anyOf:
+                    - type: string
+                      pattern: ^[a-zA-Z0-9_-]+\/[a-zA-Z0-9_.-]+$
+                      maxLength: 300
+                    - type: string
+                      pattern: ^[a-zA-Z0-9_-]+(?:\.[a-zA-Z0-9_-]+)+$
+                      maxLength: 253
+                  skillId:
+                    type: string
+                    pattern: ^[a-zA-Z0-9][a-zA-Z0-9_.-]*$
+                    maxLength: 255
+                  files:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        content:
+                          type: string
+                        filename:
+                          type: string
+                          minLength: 1
+                      required:
+                      - content
+                      - filename
+                      additionalProperties: false
+                    minItems: 1
+                  hash:
+                    type: string
+                    minLength: 1
+                required:
+                - source
+                - skillId
+                - files
+                - hash
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Skill not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Skill operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '502':
+          description: The skill marketplace is unavailable or returned invalid data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: skillId
+        schema:
+          type: string
+          pattern: ^[a-zA-Z0-9][a-zA-Z0-9_.-]*$
+          maxLength: 255
+        required: true
+      - in: query
+        name: source
+        schema:
+          anyOf:
+          - type: string
+            pattern: ^[a-zA-Z0-9_-]+\/[a-zA-Z0-9_.-]+$
+            maxLength: 300
+          - type: string
+            pattern: ^[a-zA-Z0-9_-]+(?:\.[a-zA-Z0-9_-]+)+$
+            maxLength: 253
+        required: true
+        description: The source repository in owner/repo format. Domain-only sources cannot be downloaded and return 404.
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/skills:
+    get:
+      operationId: listSkills
+      summary: List skills
+      description: List organization skills or skills checked into a repository.
+      tags:
+      - Skills
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: List skills
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        description:
+                          type: string
+                        id:
+                          type: string
+                          format: uuid
+                        name:
+                          type: string
+                        keywords:
+                          type: array
+                          items:
+                            type: string
+                        source:
+                          type: string
+                          enum:
+                          - organization
+                          - repository
+                      required:
+                      - description
+                      - id
+                      - name
+                      - keywords
+                      - source
+                      additionalProperties: false
+                  nextCursor:
+                    type:
+                    - string
+                    - 'null'
+                    format: uuid
+                required:
+                - items
+                - nextCursor
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Skill not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Skill operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: query
+        name: cursor
+        schema:
+          type: string
+          format: uuid
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 50
+      - in: query
+        name: names
+        schema:
+          type: array
+          items:
+            type: string
+            minLength: 1
+      - in: query
+        name: repositoryIds
+        schema:
+          type: array
+          items:
+            type: string
+            format: uuid
+          default: []
+      - in: query
+        name: projectId
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+      - in: query
+        name: sessionId
+        schema:
+          type: string
+          format: uuid
+      - in: query
+        name: search
+        schema:
+          type: string
+          minLength: 1
+      - in: query
+        name: source
+        schema:
+          type: string
+          enum:
+          - organization
+          - repository
+          default: organization
+    post:
+      operationId: createSkill
+      summary: Create a skill
+      description: Create an organization skill with its files.
+      tags:
+      - Skills
+      security:
+      - apiKey: []
+      responses:
+        '201':
+          description: Create a skill
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  createdAt:
+                    type: string
+                    format: date-time
+                  description:
+                    type: string
+                  id:
+                    type: string
+                    format: uuid
+                  name:
+                    type: string
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  files:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        content:
+                          type: string
+                        filename:
+                          type: string
+                        id:
+                          type: string
+                          format: uuid
+                      required:
+                      - content
+                      - filename
+                      - id
+                      additionalProperties: false
+                required:
+                - createdAt
+                - description
+                - id
+                - name
+                - updatedAt
+                - files
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Skill not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Skill operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                description:
+                  type: string
+                name:
+                  type: string
+                  minLength: 1
+                files:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      content:
+                        type: string
+                      filename:
+                        type: string
+                        minLength: 1
+                    required:
+                    - content
+                    - filename
+                    additionalProperties: false
+                  minItems: 1
+              required:
+              - description
+              - name
+              - files
+              additionalProperties: false
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/skills/{skillId}:
+    get:
+      operationId: retrieveSkill
+      summary: Retrieve a skill
+      description: Retrieve an organization skill and all of its files.
+      tags:
+      - Skills
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Retrieve a skill
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  createdAt:
+                    type: string
+                    format: date-time
+                  description:
+                    type: string
+                  id:
+                    type: string
+                    format: uuid
+                  name:
+                    type: string
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  files:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        content:
+                          type: string
+                        filename:
+                          type: string
+                        id:
+                          type: string
+                          format: uuid
+                      required:
+                      - content
+                      - filename
+                      - id
+                      additionalProperties: false
+                required:
+                - createdAt
+                - description
+                - id
+                - name
+                - updatedAt
+                - files
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Skill not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Skill operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: skillId
+        schema:
+          type: string
+          format: uuid
+        required: true
+    patch:
+      operationId: updateSkill
+      summary: Update a skill
+      description: Update an organization skill. When files are provided, they replace the complete file set.
+      tags:
+      - Skills
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Update a skill
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  createdAt:
+                    type: string
+                    format: date-time
+                  description:
+                    type: string
+                  id:
+                    type: string
+                    format: uuid
+                  name:
+                    type: string
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  files:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        content:
+                          type: string
+                        filename:
+                          type: string
+                        id:
+                          type: string
+                          format: uuid
+                      required:
+                      - content
+                      - filename
+                      - id
+                      additionalProperties: false
+                required:
+                - createdAt
+                - description
+                - id
+                - name
+                - updatedAt
+                - files
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Skill not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Skill operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: skillId
+        schema:
+          type: string
+          format: uuid
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                description:
+                  type: string
+                name:
+                  type: string
+                  minLength: 1
+                files:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      content:
+                        type: string
+                      filename:
+                        type: string
+                        minLength: 1
+                    required:
+                    - content
+                    - filename
+                    additionalProperties: false
+                  minItems: 1
+              additionalProperties: false
+    delete:
+      operationId: deleteSkill
+      summary: Delete a skill
+      description: Delete an organization skill.
+      tags:
+      - Skills
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Delete a skill
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  deleted:
+                    type: boolean
+                    const: true
+                  id:
+                    type: string
+                    format: uuid
+                required:
+                - deleted
+                - id
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Skill not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Skill operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: skillId
+        schema:
+          type: string
+          format: uuid
+        required: true
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+components:
+  securitySchemes:
+    apiKey:
+      type: http
+      scheme: bearer
+x-refined-from:
+- tembo-openapi-original.json
+- tembo-openapi.yml

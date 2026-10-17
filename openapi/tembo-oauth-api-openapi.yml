@@ -1,0 +1,63 @@
+openapi: 3.2.0
+info:
+  title: Tembo OAuth API
+  version: 1.0.0
+  description: 'Operations tagged OAuth across 2 of this provider''s published API definitions: tembo-openapi-original.json, tembo-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.tembo.io/
+  description: Tembo API
+tags:
+- name: OAuth
+paths:
+  /oauth/context:
+    get:
+      operationId: retrieveOAuthContext
+      summary: Get the authenticated OAuth identity
+      description: Returns the user, organization, OAuth client, granted scopes, and expiration for the supplied access token. The token must include the user:org:read scope.
+      tags:
+      - OAuth
+      responses:
+        '200':
+          description: The identity and authorization details for the access token.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    type: string
+                  organizationId:
+                    type: string
+                  clientId:
+                    type: string
+                  scopes:
+                    type: array
+                    items:
+                      type: string
+                  expiresAt:
+                    type: number
+                required:
+                - userId
+                - organizationId
+                - clientId
+                - scopes
+                - expiresAt
+        '400':
+          description: The Authorization header does not use the Bearer scheme.
+        '401':
+          description: The access token is missing or invalid.
+        '403':
+          description: The token lacks a required scope or the user cannot access the organization.
+        '503':
+          description: The authentication provider is unavailable.
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+components:
+  securitySchemes:
+    apiKey:
+      type: http
+      scheme: bearer
+x-refined-from:
+- tembo-openapi-original.json
+- tembo-openapi.yml

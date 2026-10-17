@@ -1,0 +1,954 @@
+openapi: 3.2.0
+info:
+  title: Tembo Artifacts API
+  version: 1.0.0
+  description: 'Operations tagged Artifacts across 2 of this provider''s published API definitions: tembo-openapi-original.json, tembo-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.tembo.io/
+  description: Tembo API
+tags:
+- name: Artifacts
+paths:
+  /v1/artifacts:
+    get:
+      operationId: listArtifacts
+      summary: List artifacts
+      description: List organization artifacts with optional session and type filters.
+      tags:
+      - Artifacts
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: List artifacts
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        createdAt:
+                          type: string
+                          format: date-time
+                        id:
+                          type: string
+                          format: uuid
+                        sessionId:
+                          type: string
+                          format: uuid
+                        type:
+                          type: string
+                          enum:
+                          - PullRequest
+                          - ToolCall
+                          - Plan
+                          - Response
+                          - File
+                          - Service
+                          - Source
+                          default: PullRequest
+                        updatedAt:
+                          type: string
+                          format: date-time
+                        assetId:
+                          type:
+                          - string
+                          - 'null'
+                          format: uuid
+                        category:
+                          type:
+                          - string
+                          - 'null'
+                          enum:
+                          - code_walkthrough
+                          - bug_report
+                          - incident_report
+                          - license_audit
+                          - data_flow_map
+                          - security_findings
+                          - cost_map
+                          - ux_variations
+                          - architecture_map
+                          - migration_summary
+                          - release_checklist
+                          - shipped_summary
+                          - rollout_plan
+                          - diagram
+                          - chart
+                          - dashboard
+                          - timeline
+                          - comparison
+                          - report
+                          - null
+                        contentType:
+                          type:
+                          - string
+                          - 'null'
+                        description:
+                          type:
+                          - string
+                          - 'null'
+                        fileKind:
+                          type: string
+                          enum:
+                          - image
+                          - video
+                          - audio
+                          - html
+                          - markdown
+                          - text
+                          - file
+                        fileName:
+                          type:
+                          - string
+                          - 'null'
+                        outputType:
+                          type:
+                          - string
+                          - 'null'
+                          enum:
+                          - html
+                          - markdown
+                          - json
+                          - csv
+                          - asset
+                          - null
+                        relatedPullRequestUrls:
+                          type: array
+                          items:
+                            type: string
+                            format: uri
+                        runtime:
+                          type:
+                          - object
+                          - 'null'
+                          properties:
+                            hostname:
+                              type:
+                              - string
+                              - 'null'
+                            serviceName:
+                              type:
+                              - string
+                              - 'null'
+                            serviceType:
+                              type:
+                              - string
+                              - 'null'
+                          required:
+                          - hostname
+                          - serviceName
+                          - serviceType
+                          additionalProperties: false
+                        servicePort:
+                          type:
+                          - integer
+                          - 'null'
+                          minimum: 1
+                          maximum: 65535
+                        serviceUrl:
+                          type:
+                          - string
+                          - 'null'
+                          format: uri
+                        sizeBytes:
+                          type:
+                          - integer
+                          - 'null'
+                          minimum: 0
+                        sourceUrl:
+                          type:
+                          - string
+                          - 'null'
+                          format: uri
+                        title:
+                          type: string
+                      required:
+                      - createdAt
+                      - id
+                      - sessionId
+                      - type
+                      - updatedAt
+                      - assetId
+                      - category
+                      - contentType
+                      - description
+                      - fileKind
+                      - fileName
+                      - outputType
+                      - relatedPullRequestUrls
+                      - runtime
+                      - servicePort
+                      - serviceUrl
+                      - sizeBytes
+                      - sourceUrl
+                      - title
+                      additionalProperties: false
+                  nextCursor:
+                    type:
+                    - string
+                    - 'null'
+                    format: uuid
+                required:
+                - items
+                - nextCursor
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Artifact, session, or backing asset not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Artifact operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: query
+        name: cursor
+        schema:
+          type: string
+          format: uuid
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 50
+      - in: query
+        name: jobId
+        schema:
+          type: string
+          minLength: 1
+      - in: query
+        name: sessionId
+        schema:
+          type: string
+          format: uuid
+      - in: query
+        name: types
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - PullRequest
+            - ToolCall
+            - Plan
+            - Response
+            - File
+            - Service
+            - Source
+            default: PullRequest
+          minItems: 1
+    post:
+      operationId: createArtifact
+      summary: Create an artifact
+      description: Create a file artifact for a session from inline content or an uploaded asset.
+      tags:
+      - Artifacts
+      security:
+      - apiKey: []
+      responses:
+        '201':
+          description: Create an artifact
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  createdAt:
+                    type: string
+                    format: date-time
+                  id:
+                    type: string
+                    format: uuid
+                  sessionId:
+                    type: string
+                    format: uuid
+                  type:
+                    type: string
+                    enum:
+                    - PullRequest
+                    - ToolCall
+                    - Plan
+                    - Response
+                    - File
+                    - Service
+                    - Source
+                    default: PullRequest
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  assetId:
+                    type:
+                    - string
+                    - 'null'
+                    format: uuid
+                  assetUrl:
+                    type:
+                    - string
+                    - 'null'
+                    format: uri
+                  category:
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - code_walkthrough
+                    - bug_report
+                    - incident_report
+                    - license_audit
+                    - data_flow_map
+                    - security_findings
+                    - cost_map
+                    - ux_variations
+                    - architecture_map
+                    - migration_summary
+                    - release_checklist
+                    - shipped_summary
+                    - rollout_plan
+                    - diagram
+                    - chart
+                    - dashboard
+                    - timeline
+                    - comparison
+                    - report
+                    - null
+                  content:
+                    type: string
+                  contentType:
+                    type:
+                    - string
+                    - 'null'
+                  description:
+                    type:
+                    - string
+                    - 'null'
+                  fileKind:
+                    type: string
+                    enum:
+                    - image
+                    - video
+                    - audio
+                    - html
+                    - markdown
+                    - text
+                    - file
+                  fileName:
+                    type:
+                    - string
+                    - 'null'
+                  outputType:
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - html
+                    - markdown
+                    - json
+                    - csv
+                    - asset
+                    - null
+                  relatedPullRequestUrls:
+                    type: array
+                    items:
+                      type: string
+                      format: uri
+                  runtime:
+                    type:
+                    - object
+                    - 'null'
+                    properties:
+                      hostname:
+                        type:
+                        - string
+                        - 'null'
+                      serviceName:
+                        type:
+                        - string
+                        - 'null'
+                      serviceType:
+                        type:
+                        - string
+                        - 'null'
+                    required:
+                    - hostname
+                    - serviceName
+                    - serviceType
+                    additionalProperties: false
+                  servicePort:
+                    type:
+                    - integer
+                    - 'null'
+                    minimum: 1
+                    maximum: 65535
+                  serviceUrl:
+                    type:
+                    - string
+                    - 'null'
+                    format: uri
+                  sizeBytes:
+                    type:
+                    - integer
+                    - 'null'
+                    minimum: 0
+                  sourceUrl:
+                    type:
+                    - string
+                    - 'null'
+                    format: uri
+                  title:
+                    type: string
+                required:
+                - createdAt
+                - id
+                - sessionId
+                - type
+                - updatedAt
+                - assetId
+                - assetUrl
+                - category
+                - content
+                - contentType
+                - description
+                - fileKind
+                - fileName
+                - outputType
+                - relatedPullRequestUrls
+                - runtime
+                - servicePort
+                - serviceUrl
+                - sizeBytes
+                - sourceUrl
+                - title
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Artifact, session, or backing asset not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Artifact operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  minLength: 1
+                  maxLength: 200
+                  description: Human-readable title for the artifact.
+                description:
+                  type: string
+                  minLength: 1
+                  maxLength: 2000
+                  description: Short description of what the artifact shows.
+                category:
+                  type: string
+                  enum:
+                  - code_walkthrough
+                  - bug_report
+                  - incident_report
+                  - license_audit
+                  - data_flow_map
+                  - security_findings
+                  - cost_map
+                  - ux_variations
+                  - architecture_map
+                  - migration_summary
+                  - release_checklist
+                  - shipped_summary
+                  - rollout_plan
+                  - diagram
+                  - chart
+                  - dashboard
+                  - timeline
+                  - comparison
+                  - report
+                  description: Artifact category for display and filtering.
+                output:
+                  oneOf:
+                  - type: object
+                    properties:
+                      type:
+                        type: string
+                        const: html
+                      content:
+                        type: string
+                        minLength: 1
+                        description: Complete self-contained HTML document. Inline CSS and JavaScript are allowed. Do not depend on external network assets. Must be at most 5242880 bytes after UTF-8 encoding.
+                      fileName:
+                        type: string
+                        minLength: 1
+                        maxLength: 255
+                        description: Optional stored filename. The extension is normalized.
+                    required:
+                    - type
+                    - content
+                    additionalProperties: false
+                    description: Complete self-contained HTML document. Inline CSS and JavaScript are allowed. Do not depend on external network assets.
+                  - type: object
+                    properties:
+                      type:
+                        type: string
+                        const: markdown
+                      content:
+                        type: string
+                        minLength: 1
+                        description: Markdown content for a readable report, checklist, walkthrough, or notes artifact. Must be at most 5242880 bytes after UTF-8 encoding.
+                      fileName:
+                        type: string
+                        minLength: 1
+                        maxLength: 255
+                        description: Optional stored filename. The extension is normalized.
+                    required:
+                    - type
+                    - content
+                    additionalProperties: false
+                    description: Markdown content for a readable report, checklist, walkthrough, or notes artifact.
+                  - type: object
+                    properties:
+                      type:
+                        type: string
+                        const: json
+                      content:
+                        type: string
+                        minLength: 1
+                        description: JSON text for structured data, diagnostics, or machine-readable findings. Send the JSON as a string, not as an object. Must be at most 5242880 bytes after UTF-8 encoding.
+                      fileName:
+                        type: string
+                        minLength: 1
+                        maxLength: 255
+                        description: Optional stored filename. The extension is normalized.
+                    required:
+                    - type
+                    - content
+                    additionalProperties: false
+                    description: JSON text for structured data, diagnostics, or machine-readable findings. Send the JSON as a string, not as an object.
+                  - type: object
+                    properties:
+                      type:
+                        type: string
+                        const: csv
+                      content:
+                        type: string
+                        minLength: 1
+                        description: CSV content for audits, tables, inventories, reports, and spreadsheet-friendly exports. Must be at most 5242880 bytes after UTF-8 encoding.
+                      fileName:
+                        type: string
+                        minLength: 1
+                        maxLength: 255
+                        description: Optional stored filename. The extension is normalized.
+                    required:
+                    - type
+                    - content
+                    additionalProperties: false
+                    description: CSV content for audits, tables, inventories, reports, and spreadsheet-friendly exports.
+                  - type: object
+                    properties:
+                      type:
+                        type: string
+                        const: asset
+                      assetId:
+                        type: string
+                        format: uuid
+                        description: ID of an existing uploaded Tembo asset.
+                      fileName:
+                        type: string
+                        minLength: 1
+                        maxLength: 255
+                        description: Optional display filename for the uploaded asset.
+                    required:
+                    - type
+                    - assetId
+                    additionalProperties: false
+                    description: Attach title, category, and artifact metadata to an already uploaded screenshot, image, video, audio file, PDF, or other binary asset.
+                  description: Artifact content or a reference to an uploaded asset. The type field selects the required fields.
+                relatedPullRequestUrls:
+                  type: array
+                  items:
+                    type: string
+                    format: uri
+                  maxItems: 20
+                  description: URLs of pull requests related to this artifact.
+                sessionId:
+                  type: string
+                  format: uuid
+              required:
+              - title
+              - output
+              - sessionId
+              additionalProperties: false
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/artifacts/{artifactId}:
+    get:
+      operationId: retrieveArtifact
+      summary: Retrieve an artifact
+      description: Retrieve an organization artifact by ID.
+      tags:
+      - Artifacts
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Retrieve an artifact
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  createdAt:
+                    type: string
+                    format: date-time
+                  id:
+                    type: string
+                    format: uuid
+                  sessionId:
+                    type: string
+                    format: uuid
+                  type:
+                    type: string
+                    enum:
+                    - PullRequest
+                    - ToolCall
+                    - Plan
+                    - Response
+                    - File
+                    - Service
+                    - Source
+                    default: PullRequest
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  assetId:
+                    type:
+                    - string
+                    - 'null'
+                    format: uuid
+                  assetUrl:
+                    type:
+                    - string
+                    - 'null'
+                    format: uri
+                  category:
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - code_walkthrough
+                    - bug_report
+                    - incident_report
+                    - license_audit
+                    - data_flow_map
+                    - security_findings
+                    - cost_map
+                    - ux_variations
+                    - architecture_map
+                    - migration_summary
+                    - release_checklist
+                    - shipped_summary
+                    - rollout_plan
+                    - diagram
+                    - chart
+                    - dashboard
+                    - timeline
+                    - comparison
+                    - report
+                    - null
+                  content:
+                    type: string
+                  contentType:
+                    type:
+                    - string
+                    - 'null'
+                  description:
+                    type:
+                    - string
+                    - 'null'
+                  fileKind:
+                    type: string
+                    enum:
+                    - image
+                    - video
+                    - audio
+                    - html
+                    - markdown
+                    - text
+                    - file
+                  fileName:
+                    type:
+                    - string
+                    - 'null'
+                  outputType:
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - html
+                    - markdown
+                    - json
+                    - csv
+                    - asset
+                    - null
+                  relatedPullRequestUrls:
+                    type: array
+                    items:
+                      type: string
+                      format: uri
+                  runtime:
+                    type:
+                    - object
+                    - 'null'
+                    properties:
+                      hostname:
+                        type:
+                        - string
+                        - 'null'
+                      serviceName:
+                        type:
+                        - string
+                        - 'null'
+                      serviceType:
+                        type:
+                        - string
+                        - 'null'
+                    required:
+                    - hostname
+                    - serviceName
+                    - serviceType
+                    additionalProperties: false
+                  servicePort:
+                    type:
+                    - integer
+                    - 'null'
+                    minimum: 1
+                    maximum: 65535
+                  serviceUrl:
+                    type:
+                    - string
+                    - 'null'
+                    format: uri
+                  sizeBytes:
+                    type:
+                    - integer
+                    - 'null'
+                    minimum: 0
+                  sourceUrl:
+                    type:
+                    - string
+                    - 'null'
+                    format: uri
+                  title:
+                    type: string
+                required:
+                - createdAt
+                - id
+                - sessionId
+                - type
+                - updatedAt
+                - assetId
+                - assetUrl
+                - category
+                - content
+                - contentType
+                - description
+                - fileKind
+                - fileName
+                - outputType
+                - relatedPullRequestUrls
+                - runtime
+                - servicePort
+                - serviceUrl
+                - sizeBytes
+                - sourceUrl
+                - title
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Artifact, session, or backing asset not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Artifact operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: artifactId
+        schema:
+          type: string
+          format: uuid
+        required: true
+    delete:
+      operationId: deleteArtifact
+      summary: Delete an artifact
+      description: Delete an organization artifact and its backing asset when present.
+      tags:
+      - Artifacts
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Delete an artifact
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  deleted:
+                    type: boolean
+                    const: true
+                  id:
+                    type: string
+                    format: uuid
+                required:
+                - deleted
+                - id
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Artifact, session, or backing asset not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Artifact operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: artifactId
+        schema:
+          type: string
+          format: uuid
+        required: true
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+components:
+  securitySchemes:
+    apiKey:
+      type: http
+      scheme: bearer
+x-refined-from:
+- tembo-openapi-original.json
+- tembo-openapi.yml

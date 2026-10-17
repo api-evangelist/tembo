@@ -1,0 +1,873 @@
+openapi: 3.2.0
+info:
+  title: Tembo Pull requests API
+  version: 1.0.0
+  description: 'Operations tagged Pull requests across 2 of this provider''s published API definitions: tembo-openapi-original.json, tembo-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.tembo.io/
+  description: Tembo API
+tags:
+- name: Pull requests
+paths:
+  /v1/pull-requests:
+    get:
+      operationId: listPullRequests
+      summary: List pull requests
+      description: List pull requests for the authenticated organization with cursor pagination.
+      tags:
+      - Pull requests
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: List pull requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        createdAt:
+                          type: string
+                          format: date-time
+                        description:
+                          type:
+                          - string
+                          - 'null'
+                        externalId:
+                          type: string
+                        externalProvider:
+                          type: string
+                        id:
+                          type: string
+                        isDraft:
+                          type: boolean
+                        mergedAt:
+                          type:
+                          - string
+                          - 'null'
+                          format: date-time
+                        reviewDecision:
+                          type:
+                          - string
+                          - 'null'
+                          enum:
+                          - APPROVED
+                          - CHANGES_REQUESTED
+                          - REVIEW_REQUIRED
+                          - null
+                        sourceBranch:
+                          type:
+                          - string
+                          - 'null'
+                        status:
+                          type: string
+                          enum:
+                          - open
+                          - merged
+                          - closed
+                          default: open
+                        title:
+                          type:
+                          - string
+                          - 'null'
+                        updatedAt:
+                          type: string
+                          format: date-time
+                        url:
+                          type: string
+                        author:
+                          type: object
+                          properties:
+                            id:
+                              type:
+                              - string
+                              - 'null'
+                            login:
+                              type:
+                              - string
+                              - 'null'
+                            name:
+                              type:
+                              - string
+                              - 'null'
+                            avatarUrl:
+                              type:
+                              - string
+                              - 'null'
+                            profileUrl:
+                              type:
+                              - string
+                              - 'null'
+                          required:
+                          - id
+                          - login
+                          - name
+                          - avatarUrl
+                          - profileUrl
+                          additionalProperties: false
+                        baseBranch:
+                          type:
+                          - string
+                          - 'null'
+                        codeRepository:
+                          type:
+                          - object
+                          - 'null'
+                          properties:
+                            id:
+                              type: string
+                              format: uuid
+                            name:
+                              type: string
+                            url:
+                              type: string
+                            owner:
+                              type:
+                              - string
+                              - 'null'
+                            targetBranch:
+                              type:
+                              - string
+                              - 'null'
+                            baseBranch:
+                              type:
+                              - string
+                              - 'null'
+                            provider:
+                              type: string
+                          required:
+                          - id
+                          - name
+                          - url
+                          - owner
+                          - targetBranch
+                          - baseBranch
+                          - provider
+                          additionalProperties: false
+                        headSha:
+                          type:
+                          - string
+                          - 'null'
+                        number:
+                          type:
+                          - integer
+                          - 'null'
+                          exclusiveMinimum: 0
+                        owner:
+                          type:
+                          - string
+                          - 'null'
+                        reviewers:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                              login:
+                                type: string
+                              name:
+                                type: string
+                              avatarUrl:
+                                type:
+                                - string
+                                - 'null'
+                              profileUrl:
+                                type:
+                                - string
+                                - 'null'
+                              type:
+                                type: string
+                                enum:
+                                - bot
+                                - user
+                              reviewRequested:
+                                type: boolean
+                              commented:
+                                type: boolean
+                              approved:
+                                type: boolean
+                              state:
+                                type: string
+                                enum:
+                                - approved
+                                - changes_requested
+                                - commented
+                                - awaiting
+                              changesRequested:
+                                type: boolean
+                              awaitingReview:
+                                type: boolean
+                            required:
+                            - id
+                            - login
+                            - name
+                            - avatarUrl
+                            - profileUrl
+                            - reviewRequested
+                            - commented
+                            - approved
+                            additionalProperties: false
+                        state:
+                          type: string
+                          enum:
+                          - approved
+                          - needs review
+                          - draft
+                          - merged
+                          - closed
+                        approvers:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              login:
+                                type: string
+                              avatarUrl:
+                                type:
+                                - string
+                                - 'null'
+                            required:
+                            - login
+                            - avatarUrl
+                            additionalProperties: false
+                        diff:
+                          type:
+                          - object
+                          - 'null'
+                          properties:
+                            additions:
+                              type: integer
+                              minimum: 0
+                            deletions:
+                              type: integer
+                              minimum: 0
+                          required:
+                          - additions
+                          - deletions
+                          additionalProperties: false
+                        session:
+                          type:
+                          - object
+                          - 'null'
+                          properties:
+                            id:
+                              type: string
+                              format: uuid
+                            title:
+                              type: string
+                            kind:
+                              type: string
+                            htmlUrl:
+                              type: string
+                            visibility:
+                              type: string
+                              enum:
+                              - private
+                              - public
+                          required:
+                          - id
+                          - title
+                          - kind
+                          - htmlUrl
+                          additionalProperties: false
+                      required:
+                      - createdAt
+                      - description
+                      - externalId
+                      - externalProvider
+                      - id
+                      - isDraft
+                      - mergedAt
+                      - reviewDecision
+                      - sourceBranch
+                      - status
+                      - title
+                      - updatedAt
+                      - url
+                      - author
+                      - baseBranch
+                      - codeRepository
+                      - headSha
+                      - number
+                      - owner
+                      - reviewers
+                      - state
+                      - approvers
+                      - diff
+                      - session
+                      additionalProperties: false
+                  nextCursor:
+                    type:
+                    - string
+                    - 'null'
+                    format: uuid
+                  totalCount:
+                    type: integer
+                    minimum: 0
+                required:
+                - items
+                - nextCursor
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: The caller is not permitted to perform this operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Pull request not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Pull request conflicts with an existing resource
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Pull request operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '502':
+          description: Repository provider operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: query
+        name: authorIds
+        schema:
+          type: array
+          items:
+            type: string
+            minLength: 1
+          default: []
+      - in: query
+        name: createdAfter
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: cursor
+        schema:
+          type: string
+          format: uuid
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 50
+      - in: query
+        name: excludeAuthorIds
+        schema:
+          type: array
+          items:
+            type: string
+            minLength: 1
+          default: []
+      - in: query
+        name: excludeOrganizationName
+        schema:
+          type: string
+          minLength: 1
+      - in: query
+        name: excludeReturnedAuthorIds
+        schema:
+          type: array
+          items:
+            type: string
+            minLength: 1
+          default: []
+      - in: query
+        name: excludeReviewerIds
+        schema:
+          type: array
+          items:
+            type: string
+            minLength: 1
+          default: []
+      - in: query
+        name: hasTemboSession
+        schema:
+          type: boolean
+      - in: query
+        name: includeAuthors
+        schema:
+          type: boolean
+      - in: query
+        name: includeTotal
+        schema:
+          type: boolean
+      - in: query
+        name: repositoryIds
+        schema:
+          type: array
+          items:
+            type: string
+            minLength: 1
+          default: []
+      - in: query
+        name: reviewerIds
+        schema:
+          type: array
+          items:
+            type: string
+            minLength: 1
+          default: []
+      - in: query
+        name: mergedAfter
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: search
+        schema:
+          type: string
+          minLength: 1
+      - in: query
+        name: sortBy
+        schema:
+          type: string
+          enum:
+          - createdAt
+          - updatedAt
+      - in: query
+        name: state
+        schema:
+          type: string
+          enum:
+          - open
+          - returned
+          - approved
+          - needs review
+          - draft
+          - merged
+          - closed
+      - in: query
+        name: updatedAfter
+        schema:
+          type: string
+          format: date-time
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/pull-requests/{pullRequestId}:
+    get:
+      operationId: retrievePullRequest
+      summary: Retrieve a pull request
+      description: Retrieve a pull request for the authenticated organization.
+      tags:
+      - Pull requests
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Retrieve a pull request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  createdAt:
+                    type: string
+                    format: date-time
+                  description:
+                    type:
+                    - string
+                    - 'null'
+                  externalId:
+                    type: string
+                  externalProvider:
+                    type: string
+                  id:
+                    type: string
+                  isDraft:
+                    type: boolean
+                  mergedAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  reviewDecision:
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - APPROVED
+                    - CHANGES_REQUESTED
+                    - REVIEW_REQUIRED
+                    - null
+                  sourceBranch:
+                    type:
+                    - string
+                    - 'null'
+                  status:
+                    type: string
+                    enum:
+                    - open
+                    - merged
+                    - closed
+                    default: open
+                  title:
+                    type:
+                    - string
+                    - 'null'
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  url:
+                    type: string
+                  author:
+                    type: object
+                    properties:
+                      id:
+                        type:
+                        - string
+                        - 'null'
+                      login:
+                        type:
+                        - string
+                        - 'null'
+                      name:
+                        type:
+                        - string
+                        - 'null'
+                      avatarUrl:
+                        type:
+                        - string
+                        - 'null'
+                      profileUrl:
+                        type:
+                        - string
+                        - 'null'
+                    required:
+                    - id
+                    - login
+                    - name
+                    - avatarUrl
+                    - profileUrl
+                    additionalProperties: false
+                  baseBranch:
+                    type:
+                    - string
+                    - 'null'
+                  codeRepository:
+                    type:
+                    - object
+                    - 'null'
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                      name:
+                        type: string
+                      url:
+                        type: string
+                      owner:
+                        type:
+                        - string
+                        - 'null'
+                      targetBranch:
+                        type:
+                        - string
+                        - 'null'
+                      baseBranch:
+                        type:
+                        - string
+                        - 'null'
+                      provider:
+                        type: string
+                    required:
+                    - id
+                    - name
+                    - url
+                    - owner
+                    - targetBranch
+                    - baseBranch
+                    - provider
+                    additionalProperties: false
+                  diff:
+                    type:
+                    - object
+                    - 'null'
+                    properties:
+                      additions:
+                        type: integer
+                        minimum: 0
+                      deletions:
+                        type: integer
+                        minimum: 0
+                      data:
+                        type: string
+                    required:
+                    - additions
+                    - deletions
+                    - data
+                    additionalProperties: false
+                  headSha:
+                    type:
+                    - string
+                    - 'null'
+                  number:
+                    type:
+                    - integer
+                    - 'null'
+                    exclusiveMinimum: 0
+                  owner:
+                    type:
+                    - string
+                    - 'null'
+                  reviewers:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        login:
+                          type: string
+                        name:
+                          type: string
+                        avatarUrl:
+                          type:
+                          - string
+                          - 'null'
+                        profileUrl:
+                          type:
+                          - string
+                          - 'null'
+                        type:
+                          type: string
+                          enum:
+                          - bot
+                          - user
+                        reviewRequested:
+                          type: boolean
+                        commented:
+                          type: boolean
+                        approved:
+                          type: boolean
+                        state:
+                          type: string
+                          enum:
+                          - approved
+                          - changes_requested
+                          - commented
+                          - awaiting
+                        changesRequested:
+                          type: boolean
+                        awaitingReview:
+                          type: boolean
+                      required:
+                      - id
+                      - login
+                      - name
+                      - avatarUrl
+                      - profileUrl
+                      - reviewRequested
+                      - commented
+                      - approved
+                      additionalProperties: false
+                  state:
+                    type: string
+                    enum:
+                    - approved
+                    - needs review
+                    - draft
+                    - merged
+                    - closed
+                  session:
+                    type:
+                    - object
+                    - 'null'
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                      title:
+                        type: string
+                      kind:
+                        type: string
+                      htmlUrl:
+                        type: string
+                      visibility:
+                        type: string
+                        enum:
+                        - private
+                        - public
+                    required:
+                    - id
+                    - title
+                    - kind
+                    - htmlUrl
+                    additionalProperties: false
+                required:
+                - createdAt
+                - description
+                - externalId
+                - externalProvider
+                - id
+                - isDraft
+                - mergedAt
+                - reviewDecision
+                - sourceBranch
+                - status
+                - title
+                - updatedAt
+                - url
+                - author
+                - baseBranch
+                - codeRepository
+                - diff
+                - headSha
+                - number
+                - owner
+                - reviewers
+                - state
+                - session
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: The caller is not permitted to perform this operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Pull request not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Pull request conflicts with an existing resource
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Pull request operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '502':
+          description: Repository provider operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: pullRequestId
+        schema:
+          type: string
+          format: uuid
+        required: true
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+components:
+  securitySchemes:
+    apiKey:
+      type: http
+      scheme: bearer
+x-refined-from:
+- tembo-openapi-original.json
+- tembo-openapi.yml

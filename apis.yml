@@ -103,21 +103,16 @@ common:
 - type: StatusPage
   url: https://status.tembo.io
 apis:
-- aid: tembo:tembo-public-api
-  name: Tembo Public API
-  description: Programmatic access to Tembo sessions, agents, projects, organizations, users, integrations, MCP connections, skills and API keys. Bearer API key authentication.
+- aid: tembo:tembo-agents-api
+  name: Tembo Agents API
+  description: The Agents API from Tembo — 13 operation(s) for agents.
   humanURL: https://docs.tembo.io/api
   baseURL: https://api.tembo.io
   tags:
-  - AI Agents
-  - Sessions
-  - Automation
+  - Agents
   properties:
   - type: OpenAPI
-    url: openapi/tembo-openapi.yml
-  - type: OpenAPI
-    name: OpenAPI (provider-hosted)
-    url: https://api.tembo.io/public-api/openapi/public
+    url: openapi/tembo-agents-api-openapi.yml
   - type: Documentation
     url: https://docs.tembo.io/api
   - type: JSONSchema
@@ -132,7 +127,438 @@ apis:
     url: json-schema/tembo-tip-tap-document-schema.json
   - type: JSONSchema
     url: json-schema/tembo-agent-state-schema.json
-  image: https://www.tembo.io/images/og-image.png
+- aid: tembo:tembo-api-keys-api
+  name: Tembo API Keys API
+  description: The API Keys API from Tembo — 2 operation(s) for api keys.
+  humanURL: https://docs.tembo.io/api
+  baseURL: https://api.tembo.io
+  tags:
+  - API Keys
+  properties:
+  - type: OpenAPI
+    url: openapi/tembo-api-keys-api-openapi.yml
+  - type: Documentation
+    url: https://docs.tembo.io/api
+  - type: JSONSchema
+    url: json-schema/tembo-trigger-filters-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-session-event-data-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-options-input-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-options-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-tip-tap-document-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-state-schema.json
+- aid: tembo:tembo-artifacts-api
+  name: Tembo Artifacts API
+  description: The Artifacts API from Tembo — 2 operation(s) for artifacts.
+  humanURL: https://docs.tembo.io/api
+  baseURL: https://api.tembo.io
+  tags:
+  - Artifacts
+  properties:
+  - type: OpenAPI
+    url: openapi/tembo-artifacts-api-openapi.yml
+  - type: Documentation
+    url: https://docs.tembo.io/api
+  - type: JSONSchema
+    url: json-schema/tembo-trigger-filters-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-session-event-data-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-options-input-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-options-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-tip-tap-document-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-state-schema.json
+- aid: tembo:tembo-authentication-api
+  name: Tembo Authentication API
+  description: The Authentication API from Tembo — 1 operation(s) for authentication.
+  humanURL: https://docs.tembo.io/api
+  baseURL: https://api.tembo.io
+  tags:
+  - Authentication
+  properties:
+  - type: OpenAPI
+    url: openapi/tembo-authentication-api-openapi.yml
+  - type: Documentation
+    url: https://docs.tembo.io/api
+  - type: JSONSchema
+    url: json-schema/tembo-trigger-filters-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-session-event-data-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-options-input-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-options-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-tip-tap-document-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-state-schema.json
+- aid: tembo:tembo-billing-api
+  name: Tembo Billing API
+  description: The Billing API from Tembo — 2 operation(s) for billing.
+  humanURL: https://docs.tembo.io/api
+  baseURL: https://api.tembo.io
+  tags:
+  - Billing
+  properties:
+  - type: OpenAPI
+    url: openapi/tembo-billing-api-openapi.yml
+  - type: Documentation
+    url: https://docs.tembo.io/api
+  - type: JSONSchema
+    url: json-schema/tembo-trigger-filters-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-session-event-data-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-options-input-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-options-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-tip-tap-document-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-state-schema.json
+- aid: tembo:tembo-insights-api
+  name: Tembo Insights API
+  description: The Insights API from Tembo — 3 operation(s) for insights.
+  humanURL: https://docs.tembo.io/api
+  baseURL: https://api.tembo.io
+  tags:
+  - Insights
+  properties:
+  - type: OpenAPI
+    url: openapi/tembo-insights-api-openapi.yml
+  - type: Documentation
+    url: https://docs.tembo.io/api
+  - type: JSONSchema
+    url: json-schema/tembo-trigger-filters-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-session-event-data-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-options-input-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-options-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-tip-tap-document-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-state-schema.json
+- aid: tembo:tembo-integrations-api
+  name: Tembo Integrations API
+  description: The Integrations API from Tembo — 13 operation(s) for integrations.
+  humanURL: https://docs.tembo.io/api
+  baseURL: https://api.tembo.io
+  tags:
+  - Integrations
+  properties:
+  - type: OpenAPI
+    url: openapi/tembo-integrations-api-openapi.yml
+  - type: Documentation
+    url: https://docs.tembo.io/api
+  - type: JSONSchema
+    url: json-schema/tembo-trigger-filters-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-session-event-data-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-options-input-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-options-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-tip-tap-document-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-state-schema.json
+- aid: tembo:tembo-mcp-connections-api
+  name: Tembo MCP Connections API
+  description: The MCP Connections API from Tembo — 4 operation(s) for mcp connections.
+  humanURL: https://docs.tembo.io/api
+  baseURL: https://api.tembo.io
+  tags:
+  - MCP Connections
+  properties:
+  - type: OpenAPI
+    url: openapi/tembo-mcp-connections-api-openapi.yml
+  - type: Documentation
+    url: https://docs.tembo.io/api
+  - type: JSONSchema
+    url: json-schema/tembo-trigger-filters-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-session-event-data-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-options-input-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-options-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-tip-tap-document-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-state-schema.json
+- aid: tembo:tembo-messages-api
+  name: Tembo Messages API
+  description: The Messages API from Tembo — 3 operation(s) for messages.
+  humanURL: https://docs.tembo.io/api
+  baseURL: https://api.tembo.io
+  tags:
+  - Messages
+  properties:
+  - type: OpenAPI
+    url: openapi/tembo-messages-api-openapi.yml
+  - type: Documentation
+    url: https://docs.tembo.io/api
+  - type: JSONSchema
+    url: json-schema/tembo-trigger-filters-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-session-event-data-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-options-input-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-options-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-tip-tap-document-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-state-schema.json
+- aid: tembo:tembo-models-api
+  name: Tembo Models API
+  description: The Models API from Tembo — 2 operation(s) for models.
+  humanURL: https://docs.tembo.io/api
+  baseURL: https://api.tembo.io
+  tags:
+  - Models
+  properties:
+  - type: OpenAPI
+    url: openapi/tembo-models-api-openapi.yml
+  - type: Documentation
+    url: https://docs.tembo.io/api
+  - type: JSONSchema
+    url: json-schema/tembo-trigger-filters-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-session-event-data-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-options-input-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-options-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-tip-tap-document-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-state-schema.json
+- aid: tembo:tembo-oauth-api
+  name: Tembo OAuth API
+  description: The OAuth API from Tembo — 1 operation(s) for oauth.
+  humanURL: https://docs.tembo.io/api
+  baseURL: https://api.tembo.io
+  tags:
+  - OAuth
+  properties:
+  - type: OpenAPI
+    url: openapi/tembo-oauth-api-openapi.yml
+  - type: Documentation
+    url: https://docs.tembo.io/api
+  - type: JSONSchema
+    url: json-schema/tembo-trigger-filters-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-session-event-data-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-options-input-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-options-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-tip-tap-document-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-state-schema.json
+- aid: tembo:tembo-organizations-api
+  name: Tembo Organizations API
+  description: The Organizations API from Tembo — 10 operation(s) for organizations.
+  humanURL: https://docs.tembo.io/api
+  baseURL: https://api.tembo.io
+  tags:
+  - Organizations
+  properties:
+  - type: OpenAPI
+    url: openapi/tembo-organizations-api-openapi.yml
+  - type: Documentation
+    url: https://docs.tembo.io/api
+  - type: JSONSchema
+    url: json-schema/tembo-trigger-filters-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-session-event-data-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-options-input-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-options-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-tip-tap-document-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-state-schema.json
+- aid: tembo:tembo-projects-api
+  name: Tembo Projects API
+  description: The Projects API from Tembo — 12 operation(s) for projects.
+  humanURL: https://docs.tembo.io/api
+  baseURL: https://api.tembo.io
+  tags:
+  - Projects
+  properties:
+  - type: OpenAPI
+    url: openapi/tembo-projects-api-openapi.yml
+  - type: Documentation
+    url: https://docs.tembo.io/api
+  - type: JSONSchema
+    url: json-schema/tembo-trigger-filters-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-session-event-data-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-options-input-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-options-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-tip-tap-document-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-state-schema.json
+- aid: tembo:tembo-pull-requests-api
+  name: Tembo Pull requests API
+  description: The Pull requests API from Tembo — 2 operation(s) for pull requests.
+  humanURL: https://docs.tembo.io/api
+  baseURL: https://api.tembo.io
+  tags:
+  - Pull requests
+  properties:
+  - type: OpenAPI
+    url: openapi/tembo-pull-requests-api-openapi.yml
+  - type: Documentation
+    url: https://docs.tembo.io/api
+  - type: JSONSchema
+    url: json-schema/tembo-trigger-filters-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-session-event-data-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-options-input-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-options-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-tip-tap-document-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-state-schema.json
+- aid: tembo:tembo-repositories-api
+  name: Tembo Repositories API
+  description: The Repositories API from Tembo — 2 operation(s) for repositories.
+  humanURL: https://docs.tembo.io/api
+  baseURL: https://api.tembo.io
+  tags:
+  - Repositories
+  properties:
+  - type: OpenAPI
+    url: openapi/tembo-repositories-api-openapi.yml
+  - type: Documentation
+    url: https://docs.tembo.io/api
+  - type: JSONSchema
+    url: json-schema/tembo-trigger-filters-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-session-event-data-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-options-input-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-options-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-tip-tap-document-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-state-schema.json
+- aid: tembo:tembo-runtimes-api
+  name: Tembo Runtimes API
+  description: The Runtimes API from Tembo — 1 operation(s) for runtimes.
+  humanURL: https://docs.tembo.io/api
+  baseURL: https://api.tembo.io
+  tags:
+  - Runtimes
+  properties:
+  - type: OpenAPI
+    url: openapi/tembo-runtimes-api-openapi.yml
+  - type: Documentation
+    url: https://docs.tembo.io/api
+  - type: JSONSchema
+    url: json-schema/tembo-trigger-filters-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-session-event-data-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-options-input-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-options-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-tip-tap-document-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-state-schema.json
+- aid: tembo:tembo-sessions-api
+  name: Tembo Sessions API
+  description: The Sessions API from Tembo — 10 operation(s) for sessions.
+  humanURL: https://docs.tembo.io/api
+  baseURL: https://api.tembo.io
+  tags:
+  - Sessions
+  properties:
+  - type: OpenAPI
+    url: openapi/tembo-sessions-api-openapi.yml
+  - type: Documentation
+    url: https://docs.tembo.io/api
+  - type: JSONSchema
+    url: json-schema/tembo-trigger-filters-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-session-event-data-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-options-input-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-options-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-tip-tap-document-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-state-schema.json
+- aid: tembo:tembo-skills-api
+  name: Tembo Skills API
+  description: The Skills API from Tembo — 4 operation(s) for skills.
+  humanURL: https://docs.tembo.io/api
+  baseURL: https://api.tembo.io
+  tags:
+  - Skills
+  properties:
+  - type: OpenAPI
+    url: openapi/tembo-skills-api-openapi.yml
+  - type: Documentation
+    url: https://docs.tembo.io/api
+  - type: JSONSchema
+    url: json-schema/tembo-trigger-filters-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-session-event-data-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-options-input-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-options-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-tip-tap-document-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-state-schema.json
+- aid: tembo:tembo-users-api
+  name: Tembo Users API
+  description: The Users API from Tembo — 8 operation(s) for users.
+  humanURL: https://docs.tembo.io/api
+  baseURL: https://api.tembo.io
+  tags:
+  - Users
+  properties:
+  - type: OpenAPI
+    url: openapi/tembo-users-api-openapi.yml
+  - type: Documentation
+    url: https://docs.tembo.io/api
+  - type: JSONSchema
+    url: json-schema/tembo-trigger-filters-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-session-event-data-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-options-input-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-options-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-tip-tap-document-schema.json
+  - type: JSONSchema
+    url: json-schema/tembo-agent-state-schema.json
 x-enrichment:
   date: '2026-10-13'
   status: enriched

@@ -1,0 +1,673 @@
+openapi: 3.2.0
+info:
+  title: Tembo Repositories API
+  version: 1.0.0
+  description: 'Operations tagged Repositories across 2 of this provider''s published API definitions: tembo-openapi-original.json, tembo-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.tembo.io/
+  description: Tembo API
+tags:
+- name: Repositories
+paths:
+  /v1/repositories:
+    get:
+      operationId: listRepositories
+      summary: List repositories
+      description: List repositories in the authenticated organization. Defaults to enabled repositories.
+      tags:
+      - Repositories
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: List repositories
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        baseBranch:
+                          type:
+                          - string
+                          - 'null'
+                        createdAt:
+                          type: string
+                          format: date-time
+                        description:
+                          type:
+                          - string
+                          - 'null'
+                        enabledAt:
+                          type:
+                          - string
+                          - 'null'
+                          format: date-time
+                        id:
+                          type: string
+                          format: uuid
+                        name:
+                          type: string
+                        owner:
+                          type:
+                          - string
+                          - 'null'
+                        provider:
+                          type: object
+                          properties:
+                            displayName:
+                              type: string
+                              minLength: 1
+                              maxLength: 500
+                            integrationId:
+                              type: string
+                              format: uuid
+                            type:
+                              type: string
+                              minLength: 1
+                              maxLength: 100
+                          required:
+                          - displayName
+                          - integrationId
+                          - type
+                          additionalProperties: false
+                        targetBranch:
+                          type:
+                          - string
+                          - 'null'
+                        updatedAt:
+                          type: string
+                          format: date-time
+                        url:
+                          type: string
+                      required:
+                      - baseBranch
+                      - createdAt
+                      - description
+                      - enabledAt
+                      - id
+                      - name
+                      - owner
+                      - provider
+                      - targetBranch
+                      - updatedAt
+                      - url
+                      additionalProperties: false
+                  nextCursor:
+                    type:
+                    - string
+                    - 'null'
+                    format: uuid
+                required:
+                - items
+                - nextCursor
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: Provider authentication failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: Provider authorization failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Repository, integration, or file not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Repository conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Repository operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '502':
+          description: Repository provider operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '504':
+          description: Repository provider operation timed out
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: query
+        name: cursor
+        schema:
+          type: string
+          format: uuid
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 50
+      - in: query
+        name: enabled
+        schema:
+          type: string
+          enum:
+          - all
+          - 'true'
+          - 'false'
+          default: all
+      - in: query
+        name: ids
+        schema:
+          type: array
+          items:
+            type: string
+            format: uuid
+          minItems: 1
+          maxItems: 100
+      - in: query
+        name: integrationId
+        schema:
+          type: string
+          format: uuid
+      - in: query
+        name: order
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: desc
+      - in: query
+        name: search
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 500
+      - in: query
+        name: sort
+        schema:
+          type: string
+          enum:
+          - createdAt
+          - integration
+          - name
+          - pullRequests
+          - updatedAt
+          default: pullRequests
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/repositories/{repositoryId}:
+    get:
+      operationId: retrieveRepository
+      summary: Retrieve a repository
+      description: Retrieve a repository in the authenticated organization.
+      tags:
+      - Repositories
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Retrieve a repository
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  baseBranch:
+                    type:
+                    - string
+                    - 'null'
+                  createdAt:
+                    type: string
+                    format: date-time
+                  description:
+                    type:
+                    - string
+                    - 'null'
+                  enabledAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  id:
+                    type: string
+                    format: uuid
+                  name:
+                    type: string
+                  owner:
+                    type:
+                    - string
+                    - 'null'
+                  provider:
+                    type: object
+                    properties:
+                      displayName:
+                        type: string
+                        minLength: 1
+                        maxLength: 500
+                      integrationId:
+                        type: string
+                        format: uuid
+                      type:
+                        type: string
+                        minLength: 1
+                        maxLength: 100
+                    required:
+                    - displayName
+                    - integrationId
+                    - type
+                    additionalProperties: false
+                  targetBranch:
+                    type:
+                    - string
+                    - 'null'
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  url:
+                    type: string
+                required:
+                - baseBranch
+                - createdAt
+                - description
+                - enabledAt
+                - id
+                - name
+                - owner
+                - provider
+                - targetBranch
+                - updatedAt
+                - url
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: Provider authentication failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: Provider authorization failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Repository, integration, or file not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Repository conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Repository operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '502':
+          description: Repository provider operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '504':
+          description: Repository provider operation timed out
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: repositoryId
+        schema:
+          type: string
+          format: uuid
+        required: true
+    patch:
+      operationId: updateRepository
+      summary: Update a repository
+      description: Update repository configuration or enable or disable it.
+      tags:
+      - Repositories
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Update a repository
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  baseBranch:
+                    type:
+                    - string
+                    - 'null'
+                  createdAt:
+                    type: string
+                    format: date-time
+                  description:
+                    type:
+                    - string
+                    - 'null'
+                  enabledAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  id:
+                    type: string
+                    format: uuid
+                  name:
+                    type: string
+                  owner:
+                    type:
+                    - string
+                    - 'null'
+                  provider:
+                    type: object
+                    properties:
+                      displayName:
+                        type: string
+                        minLength: 1
+                        maxLength: 500
+                      integrationId:
+                        type: string
+                        format: uuid
+                      type:
+                        type: string
+                        minLength: 1
+                        maxLength: 100
+                    required:
+                    - displayName
+                    - integrationId
+                    - type
+                    additionalProperties: false
+                  targetBranch:
+                    type:
+                    - string
+                    - 'null'
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  url:
+                    type: string
+                required:
+                - baseBranch
+                - createdAt
+                - description
+                - enabledAt
+                - id
+                - name
+                - owner
+                - provider
+                - targetBranch
+                - updatedAt
+                - url
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: Provider authentication failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: Provider authorization failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Repository, integration, or file not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Repository conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Repository operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '502':
+          description: Repository provider operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '504':
+          description: Repository provider operation timed out
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: repositoryId
+        schema:
+          type: string
+          format: uuid
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                enabled:
+                  type: boolean
+                  default: false
+                baseBranch:
+                  type:
+                  - string
+                  - 'null'
+                  minLength: 1
+                  maxLength: 1024
+                targetBranch:
+                  type:
+                  - string
+                  - 'null'
+                  minLength: 1
+                  maxLength: 1024
+              additionalProperties: false
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+components:
+  securitySchemes:
+    apiKey:
+      type: http
+      scheme: bearer
+x-refined-from:
+- tembo-openapi-original.json
+- tembo-openapi.yml

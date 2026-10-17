@@ -1,0 +1,1288 @@
+openapi: 3.2.0
+info:
+  title: Tembo MCP Connections API
+  version: 1.0.0
+  description: 'Operations tagged MCP Connections across 2 of this provider''s published API definitions: tembo-openapi-original.json, tembo-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.tembo.io/
+  description: Tembo API
+tags:
+- name: MCP Connections
+paths:
+  /v1/mcp-connections:
+    get:
+      operationId: listMcpConnections
+      summary: List MCP connections
+      description: List MCP connections for the current organization with cursor pagination and optional search by name or URL. Command arguments, headers, and environment configuration are omitted.
+      tags:
+      - MCP Connections
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: List MCP connections
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        connectedAt:
+                          type:
+                          - string
+                          - 'null'
+                          format: date-time
+                        id:
+                          type: string
+                          format: uuid
+                        name:
+                          type: string
+                        serverUrl:
+                          type:
+                          - string
+                          - 'null'
+                        type:
+                          type: string
+                          enum:
+                          - remote
+                          - stdio
+                        visibility:
+                          type: string
+                          enum:
+                          - shared
+                          - personal
+                      required:
+                      - connectedAt
+                      - id
+                      - name
+                      - serverUrl
+                      - type
+                      - visibility
+                      additionalProperties: false
+                  nextCursor:
+                    type:
+                    - string
+                    - 'null'
+                    format: uuid
+                required:
+                - items
+                - nextCursor
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: MCP connection management is not permitted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: MCP connection not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: MCP connection conflict or unsupported action
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: MCP connection operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '502':
+          description: The remote MCP server operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: query
+        name: connected
+        schema:
+          type: boolean
+      - in: query
+        name: cursor
+        schema:
+          type: string
+          format: uuid
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 50
+      - in: query
+        name: search
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 200
+    post:
+      operationId: createMcpConnection
+      summary: Create an MCP connection
+      description: Create a new stdio or Streamable HTTP MCP connection. Remote connections support OAuth, client credentials, or static headers and begin authorization when required; stdio commands are stored but never executed by this API.
+      tags:
+      - MCP Connections
+      security:
+      - apiKey: []
+      responses:
+        '201':
+          description: Create an MCP connection
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  authorizationUrl:
+                    type:
+                    - string
+                    - 'null'
+                    format: uri
+                  connection:
+                    type: object
+                    properties:
+                      connectedAt:
+                        type:
+                        - string
+                        - 'null'
+                        format: date-time
+                      id:
+                        type: string
+                        format: uuid
+                      name:
+                        type: string
+                      serverUrl:
+                        type:
+                        - string
+                        - 'null'
+                      type:
+                        type: string
+                        enum:
+                        - remote
+                        - stdio
+                      visibility:
+                        type: string
+                        enum:
+                        - shared
+                        - personal
+                      args:
+                        type:
+                        - array
+                        - 'null'
+                        items:
+                          type: string
+                          maxLength: 8192
+                        maxItems: 100
+                      authType:
+                        type:
+                        - string
+                        - 'null'
+                        enum:
+                        - oauth
+                        - client_credentials
+                        - static_headers
+                        - null
+                      command:
+                        type:
+                        - string
+                        - 'null'
+                      createdAt:
+                        type: string
+                        format: date-time
+                      envKeys:
+                        type: array
+                        items:
+                          type: string
+                      headerKeys:
+                        type: array
+                        items:
+                          type: string
+                      updatedAt:
+                        type: string
+                        format: date-time
+                    required:
+                    - connectedAt
+                    - id
+                    - name
+                    - serverUrl
+                    - type
+                    - visibility
+                    - args
+                    - authType
+                    - command
+                    - createdAt
+                    - envKeys
+                    - headerKeys
+                    - updatedAt
+                    additionalProperties: false
+                required:
+                - authorizationUrl
+                - connection
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: MCP connection management is not permitted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: MCP connection not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: MCP connection conflict or unsupported action
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: MCP connection operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '502':
+          description: The remote MCP server operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - type: object
+                properties:
+                  name:
+                    type: string
+                    minLength: 1
+                    maxLength: 200
+                  args:
+                    type: array
+                    items:
+                      type: string
+                      maxLength: 8192
+                    maxItems: 100
+                    default: []
+                  command:
+                    type: string
+                    minLength: 1
+                    maxLength: 4096
+                  env:
+                    type: object
+                    propertyNames:
+                      type: string
+                      minLength: 1
+                      maxLength: 256
+                    additionalProperties:
+                      type: string
+                      maxLength: 16384
+                  type:
+                    type: string
+                    const: stdio
+                  visibility:
+                    type: string
+                    enum:
+                    - shared
+                    - personal
+                    default: shared
+                required:
+                - name
+                - command
+                - type
+                additionalProperties: false
+              - type: object
+                properties:
+                  name:
+                    type: string
+                    minLength: 1
+                    maxLength: 200
+                  serverUrl:
+                    type: string
+                    format: uri
+                  authType:
+                    type: string
+                    enum:
+                    - oauth
+                    - client_credentials
+                    - static_headers
+                    default: oauth
+                  clientId:
+                    type: string
+                    minLength: 1
+                    maxLength: 4096
+                  clientSecret:
+                    type: string
+                    minLength: 1
+                    maxLength: 65536
+                  headers:
+                    type: object
+                    propertyNames:
+                      type: string
+                      minLength: 1
+                      maxLength: 256
+                    additionalProperties:
+                      type: string
+                      maxLength: 16384
+                  oauthRegistration:
+                    type: string
+                    enum:
+                    - automatic
+                    - pre_registered
+                    default: automatic
+                  scope:
+                    type: string
+                    minLength: 1
+                    maxLength: 4096
+                  type:
+                    type: string
+                    const: remote
+                    default: remote
+                  visibility:
+                    type: string
+                    enum:
+                    - shared
+                    - personal
+                    default: shared
+                required:
+                - name
+                - serverUrl
+                additionalProperties: false
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/mcp-connections/{mcpConnectionId}:
+    get:
+      operationId: retrieveMcpConnection
+      summary: Retrieve an MCP connection
+      description: Retrieve MCP connection configuration and authentication details. Stored header values, environment values, OAuth tokens, and client secrets are never returned.
+      tags:
+      - MCP Connections
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Retrieve an MCP connection
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  connectedAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  id:
+                    type: string
+                    format: uuid
+                  name:
+                    type: string
+                  serverUrl:
+                    type:
+                    - string
+                    - 'null'
+                  type:
+                    type: string
+                    enum:
+                    - remote
+                    - stdio
+                  visibility:
+                    type: string
+                    enum:
+                    - shared
+                    - personal
+                  args:
+                    type:
+                    - array
+                    - 'null'
+                    items:
+                      type: string
+                      maxLength: 8192
+                    maxItems: 100
+                  authType:
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - oauth
+                    - client_credentials
+                    - static_headers
+                    - null
+                  command:
+                    type:
+                    - string
+                    - 'null'
+                  createdAt:
+                    type: string
+                    format: date-time
+                  envKeys:
+                    type: array
+                    items:
+                      type: string
+                  headerKeys:
+                    type: array
+                    items:
+                      type: string
+                  updatedAt:
+                    type: string
+                    format: date-time
+                required:
+                - connectedAt
+                - id
+                - name
+                - serverUrl
+                - type
+                - visibility
+                - args
+                - authType
+                - command
+                - createdAt
+                - envKeys
+                - headerKeys
+                - updatedAt
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: MCP connection management is not permitted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: MCP connection not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: MCP connection conflict or unsupported action
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: MCP connection operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '502':
+          description: The remote MCP server operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: mcpConnectionId
+        schema:
+          type: string
+          format: uuid
+        required: true
+    patch:
+      operationId: updateMcpConnection
+      summary: Update an MCP connection
+      description: Update MCP configuration. Header and environment objects merge write-only values by key, null values remove individual keys, and a null environment clears all variables. Hidden credentials are preserved unless explicitly changed or authentication is replaced; changing a remote server URL clears credentials for the old server. Call authorize explicitly after changing the server or authentication to reconnect.
+      tags:
+      - MCP Connections
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Update an MCP connection
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  connectedAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  id:
+                    type: string
+                    format: uuid
+                  name:
+                    type: string
+                  serverUrl:
+                    type:
+                    - string
+                    - 'null'
+                  type:
+                    type: string
+                    enum:
+                    - remote
+                    - stdio
+                  visibility:
+                    type: string
+                    enum:
+                    - shared
+                    - personal
+                  args:
+                    type:
+                    - array
+                    - 'null'
+                    items:
+                      type: string
+                      maxLength: 8192
+                    maxItems: 100
+                  authType:
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - oauth
+                    - client_credentials
+                    - static_headers
+                    - null
+                  command:
+                    type:
+                    - string
+                    - 'null'
+                  createdAt:
+                    type: string
+                    format: date-time
+                  envKeys:
+                    type: array
+                    items:
+                      type: string
+                  headerKeys:
+                    type: array
+                    items:
+                      type: string
+                  updatedAt:
+                    type: string
+                    format: date-time
+                required:
+                - connectedAt
+                - id
+                - name
+                - serverUrl
+                - type
+                - visibility
+                - args
+                - authType
+                - command
+                - createdAt
+                - envKeys
+                - headerKeys
+                - updatedAt
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: MCP connection management is not permitted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: MCP connection not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: MCP connection conflict or unsupported action
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: MCP connection operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '502':
+          description: The remote MCP server operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: mcpConnectionId
+        schema:
+          type: string
+          format: uuid
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - type: object
+                properties:
+                  name:
+                    type: string
+                    minLength: 1
+                    maxLength: 200
+                  serverUrl:
+                    type: string
+                    format: uri
+                  type:
+                    type: string
+                    const: remote
+                  authType:
+                    type: string
+                    enum:
+                    - oauth
+                    - client_credentials
+                    - static_headers
+                  clientId:
+                    type: string
+                    minLength: 1
+                    maxLength: 4096
+                  clientSecret:
+                    type: string
+                    minLength: 1
+                    maxLength: 65536
+                  headers:
+                    type:
+                    - object
+                    - 'null'
+                    propertyNames:
+                      type: string
+                      minLength: 1
+                      maxLength: 256
+                    additionalProperties:
+                      type:
+                      - string
+                      - 'null'
+                      maxLength: 16384
+                  oauthRegistration:
+                    type: string
+                    enum:
+                    - automatic
+                    - pre_registered
+                  scope:
+                    type: string
+                    minLength: 1
+                    maxLength: 4096
+                required:
+                - type
+                additionalProperties: false
+              - type: object
+                properties:
+                  command:
+                    type: string
+                    minLength: 1
+                    maxLength: 4096
+                  name:
+                    type: string
+                    minLength: 1
+                    maxLength: 200
+                  type:
+                    type: string
+                    const: stdio
+                  args:
+                    type:
+                    - array
+                    - 'null'
+                    items:
+                      type: string
+                      maxLength: 8192
+                    maxItems: 100
+                  env:
+                    type:
+                    - object
+                    - 'null'
+                    propertyNames:
+                      type: string
+                      minLength: 1
+                      maxLength: 256
+                    additionalProperties:
+                      type:
+                      - string
+                      - 'null'
+                      maxLength: 16384
+                required:
+                - type
+                additionalProperties: false
+    delete:
+      operationId: deleteMcpConnection
+      summary: Delete an MCP connection
+      description: Delete an MCP connection in the current organization.
+      tags:
+      - MCP Connections
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Delete an MCP connection
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  deleted:
+                    type: boolean
+                    const: true
+                  id:
+                    type: string
+                    format: uuid
+                required:
+                - deleted
+                - id
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: MCP connection management is not permitted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: MCP connection not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: MCP connection conflict or unsupported action
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: MCP connection operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '502':
+          description: The remote MCP server operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: mcpConnectionId
+        schema:
+          type: string
+          format: uuid
+        required: true
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/mcp-connections/{mcpConnectionId}/authorize:
+    post:
+      operationId: authorizeMcpConnection
+      summary: Authorize an MCP connection
+      description: Connect or authorize a remote Streamable HTTP MCP connection, returning an OAuth URL when user authorization is required. Stdio connections are rejected because this action cannot authorize them.
+      tags:
+      - MCP Connections
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Authorize an MCP connection
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  authorizationUrl:
+                    type:
+                    - string
+                    - 'null'
+                    format: uri
+                  connection:
+                    type: object
+                    properties:
+                      connectedAt:
+                        type:
+                        - string
+                        - 'null'
+                        format: date-time
+                      id:
+                        type: string
+                        format: uuid
+                      name:
+                        type: string
+                      serverUrl:
+                        type:
+                        - string
+                        - 'null'
+                      type:
+                        type: string
+                        enum:
+                        - remote
+                        - stdio
+                      visibility:
+                        type: string
+                        enum:
+                        - shared
+                        - personal
+                      args:
+                        type:
+                        - array
+                        - 'null'
+                        items:
+                          type: string
+                          maxLength: 8192
+                        maxItems: 100
+                      authType:
+                        type:
+                        - string
+                        - 'null'
+                        enum:
+                        - oauth
+                        - client_credentials
+                        - static_headers
+                        - null
+                      command:
+                        type:
+                        - string
+                        - 'null'
+                      createdAt:
+                        type: string
+                        format: date-time
+                      envKeys:
+                        type: array
+                        items:
+                          type: string
+                      headerKeys:
+                        type: array
+                        items:
+                          type: string
+                      updatedAt:
+                        type: string
+                        format: date-time
+                    required:
+                    - connectedAt
+                    - id
+                    - name
+                    - serverUrl
+                    - type
+                    - visibility
+                    - args
+                    - authType
+                    - command
+                    - createdAt
+                    - envKeys
+                    - headerKeys
+                    - updatedAt
+                    additionalProperties: false
+                required:
+                - authorizationUrl
+                - connection
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: MCP connection management is not permitted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: MCP connection not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: MCP connection conflict or unsupported action
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: MCP connection operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '502':
+          description: The remote MCP server operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: mcpConnectionId
+        schema:
+          type: string
+          format: uuid
+        required: true
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/mcp-connections/{mcpConnectionId}/test:
+    post:
+      operationId: testMcpConnection
+      summary: Test an MCP connection
+      description: Test a remote MCP connection by connecting to its server. Stdio connections are rejected because the API does not execute arbitrary local commands.
+      tags:
+      - MCP Connections
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Test an MCP connection
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    const: true
+                required:
+                - success
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: MCP connection management is not permitted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: MCP connection not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: MCP connection conflict or unsupported action
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: MCP connection operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '502':
+          description: The remote MCP server operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: mcpConnectionId
+        schema:
+          type: string
+          format: uuid
+        required: true
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+components:
+  securitySchemes:
+    apiKey:
+      type: http
+      scheme: bearer
+x-refined-from:
+- tembo-openapi-original.json
+- tembo-openapi.yml

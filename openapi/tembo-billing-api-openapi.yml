@@ -1,0 +1,521 @@
+openapi: 3.2.0
+info:
+  title: Tembo Billing API
+  version: 1.0.0
+  description: 'Operations tagged Billing across 2 of this provider''s published API definitions: tembo-openapi-original.json, tembo-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.tembo.io/
+  description: Tembo API
+tags:
+- name: Billing
+paths:
+  /v1/billing:
+    get:
+      operationId: retrieveBilling
+      summary: Retrieve billing
+      description: Retrieve billing and credit information for the organization.
+      tags:
+      - Billing
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Retrieve billing
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access:
+                    type: object
+                    properties:
+                      state:
+                        type: string
+                        enum:
+                        - blocked
+                        - trial
+                        - paid
+                      canExecute:
+                        type: boolean
+                      blockedReason:
+                        type:
+                        - string
+                        - 'null'
+                        enum:
+                        - awaiting_demo
+                        - trial_expired
+                        - trial_allowance_exhausted
+                        - subscription_ended
+                        - null
+                        default: null
+                    required:
+                    - state
+                    - canExecute
+                    - blockedReason
+                  trial:
+                    type:
+                    - object
+                    - 'null'
+                    properties:
+                      status:
+                        type: string
+                        const: Trialing
+                      startedAt:
+                        type: string
+                        format: date-time
+                      endsAt:
+                        type: string
+                        format: date-time
+                      allowance:
+                        type: number
+                      remainingAllowance:
+                        type: number
+                      exhausted:
+                        type: boolean
+                    required:
+                    - status
+                    - startedAt
+                    - endsAt
+                    - allowance
+                    - remainingAllowance
+                    - exhausted
+                    default: null
+                  billingEnabled:
+                    type: boolean
+                  availablePlans:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          minLength: 1
+                          maxLength: 255
+                        title:
+                          type: string
+                          maxLength: 255
+                        tier:
+                          type: integer
+                          minimum: 0
+                        description:
+                          type: string
+                          maxLength: 2000
+                        includedCredits:
+                          type: number
+                          minimum: 0
+                        monthlyPrice:
+                          type: number
+                          minimum: 0
+                        yearlyPrice:
+                          type:
+                          - number
+                          - 'null'
+                          minimum: 0
+                      required:
+                      - id
+                      - title
+                      - tier
+                      - description
+                      - includedCredits
+                      - monthlyPrice
+                      - yearlyPrice
+                      additionalProperties: false
+                    maxItems: 20
+                  balance:
+                    type: object
+                    properties:
+                      calculatedBalance:
+                        type: number
+                      availableBalance:
+                        type: number
+                      availableOnDemandUsage:
+                        type: number
+                      lastTransaction:
+                        type:
+                        - object
+                        - 'null'
+                        properties:
+                          amount:
+                            type: integer
+                          createdAt:
+                            type: string
+                            format: date-time
+                        required:
+                        - amount
+                        - createdAt
+                        additionalProperties: false
+                      unlimitedCredits:
+                        type: boolean
+                    required:
+                    - calculatedBalance
+                    - availableBalance
+                    - availableOnDemandUsage
+                    - lastTransaction
+                    - unlimitedCredits
+                    additionalProperties: false
+                  onDemand:
+                    type: object
+                    properties:
+                      enabled:
+                        type: boolean
+                      currentUsage:
+                        type: number
+                      maxCreditUsage:
+                        type: number
+                        minimum: 0
+                    required:
+                    - enabled
+                    - currentUsage
+                    - maxCreditUsage
+                    additionalProperties: false
+                  subscription:
+                    type:
+                    - object
+                    - 'null'
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                        - Active
+                        - PastDue
+                        - Unpaid
+                        - Canceled
+                        - Trialing
+                        - Incomplete
+                        - IncompleteExpired
+                      canceledAt:
+                        type:
+                        - string
+                        - 'null'
+                        format: date-time
+                      periodEnd:
+                        type:
+                        - string
+                        - 'null'
+                        format: date-time
+                      type:
+                        type: string
+                        const: paid
+                      plan:
+                        type:
+                        - object
+                        - 'null'
+                        properties:
+                          id:
+                            type: string
+                            minLength: 1
+                            maxLength: 255
+                          title:
+                            type: string
+                            maxLength: 255
+                          tier:
+                            type: integer
+                            minimum: 0
+                          description:
+                            type: string
+                            maxLength: 2000
+                          includedCredits:
+                            type: number
+                            minimum: 0
+                          monthlyPrice:
+                            type: number
+                            minimum: 0
+                          yearlyPrice:
+                            type:
+                            - number
+                            - 'null'
+                            minimum: 0
+                        required:
+                        - id
+                        - title
+                        - tier
+                        - description
+                        - includedCredits
+                        - monthlyPrice
+                        - yearlyPrice
+                        additionalProperties: false
+                      currentTier:
+                        type: integer
+                        minimum: 0
+                      upgradablePlans:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              minLength: 1
+                              maxLength: 255
+                            title:
+                              type: string
+                              maxLength: 255
+                            tier:
+                              type: integer
+                              minimum: 0
+                            description:
+                              type: string
+                              maxLength: 2000
+                            includedCredits:
+                              type: number
+                              minimum: 0
+                            monthlyPrice:
+                              type: number
+                              minimum: 0
+                            yearlyPrice:
+                              type:
+                              - number
+                              - 'null'
+                              minimum: 0
+                          required:
+                          - id
+                          - title
+                          - tier
+                          - description
+                          - includedCredits
+                          - monthlyPrice
+                          - yearlyPrice
+                          additionalProperties: false
+                        maxItems: 20
+                    required:
+                    - status
+                    - canceledAt
+                    - periodEnd
+                    - type
+                    - plan
+                    - currentTier
+                    - upgradablePlans
+                    additionalProperties: false
+                required:
+                - access
+                - trial
+                - billingEnabled
+                - availablePlans
+                - balance
+                - onDemand
+                - subscription
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing organization billing information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Billing resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Billing operation conflicts with its current state
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '502':
+          description: Billing provider operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/billing/usage:
+    get:
+      operationId: listBillingUsage
+      summary: List billing usage
+      description: List session usage with cursor pagination.
+      tags:
+      - Billing
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: List billing usage
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        agent:
+                          type:
+                          - string
+                          - 'null'
+                        id:
+                          type: string
+                          minLength: 1
+                          maxLength: 255
+                        title:
+                          type: string
+                        kind:
+                          type: string
+                        createdAt:
+                          type: string
+                          format: date-time
+                        managedInferenceCredits:
+                          type: number
+                          minimum: 0
+                        computeCredits:
+                          type: number
+                          minimum: 0
+                        totalCredits:
+                          type: number
+                          minimum: 0
+                      required:
+                      - agent
+                      - id
+                      - title
+                      - kind
+                      - createdAt
+                      - managedInferenceCredits
+                      - computeCredits
+                      - totalCredits
+                      additionalProperties: false
+                    maxItems: 100
+                  nextCursor:
+                    type:
+                    - string
+                    - 'null'
+                    minLength: 1
+                    maxLength: 255
+                  asOf:
+                    type: string
+                    format: date-time
+                required:
+                - items
+                - nextCursor
+                - asOf
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing organization billing information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Billing resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Billing operation conflicts with its current state
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '502':
+          description: Billing provider operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: query
+        name: cursor
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 50
+      - in: query
+        name: sessionId
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+components:
+  securitySchemes:
+    apiKey:
+      type: http
+      scheme: bearer
+x-refined-from:
+- tembo-openapi-original.json
+- tembo-openapi.yml

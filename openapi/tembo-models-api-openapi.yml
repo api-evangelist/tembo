@@ -1,0 +1,1007 @@
+openapi: 3.2.0
+info:
+  title: Tembo Models API
+  version: 1.0.0
+  description: 'Operations tagged Models across 2 of this provider''s published API definitions: tembo-openapi-original.json, tembo-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.tembo.io/
+  description: Tembo API
+tags:
+- name: Models
+paths:
+  /v1/models:
+    get:
+      operationId: listModels
+      summary: List models
+      description: List the models available to the current organization, including enablement and inference-provider access.
+      tags:
+      - Models
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: List models
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          enum:
+                          - claude-opus-5-5
+                          - claude-fable-5-1
+                          - claude-fable-5
+                          - claude-opus-5
+                          - claude-sonnet-5-5
+                          - claude-haiku-5-5
+                          - claude-opus-4-8
+                          - claude-opus-4-7
+                          - claude-opus-4-6
+                          - claude-opus-4-5
+                          - claude-4-5-haiku
+                          - gpt-6.1-sol
+                          - gpt-6-astra
+                          - gpt-6-sol
+                          - gpt-6-luna
+                          - gpt-5.6-sol
+                          - gpt-5.6-terra
+                          - gpt-5.6-luna
+                          - gpt-5.5-pro
+                          - gpt-5.5
+                          - gpt-5.4
+                          - gpt-5.4-mini
+                          - gpt-5.4-nano
+                          - gpt-5.3-codex
+                          - gpt-5.3-codex-spark
+                          - gpt-5.2-codex
+                          - gpt-5.2
+                          - glm-5p3
+                          - glm-5p3-flash
+                          - composer-1.5
+                          - composer-2
+                          - composer-2-fast
+                          - composer-2.5
+                          - gemini-3.1-pro
+                          - gemini-3.5-flash
+                          - grok-4.7
+                          - grok
+                          - kimi-k3
+                          - minimax-m2p7
+                          - minimax-m3
+                          - deepseek-v4-pro
+                          - deepseek-v4p1-flash
+                        label:
+                          type: string
+                        provider:
+                          type: string
+                        enabled:
+                          type: boolean
+                        available:
+                          type: boolean
+                        unavailableReason:
+                          type:
+                          - string
+                          - 'null'
+                        supportedInferenceProviders:
+                          type:
+                          - array
+                          - 'null'
+                          items:
+                            type: string
+                            enum:
+                            - TemboManagedInference
+                            - BYOK
+                            - AWSBedrock
+                            - GCPVertexAI
+                            - OpenRouter
+                        availableInferenceProviders:
+                          type: array
+                          items:
+                            type: string
+                            enum:
+                            - TemboManagedInference
+                            - BYOK
+                            - AWSBedrock
+                            - GCPVertexAI
+                            - OpenRouter
+                        configuredInferenceProvider:
+                          type:
+                          - string
+                          - 'null'
+                          enum:
+                          - TemboManagedInference
+                          - BYOK
+                          - AWSBedrock
+                          - GCPVertexAI
+                          - OpenRouter
+                          - null
+                        inferenceProvider:
+                          type: string
+                          enum:
+                          - TemboManagedInference
+                          - BYOK
+                          - AWSBedrock
+                          - GCPVertexAI
+                          - OpenRouter
+                        inferenceProviderAccess:
+                          type: object
+                          properties:
+                            TemboManagedInference:
+                              anyOf:
+                              - type: object
+                                properties:
+                                  available:
+                                    type: boolean
+                                    const: true
+                                  unavailableCode:
+                                    type: 'null'
+                                  unavailableReason:
+                                    type: 'null'
+                                required:
+                                - available
+                                - unavailableCode
+                                - unavailableReason
+                                additionalProperties: false
+                              - type: object
+                                properties:
+                                  available:
+                                    type: boolean
+                                    const: false
+                                  unavailableCode:
+                                    type: string
+                                    enum:
+                                    - plan_required
+                                    - missing_credentials
+                                    - unsupported_provider
+                                    - chatgpt_not_connected
+                                    - supergrok_not_connected
+                                    - claude_subscription_not_connected
+                                  unavailableReason:
+                                    type: string
+                                required:
+                                - available
+                                - unavailableCode
+                                - unavailableReason
+                                additionalProperties: false
+                            BYOK:
+                              anyOf:
+                              - type: object
+                                properties:
+                                  available:
+                                    type: boolean
+                                    const: true
+                                  unavailableCode:
+                                    type: 'null'
+                                  unavailableReason:
+                                    type: 'null'
+                                required:
+                                - available
+                                - unavailableCode
+                                - unavailableReason
+                                additionalProperties: false
+                              - type: object
+                                properties:
+                                  available:
+                                    type: boolean
+                                    const: false
+                                  unavailableCode:
+                                    type: string
+                                    enum:
+                                    - plan_required
+                                    - missing_credentials
+                                    - unsupported_provider
+                                    - chatgpt_not_connected
+                                    - supergrok_not_connected
+                                    - claude_subscription_not_connected
+                                  unavailableReason:
+                                    type: string
+                                required:
+                                - available
+                                - unavailableCode
+                                - unavailableReason
+                                additionalProperties: false
+                            AWSBedrock:
+                              anyOf:
+                              - type: object
+                                properties:
+                                  available:
+                                    type: boolean
+                                    const: true
+                                  unavailableCode:
+                                    type: 'null'
+                                  unavailableReason:
+                                    type: 'null'
+                                required:
+                                - available
+                                - unavailableCode
+                                - unavailableReason
+                                additionalProperties: false
+                              - type: object
+                                properties:
+                                  available:
+                                    type: boolean
+                                    const: false
+                                  unavailableCode:
+                                    type: string
+                                    enum:
+                                    - plan_required
+                                    - missing_credentials
+                                    - unsupported_provider
+                                    - chatgpt_not_connected
+                                    - supergrok_not_connected
+                                    - claude_subscription_not_connected
+                                  unavailableReason:
+                                    type: string
+                                required:
+                                - available
+                                - unavailableCode
+                                - unavailableReason
+                                additionalProperties: false
+                            GCPVertexAI:
+                              anyOf:
+                              - type: object
+                                properties:
+                                  available:
+                                    type: boolean
+                                    const: true
+                                  unavailableCode:
+                                    type: 'null'
+                                  unavailableReason:
+                                    type: 'null'
+                                required:
+                                - available
+                                - unavailableCode
+                                - unavailableReason
+                                additionalProperties: false
+                              - type: object
+                                properties:
+                                  available:
+                                    type: boolean
+                                    const: false
+                                  unavailableCode:
+                                    type: string
+                                    enum:
+                                    - plan_required
+                                    - missing_credentials
+                                    - unsupported_provider
+                                    - chatgpt_not_connected
+                                    - supergrok_not_connected
+                                    - claude_subscription_not_connected
+                                  unavailableReason:
+                                    type: string
+                                required:
+                                - available
+                                - unavailableCode
+                                - unavailableReason
+                                additionalProperties: false
+                            OpenRouter:
+                              anyOf:
+                              - type: object
+                                properties:
+                                  available:
+                                    type: boolean
+                                    const: true
+                                  unavailableCode:
+                                    type: 'null'
+                                  unavailableReason:
+                                    type: 'null'
+                                required:
+                                - available
+                                - unavailableCode
+                                - unavailableReason
+                                additionalProperties: false
+                              - type: object
+                                properties:
+                                  available:
+                                    type: boolean
+                                    const: false
+                                  unavailableCode:
+                                    type: string
+                                    enum:
+                                    - plan_required
+                                    - missing_credentials
+                                    - unsupported_provider
+                                    - chatgpt_not_connected
+                                    - supergrok_not_connected
+                                    - claude_subscription_not_connected
+                                  unavailableReason:
+                                    type: string
+                                required:
+                                - available
+                                - unavailableCode
+                                - unavailableReason
+                                additionalProperties: false
+                          required:
+                          - TemboManagedInference
+                          - BYOK
+                          - AWSBedrock
+                          - GCPVertexAI
+                          - OpenRouter
+                          additionalProperties: false
+                        selectedInferenceProviderAvailable:
+                          type: boolean
+                        selectedInferenceProviderUnavailableReason:
+                          type:
+                          - string
+                          - 'null'
+                        chatgptAvailable:
+                          type: boolean
+                        chatgptSupported:
+                          type: boolean
+                        workspaceChatgptAvailable:
+                          type: boolean
+                        claudeSubscriptionSupported:
+                          type: boolean
+                        workspaceClaudeSubscriptionAvailable:
+                          type: boolean
+                        supergrokAvailable:
+                          type: boolean
+                        agentInferenceAvailable:
+                          type: boolean
+                      required:
+                      - name
+                      - label
+                      - provider
+                      - enabled
+                      - available
+                      - unavailableReason
+                      - supportedInferenceProviders
+                      - availableInferenceProviders
+                      - configuredInferenceProvider
+                      - inferenceProvider
+                      - inferenceProviderAccess
+                      - selectedInferenceProviderAvailable
+                      - selectedInferenceProviderUnavailableReason
+                      - chatgptAvailable
+                      - chatgptSupported
+                      - workspaceChatgptAvailable
+                      - claudeSubscriptionSupported
+                      - workspaceClaudeSubscriptionAvailable
+                      - supergrokAvailable
+                      - agentInferenceAvailable
+                      additionalProperties: false
+                  nextCursor:
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - claude-opus-5-5
+                    - claude-fable-5-1
+                    - claude-fable-5
+                    - claude-opus-5
+                    - claude-sonnet-5-5
+                    - claude-haiku-5-5
+                    - claude-opus-4-8
+                    - claude-opus-4-7
+                    - claude-opus-4-6
+                    - claude-opus-4-5
+                    - claude-4-5-haiku
+                    - gpt-6.1-sol
+                    - gpt-6-astra
+                    - gpt-6-sol
+                    - gpt-6-luna
+                    - gpt-5.6-sol
+                    - gpt-5.6-terra
+                    - gpt-5.6-luna
+                    - gpt-5.5-pro
+                    - gpt-5.5
+                    - gpt-5.4
+                    - gpt-5.4-mini
+                    - gpt-5.4-nano
+                    - gpt-5.3-codex
+                    - gpt-5.3-codex-spark
+                    - gpt-5.2-codex
+                    - gpt-5.2
+                    - glm-5p3
+                    - glm-5p3-flash
+                    - composer-1.5
+                    - composer-2
+                    - composer-2-fast
+                    - composer-2.5
+                    - gemini-3.1-pro
+                    - gemini-3.5-flash
+                    - grok-4.7
+                    - grok
+                    - kimi-k3
+                    - minimax-m2p7
+                    - minimax-m3
+                    - deepseek-v4-pro
+                    - deepseek-v4p1-flash
+                    - null
+                required:
+                - items
+                - nextCursor
+                additionalProperties: false
+        '400':
+          description: Validation error, invalid cursor, or update conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: The caller cannot apply the requested model update
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Model not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Model operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: query
+        name: cursor
+        schema:
+          type: string
+          enum:
+          - claude-opus-5-5
+          - claude-fable-5-1
+          - claude-fable-5
+          - claude-opus-5
+          - claude-sonnet-5-5
+          - claude-haiku-5-5
+          - claude-opus-4-8
+          - claude-opus-4-7
+          - claude-opus-4-6
+          - claude-opus-4-5
+          - claude-4-5-haiku
+          - gpt-6.1-sol
+          - gpt-6-astra
+          - gpt-6-sol
+          - gpt-6-luna
+          - gpt-5.6-sol
+          - gpt-5.6-terra
+          - gpt-5.6-luna
+          - gpt-5.5-pro
+          - gpt-5.5
+          - gpt-5.4
+          - gpt-5.4-mini
+          - gpt-5.4-nano
+          - gpt-5.3-codex
+          - gpt-5.3-codex-spark
+          - gpt-5.2-codex
+          - gpt-5.2
+          - glm-5p3
+          - glm-5p3-flash
+          - composer-1.5
+          - composer-2
+          - composer-2-fast
+          - composer-2.5
+          - gemini-3.1-pro
+          - gemini-3.5-flash
+          - grok-4.7
+          - grok
+          - kimi-k3
+          - minimax-m2p7
+          - minimax-m3
+          - deepseek-v4-pro
+          - deepseek-v4p1-flash
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 50
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/models/{modelName}:
+    patch:
+      operationId: updateModel
+      summary: Update a model
+      description: Enable or disable an organization model, or select its inference provider.
+      tags:
+      - Models
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Update a model
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    enum:
+                    - claude-opus-5-5
+                    - claude-fable-5-1
+                    - claude-fable-5
+                    - claude-opus-5
+                    - claude-sonnet-5-5
+                    - claude-haiku-5-5
+                    - claude-opus-4-8
+                    - claude-opus-4-7
+                    - claude-opus-4-6
+                    - claude-opus-4-5
+                    - claude-4-5-haiku
+                    - gpt-6.1-sol
+                    - gpt-6-astra
+                    - gpt-6-sol
+                    - gpt-6-luna
+                    - gpt-5.6-sol
+                    - gpt-5.6-terra
+                    - gpt-5.6-luna
+                    - gpt-5.5-pro
+                    - gpt-5.5
+                    - gpt-5.4
+                    - gpt-5.4-mini
+                    - gpt-5.4-nano
+                    - gpt-5.3-codex
+                    - gpt-5.3-codex-spark
+                    - gpt-5.2-codex
+                    - gpt-5.2
+                    - glm-5p3
+                    - glm-5p3-flash
+                    - composer-1.5
+                    - composer-2
+                    - composer-2-fast
+                    - composer-2.5
+                    - gemini-3.1-pro
+                    - gemini-3.5-flash
+                    - grok-4.7
+                    - grok
+                    - kimi-k3
+                    - minimax-m2p7
+                    - minimax-m3
+                    - deepseek-v4-pro
+                    - deepseek-v4p1-flash
+                  label:
+                    type: string
+                  provider:
+                    type: string
+                  enabled:
+                    type: boolean
+                  available:
+                    type: boolean
+                  unavailableReason:
+                    type:
+                    - string
+                    - 'null'
+                  supportedInferenceProviders:
+                    type:
+                    - array
+                    - 'null'
+                    items:
+                      type: string
+                      enum:
+                      - TemboManagedInference
+                      - BYOK
+                      - AWSBedrock
+                      - GCPVertexAI
+                      - OpenRouter
+                  availableInferenceProviders:
+                    type: array
+                    items:
+                      type: string
+                      enum:
+                      - TemboManagedInference
+                      - BYOK
+                      - AWSBedrock
+                      - GCPVertexAI
+                      - OpenRouter
+                  configuredInferenceProvider:
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - TemboManagedInference
+                    - BYOK
+                    - AWSBedrock
+                    - GCPVertexAI
+                    - OpenRouter
+                    - null
+                  inferenceProvider:
+                    type: string
+                    enum:
+                    - TemboManagedInference
+                    - BYOK
+                    - AWSBedrock
+                    - GCPVertexAI
+                    - OpenRouter
+                  inferenceProviderAccess:
+                    type: object
+                    properties:
+                      TemboManagedInference:
+                        anyOf:
+                        - type: object
+                          properties:
+                            available:
+                              type: boolean
+                              const: true
+                            unavailableCode:
+                              type: 'null'
+                            unavailableReason:
+                              type: 'null'
+                          required:
+                          - available
+                          - unavailableCode
+                          - unavailableReason
+                          additionalProperties: false
+                        - type: object
+                          properties:
+                            available:
+                              type: boolean
+                              const: false
+                            unavailableCode:
+                              type: string
+                              enum:
+                              - plan_required
+                              - missing_credentials
+                              - unsupported_provider
+                              - chatgpt_not_connected
+                              - supergrok_not_connected
+                              - claude_subscription_not_connected
+                            unavailableReason:
+                              type: string
+                          required:
+                          - available
+                          - unavailableCode
+                          - unavailableReason
+                          additionalProperties: false
+                      BYOK:
+                        anyOf:
+                        - type: object
+                          properties:
+                            available:
+                              type: boolean
+                              const: true
+                            unavailableCode:
+                              type: 'null'
+                            unavailableReason:
+                              type: 'null'
+                          required:
+                          - available
+                          - unavailableCode
+                          - unavailableReason
+                          additionalProperties: false
+                        - type: object
+                          properties:
+                            available:
+                              type: boolean
+                              const: false
+                            unavailableCode:
+                              type: string
+                              enum:
+                              - plan_required
+                              - missing_credentials
+                              - unsupported_provider
+                              - chatgpt_not_connected
+                              - supergrok_not_connected
+                              - claude_subscription_not_connected
+                            unavailableReason:
+                              type: string
+                          required:
+                          - available
+                          - unavailableCode
+                          - unavailableReason
+                          additionalProperties: false
+                      AWSBedrock:
+                        anyOf:
+                        - type: object
+                          properties:
+                            available:
+                              type: boolean
+                              const: true
+                            unavailableCode:
+                              type: 'null'
+                            unavailableReason:
+                              type: 'null'
+                          required:
+                          - available
+                          - unavailableCode
+                          - unavailableReason
+                          additionalProperties: false
+                        - type: object
+                          properties:
+                            available:
+                              type: boolean
+                              const: false
+                            unavailableCode:
+                              type: string
+                              enum:
+                              - plan_required
+                              - missing_credentials
+                              - unsupported_provider
+                              - chatgpt_not_connected
+                              - supergrok_not_connected
+                              - claude_subscription_not_connected
+                            unavailableReason:
+                              type: string
+                          required:
+                          - available
+                          - unavailableCode
+                          - unavailableReason
+                          additionalProperties: false
+                      GCPVertexAI:
+                        anyOf:
+                        - type: object
+                          properties:
+                            available:
+                              type: boolean
+                              const: true
+                            unavailableCode:
+                              type: 'null'
+                            unavailableReason:
+                              type: 'null'
+                          required:
+                          - available
+                          - unavailableCode
+                          - unavailableReason
+                          additionalProperties: false
+                        - type: object
+                          properties:
+                            available:
+                              type: boolean
+                              const: false
+                            unavailableCode:
+                              type: string
+                              enum:
+                              - plan_required
+                              - missing_credentials
+                              - unsupported_provider
+                              - chatgpt_not_connected
+                              - supergrok_not_connected
+                              - claude_subscription_not_connected
+                            unavailableReason:
+                              type: string
+                          required:
+                          - available
+                          - unavailableCode
+                          - unavailableReason
+                          additionalProperties: false
+                      OpenRouter:
+                        anyOf:
+                        - type: object
+                          properties:
+                            available:
+                              type: boolean
+                              const: true
+                            unavailableCode:
+                              type: 'null'
+                            unavailableReason:
+                              type: 'null'
+                          required:
+                          - available
+                          - unavailableCode
+                          - unavailableReason
+                          additionalProperties: false
+                        - type: object
+                          properties:
+                            available:
+                              type: boolean
+                              const: false
+                            unavailableCode:
+                              type: string
+                              enum:
+                              - plan_required
+                              - missing_credentials
+                              - unsupported_provider
+                              - chatgpt_not_connected
+                              - supergrok_not_connected
+                              - claude_subscription_not_connected
+                            unavailableReason:
+                              type: string
+                          required:
+                          - available
+                          - unavailableCode
+                          - unavailableReason
+                          additionalProperties: false
+                    required:
+                    - TemboManagedInference
+                    - BYOK
+                    - AWSBedrock
+                    - GCPVertexAI
+                    - OpenRouter
+                    additionalProperties: false
+                  selectedInferenceProviderAvailable:
+                    type: boolean
+                  selectedInferenceProviderUnavailableReason:
+                    type:
+                    - string
+                    - 'null'
+                  chatgptAvailable:
+                    type: boolean
+                  chatgptSupported:
+                    type: boolean
+                  workspaceChatgptAvailable:
+                    type: boolean
+                  claudeSubscriptionSupported:
+                    type: boolean
+                  workspaceClaudeSubscriptionAvailable:
+                    type: boolean
+                  supergrokAvailable:
+                    type: boolean
+                  agentInferenceAvailable:
+                    type: boolean
+                required:
+                - name
+                - label
+                - provider
+                - enabled
+                - available
+                - unavailableReason
+                - supportedInferenceProviders
+                - availableInferenceProviders
+                - configuredInferenceProvider
+                - inferenceProvider
+                - inferenceProviderAccess
+                - selectedInferenceProviderAvailable
+                - selectedInferenceProviderUnavailableReason
+                - chatgptAvailable
+                - chatgptSupported
+                - workspaceChatgptAvailable
+                - claudeSubscriptionSupported
+                - workspaceClaudeSubscriptionAvailable
+                - supergrokAvailable
+                - agentInferenceAvailable
+                additionalProperties: false
+        '400':
+          description: Validation error, invalid cursor, or update conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: The caller cannot apply the requested model update
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Model not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Model operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: modelName
+        schema:
+          type: string
+          enum:
+          - claude-opus-5-5
+          - claude-fable-5-1
+          - claude-fable-5
+          - claude-opus-5
+          - claude-sonnet-5-5
+          - claude-haiku-5-5
+          - claude-opus-4-8
+          - claude-opus-4-7
+          - claude-opus-4-6
+          - claude-opus-4-5
+          - claude-4-5-haiku
+          - gpt-6.1-sol
+          - gpt-6-astra
+          - gpt-6-sol
+          - gpt-6-luna
+          - gpt-5.6-sol
+          - gpt-5.6-terra
+          - gpt-5.6-luna
+          - gpt-5.5-pro
+          - gpt-5.5
+          - gpt-5.4
+          - gpt-5.4-mini
+          - gpt-5.4-nano
+          - gpt-5.3-codex
+          - gpt-5.3-codex-spark
+          - gpt-5.2-codex
+          - gpt-5.2
+          - glm-5p3
+          - glm-5p3-flash
+          - composer-1.5
+          - composer-2
+          - composer-2-fast
+          - composer-2.5
+          - gemini-3.1-pro
+          - gemini-3.5-flash
+          - grok-4.7
+          - grok
+          - kimi-k3
+          - minimax-m2p7
+          - minimax-m3
+          - deepseek-v4-pro
+          - deepseek-v4p1-flash
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                enabled:
+                  type: boolean
+                inferenceProvider:
+                  type:
+                  - string
+                  - 'null'
+                  enum:
+                  - TemboManagedInference
+                  - BYOK
+                  - AWSBedrock
+                  - GCPVertexAI
+                  - OpenRouter
+                  - null
+              additionalProperties: false
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+components:
+  securitySchemes:
+    apiKey:
+      type: http
+      scheme: bearer
+x-refined-from:
+- tembo-openapi-original.json
+- tembo-openapi.yml

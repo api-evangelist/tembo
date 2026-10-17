@@ -1,0 +1,4037 @@
+openapi: 3.2.0
+info:
+  title: Tembo Projects API
+  version: 1.0.0
+  description: 'Operations tagged Projects across 2 of this provider''s published API definitions: tembo-openapi-original.json, tembo-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.tembo.io/
+  description: Tembo API
+tags:
+- name: Projects
+paths:
+  /v1/projects/defaults:
+    put:
+      operationId: updateProjectDefaults
+      summary: Update project defaults
+      description: Choose the default project and sandbox size for the organization.
+      tags:
+      - Projects
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Update project defaults
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  projectId:
+                    type:
+                    - string
+                    - 'null'
+                    minLength: 1
+                    maxLength: 255
+                  sandboxSize:
+                    type: string
+                    enum:
+                    - nano
+                    - micro
+                    - small
+                    - medium
+                    - large
+                    - xl
+                    - xxl
+                    - ultra
+                required:
+                - projectId
+                - sandboxSize
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Project resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Project resource conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Project operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                projectId:
+                  type:
+                  - string
+                  - 'null'
+                  minLength: 1
+                  maxLength: 255
+                sandboxSize:
+                  type: string
+                  enum:
+                  - nano
+                  - micro
+                  - small
+                  - medium
+                  - large
+                  - xl
+                  - xxl
+                  - ultra
+              required:
+              - projectId
+              - sandboxSize
+              additionalProperties: false
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/projects:
+    get:
+      operationId: listProjects
+      summary: List projects
+      description: List projects in the authenticated organization.
+      tags:
+      - Projects
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: List projects
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  hasBuiltSnapshot:
+                    type: boolean
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        createdAt:
+                          type: string
+                          format: date-time
+                        description:
+                          type:
+                          - string
+                          - 'null'
+                        id:
+                          type: string
+                          minLength: 1
+                          maxLength: 255
+                        includeDeps:
+                          type: boolean
+                          default: true
+                        includeSkills:
+                          type: boolean
+                          default: true
+                        name:
+                          type: string
+                        setupScript:
+                          type:
+                          - string
+                          - 'null'
+                        updatedAt:
+                          type: string
+                          format: date-time
+                        activeSnapshots:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                                minLength: 1
+                                maxLength: 255
+                              size:
+                                type: string
+                                enum:
+                                - nano
+                                - micro
+                                - small
+                                - medium
+                                - large
+                                - xl
+                                - xxl
+                                - ultra
+                              builtAt:
+                                type: string
+                                format: date-time
+                            required:
+                            - id
+                            - size
+                            - builtAt
+                            additionalProperties: false
+                        agentInstructions:
+                          type:
+                          - string
+                          - 'null'
+                          maxLength: 20000
+                        codeRepositoryIds:
+                          type:
+                          - array
+                          - 'null'
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 255
+                        color:
+                          type: string
+                          enum:
+                          - neutral
+                          - red
+                          - orange
+                          - yellow
+                          - green
+                          - teal
+                          - blue
+                          - purple
+                          - pink
+                        defaultForSizes:
+                          type: array
+                          items:
+                            type: string
+                            enum:
+                            - nano
+                            - micro
+                            - small
+                            - medium
+                            - large
+                            - xl
+                            - xxl
+                            - ultra
+                        icon:
+                          type: string
+                          enum:
+                          - folder
+                          - code
+                          - terminal
+                          - book
+                          - brain
+                          - bug
+                          - building
+                          - cloud
+                          - globe
+                          - idea
+                          - tools
+                          - magic
+                          - processor
+                          - sandbox
+                          - server
+                          - tasks
+                          - tactics
+                          - images
+                          - database
+                          - api
+                          - mobile
+                          - package
+                        onboardingDefault:
+                          type: boolean
+                          description: True for the project created during onboarding until it is first edited
+                        sizes:
+                          type: array
+                          items:
+                            type: string
+                            enum:
+                            - nano
+                            - micro
+                            - medium
+                            - large
+                            - xl
+                            - xxl
+                            - ultra
+                        warmPoolEnabled:
+                          type: boolean
+                      required:
+                      - createdAt
+                      - description
+                      - id
+                      - includeDeps
+                      - includeSkills
+                      - name
+                      - setupScript
+                      - updatedAt
+                      - activeSnapshots
+                      - agentInstructions
+                      - codeRepositoryIds
+                      - color
+                      - defaultForSizes
+                      - icon
+                      - onboardingDefault
+                      - sizes
+                      - warmPoolEnabled
+                      additionalProperties: false
+                  nextCursor:
+                    type:
+                    - string
+                    - 'null'
+                    minLength: 1
+                    maxLength: 255
+                required:
+                - hasBuiltSnapshot
+                - items
+                - nextCursor
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Project resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Project resource conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Project operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: query
+        name: cursor
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 50
+      - in: query
+        name: defaultOnly
+        schema:
+          type: string
+          const: 'true'
+      - in: query
+        name: search
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 120
+    post:
+      operationId: createProject
+      summary: Create a project
+      description: Create a reusable project environment.
+      tags:
+      - Projects
+      security:
+      - apiKey: []
+      responses:
+        '201':
+          description: Create a project
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  jobIds:
+                    type: array
+                    items:
+                      type: string
+                      minLength: 1
+                      maxLength: 255
+                  project:
+                    type: object
+                    properties:
+                      createdAt:
+                        type: string
+                        format: date-time
+                      description:
+                        type:
+                        - string
+                        - 'null'
+                      id:
+                        type: string
+                        minLength: 1
+                        maxLength: 255
+                      includeDeps:
+                        type: boolean
+                        default: true
+                      includeSkills:
+                        type: boolean
+                        default: true
+                      name:
+                        type: string
+                      setupScript:
+                        type:
+                        - string
+                        - 'null'
+                      updatedAt:
+                        type: string
+                        format: date-time
+                      activeSnapshots:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              minLength: 1
+                              maxLength: 255
+                            size:
+                              type: string
+                              enum:
+                              - nano
+                              - micro
+                              - small
+                              - medium
+                              - large
+                              - xl
+                              - xxl
+                              - ultra
+                            builtAt:
+                              type: string
+                              format: date-time
+                          required:
+                          - id
+                          - size
+                          - builtAt
+                          additionalProperties: false
+                      agentInstructions:
+                        type:
+                        - string
+                        - 'null'
+                        maxLength: 20000
+                      codeRepositoryIds:
+                        type:
+                        - array
+                        - 'null'
+                        items:
+                          type: string
+                          minLength: 1
+                          maxLength: 255
+                      color:
+                        type: string
+                        enum:
+                        - neutral
+                        - red
+                        - orange
+                        - yellow
+                        - green
+                        - teal
+                        - blue
+                        - purple
+                        - pink
+                      defaultForSizes:
+                        type: array
+                        items:
+                          type: string
+                          enum:
+                          - nano
+                          - micro
+                          - small
+                          - medium
+                          - large
+                          - xl
+                          - xxl
+                          - ultra
+                      icon:
+                        type: string
+                        enum:
+                        - folder
+                        - code
+                        - terminal
+                        - book
+                        - brain
+                        - bug
+                        - building
+                        - cloud
+                        - globe
+                        - idea
+                        - tools
+                        - magic
+                        - processor
+                        - sandbox
+                        - server
+                        - tasks
+                        - tactics
+                        - images
+                        - database
+                        - api
+                        - mobile
+                        - package
+                      onboardingDefault:
+                        type: boolean
+                        description: True for the project created during onboarding until it is first edited
+                      sizes:
+                        type: array
+                        items:
+                          type: string
+                          enum:
+                          - nano
+                          - micro
+                          - medium
+                          - large
+                          - xl
+                          - xxl
+                          - ultra
+                      warmPoolEnabled:
+                        type: boolean
+                    required:
+                    - createdAt
+                    - description
+                    - id
+                    - includeDeps
+                    - includeSkills
+                    - name
+                    - setupScript
+                    - updatedAt
+                    - activeSnapshots
+                    - agentInstructions
+                    - codeRepositoryIds
+                    - color
+                    - defaultForSizes
+                    - icon
+                    - onboardingDefault
+                    - sizes
+                    - warmPoolEnabled
+                    additionalProperties: false
+                required:
+                - jobIds
+                - project
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Project resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Project resource conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Project operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                description:
+                  type:
+                  - string
+                  - 'null'
+                  maxLength: 300
+                includeDeps:
+                  type: boolean
+                includeSkills:
+                  type: boolean
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 120
+                setupScript:
+                  type:
+                  - string
+                  - 'null'
+                  maxLength: 100000
+                codeRepositoryIds:
+                  type:
+                  - array
+                  - 'null'
+                  items:
+                    type: string
+                    minLength: 1
+                    maxLength: 255
+                agentInstructions:
+                  type:
+                  - string
+                  - 'null'
+                  maxLength: 20000
+                color:
+                  type: string
+                  enum:
+                  - neutral
+                  - red
+                  - orange
+                  - yellow
+                  - green
+                  - teal
+                  - blue
+                  - purple
+                  - pink
+                icon:
+                  type: string
+                  enum:
+                  - folder
+                  - code
+                  - terminal
+                  - book
+                  - brain
+                  - bug
+                  - building
+                  - cloud
+                  - globe
+                  - idea
+                  - tools
+                  - magic
+                  - processor
+                  - sandbox
+                  - server
+                  - tasks
+                  - tactics
+                  - images
+                  - database
+                  - api
+                  - mobile
+                  - package
+                onboardingDefault:
+                  type: boolean
+                runNow:
+                  type: boolean
+                schedule:
+                  type: object
+                  properties:
+                    cron:
+                      type: string
+                      minLength: 1
+                      maxLength: 120
+                    timezone:
+                      type: string
+                      minLength: 1
+                      maxLength: 100
+                  required:
+                  - cron
+                  additionalProperties: false
+                sizes:
+                  type: array
+                  items:
+                    type: string
+                    enum:
+                    - nano
+                    - micro
+                    - medium
+                    - large
+                    - xl
+                    - xxl
+                    - ultra
+                  minItems: 1
+              required:
+              - name
+              - sizes
+              additionalProperties: false
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/projects/{projectId}:
+    get:
+      operationId: retrieveProject
+      summary: Retrieve a project
+      description: Retrieve project configuration. Use the project subresources to list snapshots, builds, schedules, and environment variables.
+      tags:
+      - Projects
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Retrieve a project
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  createdAt:
+                    type: string
+                    format: date-time
+                  description:
+                    type:
+                    - string
+                    - 'null'
+                  id:
+                    type: string
+                    minLength: 1
+                    maxLength: 255
+                  includeDeps:
+                    type: boolean
+                    default: true
+                  includeSkills:
+                    type: boolean
+                    default: true
+                  name:
+                    type: string
+                  setupScript:
+                    type:
+                    - string
+                    - 'null'
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  activeSnapshots:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          minLength: 1
+                          maxLength: 255
+                        size:
+                          type: string
+                          enum:
+                          - nano
+                          - micro
+                          - small
+                          - medium
+                          - large
+                          - xl
+                          - xxl
+                          - ultra
+                        builtAt:
+                          type: string
+                          format: date-time
+                      required:
+                      - id
+                      - size
+                      - builtAt
+                      additionalProperties: false
+                  agentInstructions:
+                    type:
+                    - string
+                    - 'null'
+                    maxLength: 20000
+                  codeRepositoryIds:
+                    type:
+                    - array
+                    - 'null'
+                    items:
+                      type: string
+                      minLength: 1
+                      maxLength: 255
+                  color:
+                    type: string
+                    enum:
+                    - neutral
+                    - red
+                    - orange
+                    - yellow
+                    - green
+                    - teal
+                    - blue
+                    - purple
+                    - pink
+                  defaultForSizes:
+                    type: array
+                    items:
+                      type: string
+                      enum:
+                      - nano
+                      - micro
+                      - small
+                      - medium
+                      - large
+                      - xl
+                      - xxl
+                      - ultra
+                  icon:
+                    type: string
+                    enum:
+                    - folder
+                    - code
+                    - terminal
+                    - book
+                    - brain
+                    - bug
+                    - building
+                    - cloud
+                    - globe
+                    - idea
+                    - tools
+                    - magic
+                    - processor
+                    - sandbox
+                    - server
+                    - tasks
+                    - tactics
+                    - images
+                    - database
+                    - api
+                    - mobile
+                    - package
+                  onboardingDefault:
+                    type: boolean
+                    description: True for the project created during onboarding until it is first edited
+                  sizes:
+                    type: array
+                    items:
+                      type: string
+                      enum:
+                      - nano
+                      - micro
+                      - medium
+                      - large
+                      - xl
+                      - xxl
+                      - ultra
+                  warmPoolEnabled:
+                    type: boolean
+                required:
+                - createdAt
+                - description
+                - id
+                - includeDeps
+                - includeSkills
+                - name
+                - setupScript
+                - updatedAt
+                - activeSnapshots
+                - agentInstructions
+                - codeRepositoryIds
+                - color
+                - defaultForSizes
+                - icon
+                - onboardingDefault
+                - sizes
+                - warmPoolEnabled
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Project resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Project resource conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Project operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: projectId
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+        required: true
+    patch:
+      operationId: updateProject
+      summary: Update a project
+      description: Update project configuration fields.
+      tags:
+      - Projects
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Update a project
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  createdAt:
+                    type: string
+                    format: date-time
+                  description:
+                    type:
+                    - string
+                    - 'null'
+                  id:
+                    type: string
+                    minLength: 1
+                    maxLength: 255
+                  includeDeps:
+                    type: boolean
+                    default: true
+                  includeSkills:
+                    type: boolean
+                    default: true
+                  name:
+                    type: string
+                  setupScript:
+                    type:
+                    - string
+                    - 'null'
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  activeSnapshots:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          minLength: 1
+                          maxLength: 255
+                        size:
+                          type: string
+                          enum:
+                          - nano
+                          - micro
+                          - small
+                          - medium
+                          - large
+                          - xl
+                          - xxl
+                          - ultra
+                        builtAt:
+                          type: string
+                          format: date-time
+                      required:
+                      - id
+                      - size
+                      - builtAt
+                      additionalProperties: false
+                  agentInstructions:
+                    type:
+                    - string
+                    - 'null'
+                    maxLength: 20000
+                  codeRepositoryIds:
+                    type:
+                    - array
+                    - 'null'
+                    items:
+                      type: string
+                      minLength: 1
+                      maxLength: 255
+                  color:
+                    type: string
+                    enum:
+                    - neutral
+                    - red
+                    - orange
+                    - yellow
+                    - green
+                    - teal
+                    - blue
+                    - purple
+                    - pink
+                  defaultForSizes:
+                    type: array
+                    items:
+                      type: string
+                      enum:
+                      - nano
+                      - micro
+                      - small
+                      - medium
+                      - large
+                      - xl
+                      - xxl
+                      - ultra
+                  icon:
+                    type: string
+                    enum:
+                    - folder
+                    - code
+                    - terminal
+                    - book
+                    - brain
+                    - bug
+                    - building
+                    - cloud
+                    - globe
+                    - idea
+                    - tools
+                    - magic
+                    - processor
+                    - sandbox
+                    - server
+                    - tasks
+                    - tactics
+                    - images
+                    - database
+                    - api
+                    - mobile
+                    - package
+                  onboardingDefault:
+                    type: boolean
+                    description: True for the project created during onboarding until it is first edited
+                  sizes:
+                    type: array
+                    items:
+                      type: string
+                      enum:
+                      - nano
+                      - micro
+                      - medium
+                      - large
+                      - xl
+                      - xxl
+                      - ultra
+                  warmPoolEnabled:
+                    type: boolean
+                required:
+                - createdAt
+                - description
+                - id
+                - includeDeps
+                - includeSkills
+                - name
+                - setupScript
+                - updatedAt
+                - activeSnapshots
+                - agentInstructions
+                - codeRepositoryIds
+                - color
+                - defaultForSizes
+                - icon
+                - onboardingDefault
+                - sizes
+                - warmPoolEnabled
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Project resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Project resource conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Project operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: projectId
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                description:
+                  type:
+                  - string
+                  - 'null'
+                  maxLength: 300
+                includeDeps:
+                  type: boolean
+                includeSkills:
+                  type: boolean
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 120
+                setupScript:
+                  type:
+                  - string
+                  - 'null'
+                  maxLength: 100000
+                codeRepositoryIds:
+                  type:
+                  - array
+                  - 'null'
+                  items:
+                    type: string
+                    minLength: 1
+                    maxLength: 255
+                agentInstructions:
+                  type:
+                  - string
+                  - 'null'
+                  maxLength: 20000
+                color:
+                  type: string
+                  enum:
+                  - neutral
+                  - red
+                  - orange
+                  - yellow
+                  - green
+                  - teal
+                  - blue
+                  - purple
+                  - pink
+                icon:
+                  type: string
+                  enum:
+                  - folder
+                  - code
+                  - terminal
+                  - book
+                  - brain
+                  - bug
+                  - building
+                  - cloud
+                  - globe
+                  - idea
+                  - tools
+                  - magic
+                  - processor
+                  - sandbox
+                  - server
+                  - tasks
+                  - tactics
+                  - images
+                  - database
+                  - api
+                  - mobile
+                  - package
+                defaultForSizes:
+                  type: array
+                  items:
+                    type: string
+                    enum:
+                    - nano
+                    - micro
+                    - medium
+                    - large
+                    - xl
+                    - xxl
+                    - ultra
+                environmentVariables:
+                  type: object
+                  propertyNames:
+                    type: string
+                    pattern: ^[A-Za-z_][A-Za-z0-9_]*$
+                  additionalProperties:
+                    type: string
+                    maxLength: 10000
+                schedule:
+                  type: object
+                  properties:
+                    cron:
+                      type: string
+                      minLength: 1
+                      maxLength: 120
+                    enabled:
+                      type: boolean
+                    timezone:
+                      type:
+                      - string
+                      - 'null'
+                      minLength: 1
+                      maxLength: 100
+                  additionalProperties: false
+                sizes:
+                  type: array
+                  items:
+                    type: string
+                    enum:
+                    - nano
+                    - micro
+                    - medium
+                    - large
+                    - xl
+                    - xxl
+                    - ultra
+                  minItems: 1
+                warmPoolEnabled:
+                  type: boolean
+              additionalProperties: false
+    delete:
+      operationId: deleteProject
+      summary: Delete a project
+      description: Delete a project and disable its schedule.
+      tags:
+      - Projects
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Delete a project
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  deleted:
+                    type: boolean
+                    const: true
+                  id:
+                    type: string
+                    minLength: 1
+                    maxLength: 255
+                required:
+                - deleted
+                - id
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Project resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Project resource conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Project operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: projectId
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+        required: true
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/projects/{projectId}/environment-variables:
+    get:
+      operationId: listProjectEnvironmentVariables
+      summary: List project environment variables
+      description: List environment-variable names without exposing values.
+      tags:
+      - Projects
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: List project environment variables
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        key:
+                          type: string
+                          pattern: ^[A-Za-z_][A-Za-z0-9_]*$
+                      required:
+                      - key
+                      additionalProperties: false
+                required:
+                - items
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Project resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Project resource conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Project operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: projectId
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+        required: true
+    post:
+      operationId: createProjectEnvironmentVariables
+      summary: Create project environment variables
+      description: Create one or more encrypted project environment variables.
+      tags:
+      - Projects
+      security:
+      - apiKey: []
+      responses:
+        '201':
+          description: Create project environment variables
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        key:
+                          type: string
+                          pattern: ^[A-Za-z_][A-Za-z0-9_]*$
+                      required:
+                      - key
+                      additionalProperties: false
+                required:
+                - items
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Project resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Project resource conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Project operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: projectId
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                secrets:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      key:
+                        type: string
+                        pattern: ^[A-Za-z_][A-Za-z0-9_]*$
+                      value:
+                        type: string
+                        minLength: 1
+                        maxLength: 10000
+                    required:
+                    - key
+                    - value
+                    additionalProperties: false
+                  minItems: 1
+                  maxItems: 100
+              required:
+              - secrets
+              additionalProperties: false
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/projects/{projectId}/environment-variables/{key}:
+    delete:
+      operationId: deleteProjectEnvironmentVariable
+      summary: Delete a project environment variable
+      description: Delete one encrypted project environment variable.
+      tags:
+      - Projects
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Delete a project environment variable
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  deleted:
+                    type: boolean
+                    const: true
+                  key:
+                    type: string
+                    pattern: ^[A-Za-z_][A-Za-z0-9_]*$
+                required:
+                - deleted
+                - key
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Project resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Project resource conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Project operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: projectId
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+        required: true
+      - in: path
+        name: key
+        schema:
+          type: string
+          pattern: ^[A-Za-z_][A-Za-z0-9_]*$
+        required: true
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/projects/{projectId}/snapshots:
+    get:
+      operationId: listProjectSnapshots
+      summary: List project snapshots
+      description: List recent VM snapshots built for a project.
+      tags:
+      - Projects
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: List project snapshots
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        createdAt:
+                          type: string
+                          format: date-time
+                        id:
+                          type: string
+                          minLength: 1
+                          maxLength: 255
+                        isActive:
+                          type: boolean
+                        name:
+                          type:
+                          - string
+                          - 'null'
+                        pinnedAt:
+                          type:
+                          - string
+                          - 'null'
+                          format: date-time
+                        updatedAt:
+                          type: string
+                          format: date-time
+                        buildDurationMs:
+                          type:
+                          - number
+                          - 'null'
+                          minimum: 0
+                        builtAt:
+                          type:
+                          - string
+                          - 'null'
+                          format: date-time
+                        cpu:
+                          type:
+                          - integer
+                          - 'null'
+                          exclusiveMinimum: 0
+                        hasSetupScript:
+                          type:
+                          - boolean
+                          - 'null'
+                        includesDeps:
+                          type:
+                          - boolean
+                          - 'null'
+                        includesRepos:
+                          type:
+                          - boolean
+                          - 'null'
+                        includesSkills:
+                          type:
+                          - boolean
+                          - 'null'
+                        isKvm:
+                          type:
+                          - boolean
+                          - 'null'
+                        memoryMb:
+                          type:
+                          - integer
+                          - 'null'
+                          exclusiveMinimum: 0
+                        projectId:
+                          type: string
+                          minLength: 1
+                          maxLength: 255
+                        rebuildOfSnapshotId:
+                          type:
+                          - string
+                          - 'null'
+                          minLength: 1
+                          maxLength: 255
+                        repositoryIds:
+                          type:
+                          - array
+                          - 'null'
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 255
+                        setupScript:
+                          type:
+                          - string
+                          - 'null'
+                          maxLength: 100000
+                        size:
+                          type:
+                          - string
+                          - 'null'
+                          enum:
+                          - nano
+                          - micro
+                          - small
+                          - medium
+                          - large
+                          - xl
+                          - xxl
+                          - ultra
+                          - null
+                        sizeBytes:
+                          type:
+                          - string
+                          - 'null'
+                          pattern: ^\d+$
+                        trigger:
+                          type:
+                          - string
+                          - 'null'
+                          enum:
+                          - manual
+                          - scheduled
+                          - rebuild
+                          - manager_reconcile
+                          - admin
+                          - null
+                      required:
+                      - createdAt
+                      - id
+                      - isActive
+                      - name
+                      - pinnedAt
+                      - updatedAt
+                      - buildDurationMs
+                      - builtAt
+                      - cpu
+                      - hasSetupScript
+                      - includesDeps
+                      - includesRepos
+                      - includesSkills
+                      - isKvm
+                      - memoryMb
+                      - projectId
+                      - rebuildOfSnapshotId
+                      - repositoryIds
+                      - setupScript
+                      - size
+                      - sizeBytes
+                      - trigger
+                      additionalProperties: false
+                  nextCursor:
+                    type:
+                    - string
+                    - 'null'
+                    minLength: 1
+                    maxLength: 255
+                required:
+                - items
+                - nextCursor
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Project resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Project resource conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Project operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: projectId
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+        required: true
+      - in: query
+        name: cursor
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 50
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/projects/{projectId}/snapshots/{snapshotId}:
+    get:
+      operationId: retrieveProjectSnapshot
+      summary: Retrieve a project snapshot
+      description: Retrieve one project snapshot.
+      tags:
+      - Projects
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Retrieve a project snapshot
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  createdAt:
+                    type: string
+                    format: date-time
+                  id:
+                    type: string
+                    minLength: 1
+                    maxLength: 255
+                  isActive:
+                    type: boolean
+                  name:
+                    type:
+                    - string
+                    - 'null'
+                  pinnedAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  buildDurationMs:
+                    type:
+                    - number
+                    - 'null'
+                    minimum: 0
+                  builtAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  cpu:
+                    type:
+                    - integer
+                    - 'null'
+                    exclusiveMinimum: 0
+                  hasSetupScript:
+                    type:
+                    - boolean
+                    - 'null'
+                  includesDeps:
+                    type:
+                    - boolean
+                    - 'null'
+                  includesRepos:
+                    type:
+                    - boolean
+                    - 'null'
+                  includesSkills:
+                    type:
+                    - boolean
+                    - 'null'
+                  isKvm:
+                    type:
+                    - boolean
+                    - 'null'
+                  memoryMb:
+                    type:
+                    - integer
+                    - 'null'
+                    exclusiveMinimum: 0
+                  projectId:
+                    type: string
+                    minLength: 1
+                    maxLength: 255
+                  rebuildOfSnapshotId:
+                    type:
+                    - string
+                    - 'null'
+                    minLength: 1
+                    maxLength: 255
+                  repositoryIds:
+                    type:
+                    - array
+                    - 'null'
+                    items:
+                      type: string
+                      minLength: 1
+                      maxLength: 255
+                  setupScript:
+                    type:
+                    - string
+                    - 'null'
+                    maxLength: 100000
+                  size:
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - nano
+                    - micro
+                    - small
+                    - medium
+                    - large
+                    - xl
+                    - xxl
+                    - ultra
+                    - null
+                  sizeBytes:
+                    type:
+                    - string
+                    - 'null'
+                    pattern: ^\d+$
+                  trigger:
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - manual
+                    - scheduled
+                    - rebuild
+                    - manager_reconcile
+                    - admin
+                    - null
+                required:
+                - createdAt
+                - id
+                - isActive
+                - name
+                - pinnedAt
+                - updatedAt
+                - buildDurationMs
+                - builtAt
+                - cpu
+                - hasSetupScript
+                - includesDeps
+                - includesRepos
+                - includesSkills
+                - isKvm
+                - memoryMb
+                - projectId
+                - rebuildOfSnapshotId
+                - repositoryIds
+                - setupScript
+                - size
+                - sizeBytes
+                - trigger
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Project resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Project resource conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Project operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: projectId
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+        required: true
+      - in: path
+        name: snapshotId
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+        required: true
+    patch:
+      operationId: updateProjectSnapshot
+      summary: Update a project snapshot
+      description: Rename a snapshot or choose whether it is pinned.
+      tags:
+      - Projects
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Update a project snapshot
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  createdAt:
+                    type: string
+                    format: date-time
+                  id:
+                    type: string
+                    minLength: 1
+                    maxLength: 255
+                  isActive:
+                    type: boolean
+                  name:
+                    type:
+                    - string
+                    - 'null'
+                  pinnedAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  buildDurationMs:
+                    type:
+                    - number
+                    - 'null'
+                    minimum: 0
+                  builtAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  cpu:
+                    type:
+                    - integer
+                    - 'null'
+                    exclusiveMinimum: 0
+                  hasSetupScript:
+                    type:
+                    - boolean
+                    - 'null'
+                  includesDeps:
+                    type:
+                    - boolean
+                    - 'null'
+                  includesRepos:
+                    type:
+                    - boolean
+                    - 'null'
+                  includesSkills:
+                    type:
+                    - boolean
+                    - 'null'
+                  isKvm:
+                    type:
+                    - boolean
+                    - 'null'
+                  memoryMb:
+                    type:
+                    - integer
+                    - 'null'
+                    exclusiveMinimum: 0
+                  projectId:
+                    type: string
+                    minLength: 1
+                    maxLength: 255
+                  rebuildOfSnapshotId:
+                    type:
+                    - string
+                    - 'null'
+                    minLength: 1
+                    maxLength: 255
+                  repositoryIds:
+                    type:
+                    - array
+                    - 'null'
+                    items:
+                      type: string
+                      minLength: 1
+                      maxLength: 255
+                  setupScript:
+                    type:
+                    - string
+                    - 'null'
+                    maxLength: 100000
+                  size:
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - nano
+                    - micro
+                    - small
+                    - medium
+                    - large
+                    - xl
+                    - xxl
+                    - ultra
+                    - null
+                  sizeBytes:
+                    type:
+                    - string
+                    - 'null'
+                    pattern: ^\d+$
+                  trigger:
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - manual
+                    - scheduled
+                    - rebuild
+                    - manager_reconcile
+                    - admin
+                    - null
+                required:
+                - createdAt
+                - id
+                - isActive
+                - name
+                - pinnedAt
+                - updatedAt
+                - buildDurationMs
+                - builtAt
+                - cpu
+                - hasSetupScript
+                - includesDeps
+                - includesRepos
+                - includesSkills
+                - isKvm
+                - memoryMb
+                - projectId
+                - rebuildOfSnapshotId
+                - repositoryIds
+                - setupScript
+                - size
+                - sizeBytes
+                - trigger
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Project resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Project resource conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Project operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: projectId
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+        required: true
+      - in: path
+        name: snapshotId
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type:
+                  - string
+                  - 'null'
+                  maxLength: 120
+                pinned:
+                  type: boolean
+              additionalProperties: false
+    delete:
+      operationId: deleteProjectSnapshot
+      summary: Delete a project snapshot
+      description: Delete a project snapshot.
+      tags:
+      - Projects
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Delete a project snapshot
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  cleanupJobCount:
+                    type: integer
+                    minimum: 0
+                  deleted:
+                    type: boolean
+                    const: true
+                  id:
+                    type: string
+                    minLength: 1
+                    maxLength: 255
+                required:
+                - cleanupJobCount
+                - deleted
+                - id
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Project resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Project resource conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Project operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: projectId
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+        required: true
+      - in: path
+        name: snapshotId
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+        required: true
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/projects/{projectId}/builds:
+    get:
+      operationId: listProjectBuilds
+      summary: List project builds
+      description: List recent queued, running, and failed project builds.
+      tags:
+      - Projects
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: List project builds
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        createdAt:
+                          type: string
+                          format: date-time
+                        id:
+                          type: string
+                          minLength: 1
+                          maxLength: 255
+                        completedAt:
+                          type:
+                          - string
+                          - 'null'
+                          format: date-time
+                        durationMs:
+                          type:
+                          - integer
+                          - 'null'
+                          minimum: 0
+                        failure:
+                          type:
+                          - string
+                          - 'null'
+                        includeDeps:
+                          type: boolean
+                        includeSkills:
+                          type: boolean
+                        name:
+                          type:
+                          - string
+                          - 'null'
+                        progress:
+                          type:
+                          - object
+                          - 'null'
+                          properties:
+                            message:
+                              type:
+                              - string
+                              - 'null'
+                            percent:
+                              type:
+                              - number
+                              - 'null'
+                              minimum: 0
+                              maximum: 100
+                            phase:
+                              type:
+                              - string
+                              - 'null'
+                            updatedAt:
+                              type:
+                              - string
+                              - 'null'
+                              format: date-time
+                          required:
+                          - message
+                          - percent
+                          - phase
+                          - updatedAt
+                          additionalProperties: false
+                        projectId:
+                          type: string
+                          minLength: 1
+                          maxLength: 255
+                        repositoryIds:
+                          type:
+                          - array
+                          - 'null'
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 255
+                        sandboxSize:
+                          type: string
+                          enum:
+                          - nano
+                          - micro
+                          - medium
+                          - large
+                          - xl
+                          - xxl
+                          - ultra
+                        setupScript:
+                          type:
+                          - string
+                          - 'null'
+                          maxLength: 100000
+                        startedAt:
+                          type:
+                          - string
+                          - 'null'
+                          format: date-time
+                        status:
+                          type: string
+                          enum:
+                          - pending
+                          - running
+                          - failed
+                          - completed
+                          - cancelled
+                        trigger:
+                          type: string
+                          enum:
+                          - manual
+                          - scheduled
+                          - rebuild
+                      required:
+                      - createdAt
+                      - id
+                      - completedAt
+                      - durationMs
+                      - failure
+                      - includeDeps
+                      - includeSkills
+                      - name
+                      - progress
+                      - projectId
+                      - repositoryIds
+                      - sandboxSize
+                      - setupScript
+                      - startedAt
+                      - status
+                      - trigger
+                      additionalProperties: false
+                  nextCursor:
+                    type:
+                    - string
+                    - 'null'
+                    minLength: 1
+                    maxLength: 255
+                required:
+                - items
+                - nextCursor
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Project resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Project resource conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Project operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: projectId
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+        required: true
+      - in: query
+        name: cursor
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 50
+    post:
+      operationId: createProjectBuild
+      summary: Create a project build
+      description: Build selected project sizes or rebuild one snapshot.
+      tags:
+      - Projects
+      security:
+      - apiKey: []
+      responses:
+        '201':
+          description: Create a project build
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  jobIds:
+                    type: array
+                    items:
+                      type: string
+                      minLength: 1
+                      maxLength: 255
+                    minItems: 1
+                required:
+                - jobIds
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Project resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Project resource conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Project operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: projectId
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sizes:
+                  type: array
+                  items:
+                    type: string
+                    enum:
+                    - nano
+                    - micro
+                    - medium
+                    - large
+                    - xl
+                    - xxl
+                    - ultra
+                  minItems: 1
+                snapshotId:
+                  type: string
+                  minLength: 1
+                  maxLength: 255
+              additionalProperties: false
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/projects/{projectId}/builds/{buildId}:
+    get:
+      operationId: retrieveProjectBuild
+      summary: Retrieve a project build
+      description: Retrieve project build status.
+      tags:
+      - Projects
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Retrieve a project build
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  createdAt:
+                    type: string
+                    format: date-time
+                  id:
+                    type: string
+                    minLength: 1
+                    maxLength: 255
+                  completedAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  durationMs:
+                    type:
+                    - integer
+                    - 'null'
+                    minimum: 0
+                  failure:
+                    type:
+                    - string
+                    - 'null'
+                  includeDeps:
+                    type: boolean
+                  includeSkills:
+                    type: boolean
+                  name:
+                    type:
+                    - string
+                    - 'null'
+                  progress:
+                    type:
+                    - object
+                    - 'null'
+                    properties:
+                      message:
+                        type:
+                        - string
+                        - 'null'
+                      percent:
+                        type:
+                        - number
+                        - 'null'
+                        minimum: 0
+                        maximum: 100
+                      phase:
+                        type:
+                        - string
+                        - 'null'
+                      updatedAt:
+                        type:
+                        - string
+                        - 'null'
+                        format: date-time
+                    required:
+                    - message
+                    - percent
+                    - phase
+                    - updatedAt
+                    additionalProperties: false
+                  projectId:
+                    type: string
+                    minLength: 1
+                    maxLength: 255
+                  repositoryIds:
+                    type:
+                    - array
+                    - 'null'
+                    items:
+                      type: string
+                      minLength: 1
+                      maxLength: 255
+                  sandboxSize:
+                    type: string
+                    enum:
+                    - nano
+                    - micro
+                    - medium
+                    - large
+                    - xl
+                    - xxl
+                    - ultra
+                  setupScript:
+                    type:
+                    - string
+                    - 'null'
+                    maxLength: 100000
+                  startedAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  status:
+                    type: string
+                    enum:
+                    - pending
+                    - running
+                    - failed
+                    - completed
+                    - cancelled
+                  trigger:
+                    type: string
+                    enum:
+                    - manual
+                    - scheduled
+                    - rebuild
+                required:
+                - createdAt
+                - id
+                - completedAt
+                - durationMs
+                - failure
+                - includeDeps
+                - includeSkills
+                - name
+                - progress
+                - projectId
+                - repositoryIds
+                - sandboxSize
+                - setupScript
+                - startedAt
+                - status
+                - trigger
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Project resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Project resource conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Project operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: projectId
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+        required: true
+      - in: path
+        name: buildId
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+        required: true
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/projects/{projectId}/builds/{buildId}/cancel:
+    post:
+      operationId: cancelProjectBuild
+      summary: Cancel a project build
+      description: Cancel an active queued or running project build.
+      tags:
+      - Projects
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Cancel a project build
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  cancelled:
+                    type: boolean
+                    const: true
+                  id:
+                    type: string
+                    minLength: 1
+                    maxLength: 255
+                required:
+                - cancelled
+                - id
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Project resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Project resource conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Project operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: projectId
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+        required: true
+      - in: path
+        name: buildId
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+        required: true
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/projects/{projectId}/schedules:
+    get:
+      operationId: listProjectSchedules
+      summary: List project schedules
+      description: List schedules linked to a project.
+      tags:
+      - Projects
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: List project schedules
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        createdAt:
+                          type: string
+                          format: date-time
+                        cron:
+                          type: string
+                        enabledAt:
+                          type:
+                          - string
+                          - 'null'
+                          format: date-time
+                        id:
+                          type: string
+                          minLength: 1
+                          maxLength: 255
+                        lastRunAt:
+                          type:
+                          - string
+                          - 'null'
+                          format: date-time
+                        nextRunAt:
+                          type:
+                          - string
+                          - 'null'
+                          format: date-time
+                        timezone:
+                          type:
+                          - string
+                          - 'null'
+                        updatedAt:
+                          type: string
+                          format: date-time
+                        projectId:
+                          type: string
+                          minLength: 1
+                          maxLength: 255
+                      required:
+                      - createdAt
+                      - cron
+                      - enabledAt
+                      - id
+                      - lastRunAt
+                      - nextRunAt
+                      - timezone
+                      - updatedAt
+                      - projectId
+                      additionalProperties: false
+                  nextCursor:
+                    type:
+                    - string
+                    - 'null'
+                    minLength: 1
+                    maxLength: 255
+                required:
+                - items
+                - nextCursor
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Project resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Project resource conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Project operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: projectId
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+        required: true
+      - in: query
+        name: cursor
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 50
+    post:
+      operationId: createProjectSchedule
+      summary: Create a project schedule
+      description: Create a recurring project build schedule.
+      tags:
+      - Projects
+      security:
+      - apiKey: []
+      responses:
+        '201':
+          description: Create a project schedule
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  createdAt:
+                    type: string
+                    format: date-time
+                  cron:
+                    type: string
+                  enabledAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  id:
+                    type: string
+                    minLength: 1
+                    maxLength: 255
+                  lastRunAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  nextRunAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  timezone:
+                    type:
+                    - string
+                    - 'null'
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  projectId:
+                    type: string
+                    minLength: 1
+                    maxLength: 255
+                required:
+                - createdAt
+                - cron
+                - enabledAt
+                - id
+                - lastRunAt
+                - nextRunAt
+                - timezone
+                - updatedAt
+                - projectId
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Project resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Project resource conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Project operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: projectId
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cron:
+                  type: string
+                  minLength: 1
+                  maxLength: 120
+                timezone:
+                  type: string
+                  minLength: 1
+                  maxLength: 100
+              required:
+              - cron
+              additionalProperties: false
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/projects/{projectId}/schedules/{scheduleId}:
+    get:
+      operationId: retrieveProjectSchedule
+      summary: Retrieve a project schedule
+      description: Retrieve one project build schedule.
+      tags:
+      - Projects
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Retrieve a project schedule
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  createdAt:
+                    type: string
+                    format: date-time
+                  cron:
+                    type: string
+                  enabledAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  id:
+                    type: string
+                    minLength: 1
+                    maxLength: 255
+                  lastRunAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  nextRunAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  timezone:
+                    type:
+                    - string
+                    - 'null'
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  projectId:
+                    type: string
+                    minLength: 1
+                    maxLength: 255
+                required:
+                - createdAt
+                - cron
+                - enabledAt
+                - id
+                - lastRunAt
+                - nextRunAt
+                - timezone
+                - updatedAt
+                - projectId
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Project resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Project resource conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Project operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: projectId
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+        required: true
+      - in: path
+        name: scheduleId
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+        required: true
+    patch:
+      operationId: updateProjectSchedule
+      summary: Update a project schedule
+      description: Update timing or enabled state for a project schedule.
+      tags:
+      - Projects
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Update a project schedule
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  createdAt:
+                    type: string
+                    format: date-time
+                  cron:
+                    type: string
+                  enabledAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  id:
+                    type: string
+                    minLength: 1
+                    maxLength: 255
+                  lastRunAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  nextRunAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  timezone:
+                    type:
+                    - string
+                    - 'null'
+                  updatedAt:
+                    type: string
+                    format: date-time
+                  projectId:
+                    type: string
+                    minLength: 1
+                    maxLength: 255
+                required:
+                - createdAt
+                - cron
+                - enabledAt
+                - id
+                - lastRunAt
+                - nextRunAt
+                - timezone
+                - updatedAt
+                - projectId
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Project resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Project resource conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Project operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: projectId
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+        required: true
+      - in: path
+        name: scheduleId
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+        required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cron:
+                  type: string
+                  minLength: 1
+                  maxLength: 120
+                enabled:
+                  type: boolean
+                timezone:
+                  type:
+                  - string
+                  - 'null'
+                  minLength: 1
+                  maxLength: 100
+              additionalProperties: false
+    delete:
+      operationId: deleteProjectSchedule
+      summary: Delete a project schedule
+      description: Disable a project build schedule.
+      tags:
+      - Projects
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Delete a project schedule
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  deleted:
+                    type: boolean
+                    const: true
+                  id:
+                    type: string
+                    minLength: 1
+                    maxLength: 255
+                required:
+                - deleted
+                - id
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Project resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Project resource conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Project operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: path
+        name: projectId
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+        required: true
+      - in: path
+        name: scheduleId
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+        required: true
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+components:
+  securitySchemes:
+    apiKey:
+      type: http
+      scheme: bearer
+x-refined-from:
+- tembo-openapi-original.json
+- tembo-openapi.yml

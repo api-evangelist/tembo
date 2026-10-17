@@ -1,0 +1,571 @@
+openapi: 3.2.0
+info:
+  title: Tembo Insights API
+  version: 1.0.0
+  description: 'Operations tagged Insights across 2 of this provider''s published API definitions: tembo-openapi-original.json, tembo-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.tembo.io/
+  description: Tembo API
+tags:
+- name: Insights
+paths:
+  /v1/insights:
+    get:
+      operationId: retrieveInsight
+      summary: Retrieve insights
+      description: Retrieve pull request contribution insights and their collection status for the current organization.
+      tags:
+      - Insights
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Retrieve insights
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type:
+                    - string
+                    - 'null'
+                    format: uuid
+                  status:
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - syncing
+                    - ready
+                    - failed
+                    - null
+                  rangeStart:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  rangeEnd:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  lastSyncedAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  enabled:
+                    type: boolean
+                  data:
+                    type:
+                    - object
+                    - 'null'
+                    properties:
+                      summary:
+                        type: object
+                        properties:
+                          tasksCompleted:
+                            type: integer
+                          prsCreated:
+                            type: integer
+                          prsMerged:
+                            type: integer
+                          temboContribution:
+                            type: number
+                          changes:
+                            type: object
+                            properties:
+                              prsCreated:
+                                type: number
+                              prsMerged:
+                                type: number
+                              tasksCompleted:
+                                type: number
+                              temboContribution:
+                                type: number
+                            required:
+                            - prsCreated
+                            - prsMerged
+                            - tasksCompleted
+                            - temboContribution
+                            additionalProperties: false
+                        required:
+                        - tasksCompleted
+                        - prsCreated
+                        - prsMerged
+                        - temboContribution
+                        - changes
+                        additionalProperties: false
+                      timeSeries:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            month:
+                              type: string
+                            prsWithTembo:
+                              type: integer
+                            prsWithoutTembo:
+                              type: number
+                            prsMerged:
+                              type: integer
+                            prsCreated:
+                              type: integer
+                            temboContribution:
+                              type: number
+                          required:
+                          - month
+                          - prsWithTembo
+                          - prsWithoutTembo
+                          - prsMerged
+                          - prsCreated
+                          - temboContribution
+                          additionalProperties: false
+                    required:
+                    - summary
+                    - timeSeries
+                    additionalProperties: false
+                required:
+                - id
+                - status
+                - rangeStart
+                - rangeEnd
+                - lastSyncedAt
+                - enabled
+                - data
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Insight operation conflicts with its current state
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Insight operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+    patch:
+      operationId: updateInsight
+      summary: Update insights
+      description: Enable or disable pull request insight collection. Enabling starts the initial refresh when needed.
+      tags:
+      - Insights
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: Update insights
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type:
+                    - string
+                    - 'null'
+                    format: uuid
+                  status:
+                    type:
+                    - string
+                    - 'null'
+                    enum:
+                    - syncing
+                    - ready
+                    - failed
+                    - null
+                  rangeStart:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  rangeEnd:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  lastSyncedAt:
+                    type:
+                    - string
+                    - 'null'
+                    format: date-time
+                  enabled:
+                    type: boolean
+                  data:
+                    type:
+                    - object
+                    - 'null'
+                    properties:
+                      summary:
+                        type: object
+                        properties:
+                          tasksCompleted:
+                            type: integer
+                          prsCreated:
+                            type: integer
+                          prsMerged:
+                            type: integer
+                          temboContribution:
+                            type: number
+                          changes:
+                            type: object
+                            properties:
+                              prsCreated:
+                                type: number
+                              prsMerged:
+                                type: number
+                              tasksCompleted:
+                                type: number
+                              temboContribution:
+                                type: number
+                            required:
+                            - prsCreated
+                            - prsMerged
+                            - tasksCompleted
+                            - temboContribution
+                            additionalProperties: false
+                        required:
+                        - tasksCompleted
+                        - prsCreated
+                        - prsMerged
+                        - temboContribution
+                        - changes
+                        additionalProperties: false
+                      timeSeries:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            month:
+                              type: string
+                            prsWithTembo:
+                              type: integer
+                            prsWithoutTembo:
+                              type: number
+                            prsMerged:
+                              type: integer
+                            prsCreated:
+                              type: integer
+                            temboContribution:
+                              type: number
+                          required:
+                          - month
+                          - prsWithTembo
+                          - prsWithoutTembo
+                          - prsMerged
+                          - prsCreated
+                          - temboContribution
+                          additionalProperties: false
+                    required:
+                    - summary
+                    - timeSeries
+                    additionalProperties: false
+                required:
+                - id
+                - status
+                - rangeStart
+                - rangeEnd
+                - lastSyncedAt
+                - enabled
+                - data
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Insight operation conflicts with its current state
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Insight operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                enabled:
+                  type: boolean
+              required:
+              - enabled
+              additionalProperties: false
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/insights/members:
+    get:
+      operationId: listInsightMembers
+      summary: List insight members
+      description: List organization members included in pull request insights.
+      tags:
+      - Insights
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: List insight members
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        provider:
+                          type: string
+                        username:
+                          type: string
+                        name:
+                          type:
+                          - string
+                          - 'null'
+                        avatarUrl:
+                          type: string
+                        prsCreated:
+                          type: integer
+                        prsMerged:
+                          type: integer
+                        temboContribution:
+                          type: number
+                      required:
+                      - provider
+                      - username
+                      - name
+                      - avatarUrl
+                      - prsCreated
+                      - prsMerged
+                      - temboContribution
+                      additionalProperties: false
+                  nextCursor:
+                    type:
+                    - string
+                    - 'null'
+                    format: uuid
+                required:
+                - items
+                - nextCursor
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Insight operation conflicts with its current state
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Insight operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: query
+        name: cursor
+        schema:
+          type: string
+          format: uuid
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 50
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+  /v1/insights/repositories:
+    get:
+      operationId: listInsightRepositories
+      summary: List insight repositories
+      description: List repositories included in pull request insights for the current organization.
+      tags:
+      - Insights
+      security:
+      - apiKey: []
+      responses:
+        '200':
+          description: List insight repositories
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        codeRepositoryId:
+                          type: string
+                        name:
+                          type: string
+                        url:
+                          type: string
+                        provider:
+                          type: string
+                        prsCreated:
+                          type: integer
+                        prsMerged:
+                          type: integer
+                        temboContribution:
+                          type: number
+                      required:
+                      - codeRepositoryId
+                      - name
+                      - url
+                      - provider
+                      - prsCreated
+                      - prsMerged
+                      - temboContribution
+                      additionalProperties: false
+                  nextCursor:
+                    type:
+                    - string
+                    - 'null'
+                    format: uuid
+                required:
+                - items
+                - nextCursor
+                additionalProperties: false
+        '400':
+          description: Invalid request or missing required organization or user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: Insight operation conflicts with its current state
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '500':
+          description: Insight operation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      parameters:
+      - in: query
+        name: cursor
+        schema:
+          type: string
+          format: uuid
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 50
+    servers:
+    - url: https://api.tembo.io/
+      description: Tembo API
+components:
+  securitySchemes:
+    apiKey:
+      type: http
+      scheme: bearer
+x-refined-from:
+- tembo-openapi-original.json
+- tembo-openapi.yml
