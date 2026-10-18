@@ -15,6 +15,14 @@ tags:
 - AI Agents
 - Coding Agents
 - Developer Tools
+- Sandbox
+- MCP
+- Automation
+tags_raw:
+- Company
+- AI Agents
+- Coding Agents
+- Developer Tools
 - Sandboxes
 - MCP
 - Automation
@@ -133,6 +141,8 @@ apis:
   humanURL: https://docs.tembo.io/api
   baseURL: https://api.tembo.io
   tags:
+  - APIKeys
+  tags_raw:
   - API Keys
   properties:
   - type: OpenAPI
@@ -253,6 +263,8 @@ apis:
   humanURL: https://docs.tembo.io/api
   baseURL: https://api.tembo.io
   tags:
+  - Integration
+  tags_raw:
   - Integrations
   properties:
   - type: OpenAPI
@@ -301,6 +313,8 @@ apis:
   humanURL: https://docs.tembo.io/api
   baseURL: https://api.tembo.io
   tags:
+  - Message
+  tags_raw:
   - Messages
   properties:
   - type: OpenAPI
@@ -349,6 +363,8 @@ apis:
   humanURL: https://docs.tembo.io/api
   baseURL: https://api.tembo.io
   tags:
+  - Authentication
+  tags_raw:
   - OAuth
   properties:
   - type: OpenAPI
@@ -373,6 +389,8 @@ apis:
   humanURL: https://docs.tembo.io/api
   baseURL: https://api.tembo.io
   tags:
+  - Organization
+  tags_raw:
   - Organizations
   properties:
   - type: OpenAPI
@@ -397,6 +415,8 @@ apis:
   humanURL: https://docs.tembo.io/api
   baseURL: https://api.tembo.io
   tags:
+  - Project
+  tags_raw:
   - Projects
   properties:
   - type: OpenAPI
@@ -421,6 +441,8 @@ apis:
   humanURL: https://docs.tembo.io/api
   baseURL: https://api.tembo.io
   tags:
+  - Pull Requests
+  tags_raw:
   - Pull requests
   properties:
   - type: OpenAPI
@@ -541,6 +563,8 @@ apis:
   humanURL: https://docs.tembo.io/api
   baseURL: https://api.tembo.io
   tags:
+  - User
+  tags_raw:
   - Users
   properties:
   - type: OpenAPI
