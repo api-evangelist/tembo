@@ -1,5 +1,5 @@
 generated: '2026-10-13'
-method: none
+method: searched
 source:
 - https://zapier.com/apps/tembo/integrations
 - https://n8n.io/integrations/tembo/
@@ -10,7 +10,25 @@ checked:
 - https://monid.ai/tools/tembo
 - https://n8n.io/integrations/tembo/
 - https://zapier.com/apps/tembo/integrations
+- slack/integrations/slack-integration-edges.yml
 summary: null
 marketplace_apps: []
-edges: []
+edges:
+- partner_name: Slack (own)
+  partner: slack
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://slack.com/marketplace/A09E6V19JJK-tembo
+  mirror_of: slack/integrations/slack-integration-edges.yml
+  apps:
+  - Tembo
+  listing_count: 1
+  detected: '2026-10-18'
+  detected_by: mirror-platform-listings.py
+  category: Slack app
 templates: []
