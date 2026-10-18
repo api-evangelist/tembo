@@ -54,3 +54,35 @@ pricing_basis: tiered-subscription
 delivery:
   delivery: managed+licensed
   evidence: Pricing page offers cloud plans; docs describe a self-hosted Enterprise deployment (https://docs.tembo.io/features/self-hosted/overview.md).
+x-canonical:
+  generated: '2026-10-18'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - negotiated
+  - subscription
+  units: []
+  plans:
+  - name: Free trial
+    access: other
+    model: unstated
+    model_how: derived
+    units: []
+    periods: []
+  - name: Pro
+    access: other
+    model: subscription
+    model_how: derived
+    units: []
+    periods: []
+  - name: Max
+    access: other
+    model: subscription
+    model_how: derived
+    units: []
+    periods: []
+  - name: Enterprise
+    access: other
+    model: negotiated
+    model_how: derived
+    units: []
+    periods: []
