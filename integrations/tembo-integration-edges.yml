@@ -6,9 +6,16 @@ source:
 - https://composio.dev/toolkits/tembo
 - https://monid.ai/tools/tembo
 checked:
+- https://api.nuget.org/v3
 - https://composio.dev/toolkits/tembo
+- https://crates.io/api/v1
 - https://monid.ai/tools/tembo
 - https://n8n.io/integrations/tembo/
+- https://proxy.golang.org
+- https://pypi.org/pypi
+- https://registry.npmjs.org
+- https://repo1.maven.org/maven2
+- https://rubygems.org/api/v1
 - https://zapier.com/apps/tembo/integrations
 - slack/integrations/slack-integration-edges.yml
 summary: null
@@ -31,4 +38,64 @@ edges:
   detected: '2026-10-18'
   detected_by: mirror-platform-listings.py
   category: Slack app
+- partner_name: npm registry
+  partner: npm
+  partner_match: register
+  type: register
+  direction: provider-built
+  category: official SDK (JavaScript/TypeScript)
+  evidence: https://www.npmjs.com/package/@tembo-io/sdk
+  channel: package-registry
+  relationship: distribution-channel
+  contract_reference:
+    register: npm registry (public registry JSON)
+    spec_file: null
+    language: JavaScript/TypeScript
+    packages:
+    - name: '@tembo-io/sdk'
+      version: 0.13.0
+      released: '2026-10-16'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/@tembo-io/sdk
+      repo_leg: github-org:tembo
+      publisher_leg: email:tembo.io
+      matched_by: domain
+    current: true
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-official-sdks.py
+    detected: '2026-10-18'
+  detected_by: sweep-official-sdks.py
+  first_seen: '2026-10-18'
+- partner_name: PyPI
+  partner: pypi
+  partner_match: register
+  type: register
+  direction: provider-built
+  category: official SDK (Python)
+  evidence: https://pypi.org/project/tembo-sdk-python/
+  channel: package-registry
+  relationship: distribution-channel
+  contract_reference:
+    register: PyPI (public registry JSON)
+    spec_file: null
+    language: Python
+    packages:
+    - name: tembo-sdk-python
+      version: 0.2.0
+      released: '2026-01-05'
+      released_field: upload_time
+      lapsed: false
+      page: https://pypi.org/project/tembo-sdk-python/
+      repo_leg: github-org:tembo
+      publisher_leg: email:tembo.io
+      matched_by: domain
+    current: true
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-official-sdks.py
+    detected: '2026-10-18'
+  detected_by: sweep-official-sdks.py
+  first_seen: '2026-10-18'
 templates: []
